@@ -1,0 +1,1345 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Asset returns &#8212; Quant Finance in Python</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/admonitions-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/custom-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"cov": "\\operatorname{Cov}", "var": "\\operatorname{Var}", "N": "\\mathcal{N}", "E": "\\mathbb{E}", "P": "\\mathbb{P}", "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="canonical" href="https://stoffprof.github.io/qf23/01b returns.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="A model of prices" href="01c%20prices.html" />
+    <link rel="prev" title="Math background" href="01a%20math.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/qf.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Quant Finance in Python</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a%20math.html">
+   Math background
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Asset returns
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01c%20prices.html">
+   A model of prices
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reference
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="notation.html">
+   Notation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sources.html">
+   Additional sources
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/01b returns.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#compound-returns">
+   Compound returns
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#log-returns">
+   Log returns
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#aggregating-returns">
+   Aggregating returns
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#constructing-a-price-index">
+   Constructing a price index
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#day-and-night-returns">
+   Day and night returns
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Asset returns</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#compound-returns">
+   Compound returns
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#log-returns">
+   Log returns
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#aggregating-returns">
+   Aggregating returns
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#constructing-a-price-index">
+   Constructing a price index
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#day-and-night-returns">
+   Day and night returns
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="asset-returns">
+<h1>Asset returns<a class="headerlink" href="#asset-returns" title="Permalink to this headline">#</a></h1>
+<p>Let <span class="math notranslate nohighlight">\(P_t\)</span> be the price of an asset at time <span class="math notranslate nohighlight">\(t\)</span>. We’ll define the <em>gross return</em> on the asset over one period as</p>
+<div class="math notranslate nohighlight">
+\[1+R_t = \frac{P_t + D_t}{P_{t-1}},\]</div>
+<p>where <span class="math notranslate nohighlight">\(D_t\)</span> denotes the value of any dividends paid during the period.</p>
+<p>The <em>net return</em> is simply</p>
+<div class="math notranslate nohighlight">
+\[R_t = \frac{P_t + D_t}{P_{t-1}} - 1 = \frac{P_t - P_{t-1}}{P_{t-1}} + \frac{D_t}{P_{t-1}}.\]</div>
+<p>The first term is the <em>capital gains yield</em> and the second is the <em>dividend yield</em>.</p>
+<p>As an example, we’ll work with some historical price data for Apple, which we’ll get from Yahoo! finance using <a class="reference external" href="https://pydata.github.io/pandas-datareader/">pandas-datareader</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas_datareader</span> <span class="k">as</span> <span class="nn">pdr</span>
+
+<span class="c1"># require version 10 or higher</span>
+<span class="k">assert</span> <span class="nb">int</span><span class="p">(</span><span class="n">pdr</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prcs</span> <span class="o">=</span> <span class="n">pdr</span><span class="o">.</span><span class="n">get_data_yahoo</span><span class="p">(</span><span class="s1">&#39;AAPL&#39;</span><span class="p">,</span> <span class="mi">2019</span><span class="p">,</span> <span class="mi">2021</span><span class="p">,</span> <span class="n">get_actions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The data include the intraday high, low price, along with the opening and closing price as well as volume of shares traded. We can also see when a dividend was paid or a stock split occurred.</p>
+<div class="cell tag_output_scroll tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">prcs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2020-08&#39;</span><span class="p">:</span><span class="s1">&#39;2020-09&#39;</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format_index</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">na_rep</span><span class="o">=</span><span class="s1">&#39;–&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">formatter</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{:,.0f}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Volume&#39;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;background-color: lightgreen&#39;</span> <span class="k">if</span> <span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Dividends&#39;</span><span class="p">,</span> <span class="s1">&#39;Splits&#39;</span><span class="p">])</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style type="text/css">
+#T_e26b8_row4_col6, #T_e26b8_row20_col7 {
+  background-color: lightgreen;
+}
+</style>
+<table id="T_e26b8">
+  <thead>
+    <tr>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_e26b8_level0_col0" class="col_heading level0 col0" >High</th>
+      <th id="T_e26b8_level0_col1" class="col_heading level0 col1" >Low</th>
+      <th id="T_e26b8_level0_col2" class="col_heading level0 col2" >Open</th>
+      <th id="T_e26b8_level0_col3" class="col_heading level0 col3" >Close</th>
+      <th id="T_e26b8_level0_col4" class="col_heading level0 col4" >Volume</th>
+      <th id="T_e26b8_level0_col5" class="col_heading level0 col5" >Adj Close</th>
+      <th id="T_e26b8_level0_col6" class="col_heading level0 col6" >Dividends</th>
+      <th id="T_e26b8_level0_col7" class="col_heading level0 col7" >Splits</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >Date</th>
+      <th class="blank col0" >&nbsp;</th>
+      <th class="blank col1" >&nbsp;</th>
+      <th class="blank col2" >&nbsp;</th>
+      <th class="blank col3" >&nbsp;</th>
+      <th class="blank col4" >&nbsp;</th>
+      <th class="blank col5" >&nbsp;</th>
+      <th class="blank col6" >&nbsp;</th>
+      <th class="blank col7" >&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_e26b8_level0_row0" class="row_heading level0 row0" >2020-08-03</th>
+      <td id="T_e26b8_row0_col0" class="data row0 col0" >111.64</td>
+      <td id="T_e26b8_row0_col1" class="data row0 col1" >107.89</td>
+      <td id="T_e26b8_row0_col2" class="data row0 col2" >108.20</td>
+      <td id="T_e26b8_row0_col3" class="data row0 col3" >108.94</td>
+      <td id="T_e26b8_row0_col4" class="data row0 col4" >308,151,200</td>
+      <td id="T_e26b8_row0_col5" class="data row0 col5" >107.44</td>
+      <td id="T_e26b8_row0_col6" class="data row0 col6" >–</td>
+      <td id="T_e26b8_row0_col7" class="data row0 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row1" class="row_heading level0 row1" >2020-08-04</th>
+      <td id="T_e26b8_row1_col0" class="data row1 col0" >110.79</td>
+      <td id="T_e26b8_row1_col1" class="data row1 col1" >108.39</td>
+      <td id="T_e26b8_row1_col2" class="data row1 col2" >109.13</td>
+      <td id="T_e26b8_row1_col3" class="data row1 col3" >109.67</td>
+      <td id="T_e26b8_row1_col4" class="data row1 col4" >173,071,600</td>
+      <td id="T_e26b8_row1_col5" class="data row1 col5" >108.16</td>
+      <td id="T_e26b8_row1_col6" class="data row1 col6" >–</td>
+      <td id="T_e26b8_row1_col7" class="data row1 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row2" class="row_heading level0 row2" >2020-08-05</th>
+      <td id="T_e26b8_row2_col0" class="data row2 col0" >110.39</td>
+      <td id="T_e26b8_row2_col1" class="data row2 col1" >108.90</td>
+      <td id="T_e26b8_row2_col2" class="data row2 col2" >109.38</td>
+      <td id="T_e26b8_row2_col3" class="data row2 col3" >110.06</td>
+      <td id="T_e26b8_row2_col4" class="data row2 col4" >121,776,800</td>
+      <td id="T_e26b8_row2_col5" class="data row2 col5" >108.55</td>
+      <td id="T_e26b8_row2_col6" class="data row2 col6" >–</td>
+      <td id="T_e26b8_row2_col7" class="data row2 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row3" class="row_heading level0 row3" >2020-08-06</th>
+      <td id="T_e26b8_row3_col0" class="data row3 col0" >114.41</td>
+      <td id="T_e26b8_row3_col1" class="data row3 col1" >109.80</td>
+      <td id="T_e26b8_row3_col2" class="data row3 col2" >110.40</td>
+      <td id="T_e26b8_row3_col3" class="data row3 col3" >113.90</td>
+      <td id="T_e26b8_row3_col4" class="data row3 col4" >202,428,800</td>
+      <td id="T_e26b8_row3_col5" class="data row3 col5" >112.34</td>
+      <td id="T_e26b8_row3_col6" class="data row3 col6" >–</td>
+      <td id="T_e26b8_row3_col7" class="data row3 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row4" class="row_heading level0 row4" >2020-08-07</th>
+      <td id="T_e26b8_row4_col0" class="data row4 col0" >113.68</td>
+      <td id="T_e26b8_row4_col1" class="data row4 col1" >110.29</td>
+      <td id="T_e26b8_row4_col2" class="data row4 col2" >113.21</td>
+      <td id="T_e26b8_row4_col3" class="data row4 col3" >111.11</td>
+      <td id="T_e26b8_row4_col4" class="data row4 col4" >198,045,600</td>
+      <td id="T_e26b8_row4_col5" class="data row4 col5" >109.79</td>
+      <td id="T_e26b8_row4_col6" class="data row4 col6" >0.20</td>
+      <td id="T_e26b8_row4_col7" class="data row4 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row5" class="row_heading level0 row5" >2020-08-10</th>
+      <td id="T_e26b8_row5_col0" class="data row5 col0" >113.78</td>
+      <td id="T_e26b8_row5_col1" class="data row5 col1" >110.00</td>
+      <td id="T_e26b8_row5_col2" class="data row5 col2" >112.60</td>
+      <td id="T_e26b8_row5_col3" class="data row5 col3" >112.73</td>
+      <td id="T_e26b8_row5_col4" class="data row5 col4" >212,403,600</td>
+      <td id="T_e26b8_row5_col5" class="data row5 col5" >111.38</td>
+      <td id="T_e26b8_row5_col6" class="data row5 col6" >–</td>
+      <td id="T_e26b8_row5_col7" class="data row5 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row6" class="row_heading level0 row6" >2020-08-11</th>
+      <td id="T_e26b8_row6_col0" class="data row6 col0" >112.48</td>
+      <td id="T_e26b8_row6_col1" class="data row6 col1" >109.11</td>
+      <td id="T_e26b8_row6_col2" class="data row6 col2" >111.97</td>
+      <td id="T_e26b8_row6_col3" class="data row6 col3" >109.38</td>
+      <td id="T_e26b8_row6_col4" class="data row6 col4" >187,902,400</td>
+      <td id="T_e26b8_row6_col5" class="data row6 col5" >108.07</td>
+      <td id="T_e26b8_row6_col6" class="data row6 col6" >–</td>
+      <td id="T_e26b8_row6_col7" class="data row6 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row7" class="row_heading level0 row7" >2020-08-12</th>
+      <td id="T_e26b8_row7_col0" class="data row7 col0" >113.28</td>
+      <td id="T_e26b8_row7_col1" class="data row7 col1" >110.30</td>
+      <td id="T_e26b8_row7_col2" class="data row7 col2" >110.50</td>
+      <td id="T_e26b8_row7_col3" class="data row7 col3" >113.01</td>
+      <td id="T_e26b8_row7_col4" class="data row7 col4" >165,598,000</td>
+      <td id="T_e26b8_row7_col5" class="data row7 col5" >111.66</td>
+      <td id="T_e26b8_row7_col6" class="data row7 col6" >–</td>
+      <td id="T_e26b8_row7_col7" class="data row7 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row8" class="row_heading level0 row8" >2020-08-13</th>
+      <td id="T_e26b8_row8_col0" class="data row8 col0" >116.04</td>
+      <td id="T_e26b8_row8_col1" class="data row8 col1" >113.93</td>
+      <td id="T_e26b8_row8_col2" class="data row8 col2" >114.43</td>
+      <td id="T_e26b8_row8_col3" class="data row8 col3" >115.01</td>
+      <td id="T_e26b8_row8_col4" class="data row8 col4" >210,082,000</td>
+      <td id="T_e26b8_row8_col5" class="data row8 col5" >113.64</td>
+      <td id="T_e26b8_row8_col6" class="data row8 col6" >–</td>
+      <td id="T_e26b8_row8_col7" class="data row8 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row9" class="row_heading level0 row9" >2020-08-14</th>
+      <td id="T_e26b8_row9_col0" class="data row9 col0" >115.00</td>
+      <td id="T_e26b8_row9_col1" class="data row9 col1" >113.04</td>
+      <td id="T_e26b8_row9_col2" class="data row9 col2" >114.83</td>
+      <td id="T_e26b8_row9_col3" class="data row9 col3" >114.91</td>
+      <td id="T_e26b8_row9_col4" class="data row9 col4" >165,565,200</td>
+      <td id="T_e26b8_row9_col5" class="data row9 col5" >113.54</td>
+      <td id="T_e26b8_row9_col6" class="data row9 col6" >–</td>
+      <td id="T_e26b8_row9_col7" class="data row9 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row10" class="row_heading level0 row10" >2020-08-17</th>
+      <td id="T_e26b8_row10_col0" class="data row10 col0" >116.09</td>
+      <td id="T_e26b8_row10_col1" class="data row10 col1" >113.96</td>
+      <td id="T_e26b8_row10_col2" class="data row10 col2" >116.06</td>
+      <td id="T_e26b8_row10_col3" class="data row10 col3" >114.61</td>
+      <td id="T_e26b8_row10_col4" class="data row10 col4" >119,561,600</td>
+      <td id="T_e26b8_row10_col5" class="data row10 col5" >113.24</td>
+      <td id="T_e26b8_row10_col6" class="data row10 col6" >–</td>
+      <td id="T_e26b8_row10_col7" class="data row10 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row11" class="row_heading level0 row11" >2020-08-18</th>
+      <td id="T_e26b8_row11_col0" class="data row11 col0" >116.00</td>
+      <td id="T_e26b8_row11_col1" class="data row11 col1" >114.01</td>
+      <td id="T_e26b8_row11_col2" class="data row11 col2" >114.35</td>
+      <td id="T_e26b8_row11_col3" class="data row11 col3" >115.56</td>
+      <td id="T_e26b8_row11_col4" class="data row11 col4" >105,633,600</td>
+      <td id="T_e26b8_row11_col5" class="data row11 col5" >114.18</td>
+      <td id="T_e26b8_row11_col6" class="data row11 col6" >–</td>
+      <td id="T_e26b8_row11_col7" class="data row11 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row12" class="row_heading level0 row12" >2020-08-19</th>
+      <td id="T_e26b8_row12_col0" class="data row12 col0" >117.16</td>
+      <td id="T_e26b8_row12_col1" class="data row12 col1" >115.61</td>
+      <td id="T_e26b8_row12_col2" class="data row12 col2" >115.98</td>
+      <td id="T_e26b8_row12_col3" class="data row12 col3" >115.71</td>
+      <td id="T_e26b8_row12_col4" class="data row12 col4" >145,538,000</td>
+      <td id="T_e26b8_row12_col5" class="data row12 col5" >114.33</td>
+      <td id="T_e26b8_row12_col6" class="data row12 col6" >–</td>
+      <td id="T_e26b8_row12_col7" class="data row12 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row13" class="row_heading level0 row13" >2020-08-20</th>
+      <td id="T_e26b8_row13_col0" class="data row13 col0" >118.39</td>
+      <td id="T_e26b8_row13_col1" class="data row13 col1" >115.73</td>
+      <td id="T_e26b8_row13_col2" class="data row13 col2" >115.75</td>
+      <td id="T_e26b8_row13_col3" class="data row13 col3" >118.28</td>
+      <td id="T_e26b8_row13_col4" class="data row13 col4" >126,907,200</td>
+      <td id="T_e26b8_row13_col5" class="data row13 col5" >116.86</td>
+      <td id="T_e26b8_row13_col6" class="data row13 col6" >–</td>
+      <td id="T_e26b8_row13_col7" class="data row13 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row14" class="row_heading level0 row14" >2020-08-21</th>
+      <td id="T_e26b8_row14_col0" class="data row14 col0" >124.87</td>
+      <td id="T_e26b8_row14_col1" class="data row14 col1" >119.25</td>
+      <td id="T_e26b8_row14_col2" class="data row14 col2" >119.26</td>
+      <td id="T_e26b8_row14_col3" class="data row14 col3" >124.37</td>
+      <td id="T_e26b8_row14_col4" class="data row14 col4" >338,054,800</td>
+      <td id="T_e26b8_row14_col5" class="data row14 col5" >122.89</td>
+      <td id="T_e26b8_row14_col6" class="data row14 col6" >–</td>
+      <td id="T_e26b8_row14_col7" class="data row14 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row15" class="row_heading level0 row15" >2020-08-24</th>
+      <td id="T_e26b8_row15_col0" class="data row15 col0" >128.79</td>
+      <td id="T_e26b8_row15_col1" class="data row15 col1" >123.94</td>
+      <td id="T_e26b8_row15_col2" class="data row15 col2" >128.70</td>
+      <td id="T_e26b8_row15_col3" class="data row15 col3" >125.86</td>
+      <td id="T_e26b8_row15_col4" class="data row15 col4" >345,937,600</td>
+      <td id="T_e26b8_row15_col5" class="data row15 col5" >124.36</td>
+      <td id="T_e26b8_row15_col6" class="data row15 col6" >–</td>
+      <td id="T_e26b8_row15_col7" class="data row15 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row16" class="row_heading level0 row16" >2020-08-25</th>
+      <td id="T_e26b8_row16_col0" class="data row16 col0" >125.18</td>
+      <td id="T_e26b8_row16_col1" class="data row16 col1" >123.05</td>
+      <td id="T_e26b8_row16_col2" class="data row16 col2" >124.70</td>
+      <td id="T_e26b8_row16_col3" class="data row16 col3" >124.82</td>
+      <td id="T_e26b8_row16_col4" class="data row16 col4" >211,495,600</td>
+      <td id="T_e26b8_row16_col5" class="data row16 col5" >123.34</td>
+      <td id="T_e26b8_row16_col6" class="data row16 col6" >–</td>
+      <td id="T_e26b8_row16_col7" class="data row16 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row17" class="row_heading level0 row17" >2020-08-26</th>
+      <td id="T_e26b8_row17_col0" class="data row17 col0" >126.99</td>
+      <td id="T_e26b8_row17_col1" class="data row17 col1" >125.08</td>
+      <td id="T_e26b8_row17_col2" class="data row17 col2" >126.18</td>
+      <td id="T_e26b8_row17_col3" class="data row17 col3" >126.52</td>
+      <td id="T_e26b8_row17_col4" class="data row17 col4" >163,022,400</td>
+      <td id="T_e26b8_row17_col5" class="data row17 col5" >125.01</td>
+      <td id="T_e26b8_row17_col6" class="data row17 col6" >–</td>
+      <td id="T_e26b8_row17_col7" class="data row17 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row18" class="row_heading level0 row18" >2020-08-27</th>
+      <td id="T_e26b8_row18_col0" class="data row18 col0" >127.49</td>
+      <td id="T_e26b8_row18_col1" class="data row18 col1" >123.83</td>
+      <td id="T_e26b8_row18_col2" class="data row18 col2" >127.14</td>
+      <td id="T_e26b8_row18_col3" class="data row18 col3" >125.01</td>
+      <td id="T_e26b8_row18_col4" class="data row18 col4" >155,552,400</td>
+      <td id="T_e26b8_row18_col5" class="data row18 col5" >123.52</td>
+      <td id="T_e26b8_row18_col6" class="data row18 col6" >–</td>
+      <td id="T_e26b8_row18_col7" class="data row18 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row19" class="row_heading level0 row19" >2020-08-28</th>
+      <td id="T_e26b8_row19_col0" class="data row19 col0" >126.44</td>
+      <td id="T_e26b8_row19_col1" class="data row19 col1" >124.58</td>
+      <td id="T_e26b8_row19_col2" class="data row19 col2" >126.01</td>
+      <td id="T_e26b8_row19_col3" class="data row19 col3" >124.81</td>
+      <td id="T_e26b8_row19_col4" class="data row19 col4" >187,630,000</td>
+      <td id="T_e26b8_row19_col5" class="data row19 col5" >123.32</td>
+      <td id="T_e26b8_row19_col6" class="data row19 col6" >–</td>
+      <td id="T_e26b8_row19_col7" class="data row19 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row20" class="row_heading level0 row20" >2020-08-31</th>
+      <td id="T_e26b8_row20_col0" class="data row20 col0" >131.00</td>
+      <td id="T_e26b8_row20_col1" class="data row20 col1" >126.00</td>
+      <td id="T_e26b8_row20_col2" class="data row20 col2" >127.58</td>
+      <td id="T_e26b8_row20_col3" class="data row20 col3" >129.04</td>
+      <td id="T_e26b8_row20_col4" class="data row20 col4" >225,702,700</td>
+      <td id="T_e26b8_row20_col5" class="data row20 col5" >127.50</td>
+      <td id="T_e26b8_row20_col6" class="data row20 col6" >–</td>
+      <td id="T_e26b8_row20_col7" class="data row20 col7" >0.25</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row21" class="row_heading level0 row21" >2020-09-01</th>
+      <td id="T_e26b8_row21_col0" class="data row21 col0" >134.80</td>
+      <td id="T_e26b8_row21_col1" class="data row21 col1" >130.53</td>
+      <td id="T_e26b8_row21_col2" class="data row21 col2" >132.76</td>
+      <td id="T_e26b8_row21_col3" class="data row21 col3" >134.18</td>
+      <td id="T_e26b8_row21_col4" class="data row21 col4" >151,948,100</td>
+      <td id="T_e26b8_row21_col5" class="data row21 col5" >132.58</td>
+      <td id="T_e26b8_row21_col6" class="data row21 col6" >–</td>
+      <td id="T_e26b8_row21_col7" class="data row21 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row22" class="row_heading level0 row22" >2020-09-02</th>
+      <td id="T_e26b8_row22_col0" class="data row22 col0" >137.98</td>
+      <td id="T_e26b8_row22_col1" class="data row22 col1" >127.00</td>
+      <td id="T_e26b8_row22_col2" class="data row22 col2" >137.59</td>
+      <td id="T_e26b8_row22_col3" class="data row22 col3" >131.40</td>
+      <td id="T_e26b8_row22_col4" class="data row22 col4" >200,119,000</td>
+      <td id="T_e26b8_row22_col5" class="data row22 col5" >129.83</td>
+      <td id="T_e26b8_row22_col6" class="data row22 col6" >–</td>
+      <td id="T_e26b8_row22_col7" class="data row22 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row23" class="row_heading level0 row23" >2020-09-03</th>
+      <td id="T_e26b8_row23_col0" class="data row23 col0" >128.84</td>
+      <td id="T_e26b8_row23_col1" class="data row23 col1" >120.50</td>
+      <td id="T_e26b8_row23_col2" class="data row23 col2" >126.91</td>
+      <td id="T_e26b8_row23_col3" class="data row23 col3" >120.88</td>
+      <td id="T_e26b8_row23_col4" class="data row23 col4" >257,599,600</td>
+      <td id="T_e26b8_row23_col5" class="data row23 col5" >119.44</td>
+      <td id="T_e26b8_row23_col6" class="data row23 col6" >–</td>
+      <td id="T_e26b8_row23_col7" class="data row23 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row24" class="row_heading level0 row24" >2020-09-04</th>
+      <td id="T_e26b8_row24_col0" class="data row24 col0" >123.70</td>
+      <td id="T_e26b8_row24_col1" class="data row24 col1" >110.89</td>
+      <td id="T_e26b8_row24_col2" class="data row24 col2" >120.07</td>
+      <td id="T_e26b8_row24_col3" class="data row24 col3" >120.96</td>
+      <td id="T_e26b8_row24_col4" class="data row24 col4" >332,607,200</td>
+      <td id="T_e26b8_row24_col5" class="data row24 col5" >119.52</td>
+      <td id="T_e26b8_row24_col6" class="data row24 col6" >–</td>
+      <td id="T_e26b8_row24_col7" class="data row24 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row25" class="row_heading level0 row25" >2020-09-08</th>
+      <td id="T_e26b8_row25_col0" class="data row25 col0" >118.99</td>
+      <td id="T_e26b8_row25_col1" class="data row25 col1" >112.68</td>
+      <td id="T_e26b8_row25_col2" class="data row25 col2" >113.95</td>
+      <td id="T_e26b8_row25_col3" class="data row25 col3" >112.82</td>
+      <td id="T_e26b8_row25_col4" class="data row25 col4" >231,366,600</td>
+      <td id="T_e26b8_row25_col5" class="data row25 col5" >111.47</td>
+      <td id="T_e26b8_row25_col6" class="data row25 col6" >–</td>
+      <td id="T_e26b8_row25_col7" class="data row25 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row26" class="row_heading level0 row26" >2020-09-09</th>
+      <td id="T_e26b8_row26_col0" class="data row26 col0" >119.14</td>
+      <td id="T_e26b8_row26_col1" class="data row26 col1" >115.26</td>
+      <td id="T_e26b8_row26_col2" class="data row26 col2" >117.26</td>
+      <td id="T_e26b8_row26_col3" class="data row26 col3" >117.32</td>
+      <td id="T_e26b8_row26_col4" class="data row26 col4" >176,940,500</td>
+      <td id="T_e26b8_row26_col5" class="data row26 col5" >115.92</td>
+      <td id="T_e26b8_row26_col6" class="data row26 col6" >–</td>
+      <td id="T_e26b8_row26_col7" class="data row26 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row27" class="row_heading level0 row27" >2020-09-10</th>
+      <td id="T_e26b8_row27_col0" class="data row27 col0" >120.50</td>
+      <td id="T_e26b8_row27_col1" class="data row27 col1" >112.50</td>
+      <td id="T_e26b8_row27_col2" class="data row27 col2" >120.36</td>
+      <td id="T_e26b8_row27_col3" class="data row27 col3" >113.49</td>
+      <td id="T_e26b8_row27_col4" class="data row27 col4" >182,274,400</td>
+      <td id="T_e26b8_row27_col5" class="data row27 col5" >112.14</td>
+      <td id="T_e26b8_row27_col6" class="data row27 col6" >–</td>
+      <td id="T_e26b8_row27_col7" class="data row27 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row28" class="row_heading level0 row28" >2020-09-11</th>
+      <td id="T_e26b8_row28_col0" class="data row28 col0" >115.23</td>
+      <td id="T_e26b8_row28_col1" class="data row28 col1" >110.00</td>
+      <td id="T_e26b8_row28_col2" class="data row28 col2" >114.57</td>
+      <td id="T_e26b8_row28_col3" class="data row28 col3" >112.00</td>
+      <td id="T_e26b8_row28_col4" class="data row28 col4" >180,860,300</td>
+      <td id="T_e26b8_row28_col5" class="data row28 col5" >110.66</td>
+      <td id="T_e26b8_row28_col6" class="data row28 col6" >–</td>
+      <td id="T_e26b8_row28_col7" class="data row28 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row29" class="row_heading level0 row29" >2020-09-14</th>
+      <td id="T_e26b8_row29_col0" class="data row29 col0" >115.93</td>
+      <td id="T_e26b8_row29_col1" class="data row29 col1" >112.80</td>
+      <td id="T_e26b8_row29_col2" class="data row29 col2" >114.72</td>
+      <td id="T_e26b8_row29_col3" class="data row29 col3" >115.36</td>
+      <td id="T_e26b8_row29_col4" class="data row29 col4" >140,150,100</td>
+      <td id="T_e26b8_row29_col5" class="data row29 col5" >113.98</td>
+      <td id="T_e26b8_row29_col6" class="data row29 col6" >–</td>
+      <td id="T_e26b8_row29_col7" class="data row29 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row30" class="row_heading level0 row30" >2020-09-15</th>
+      <td id="T_e26b8_row30_col0" class="data row30 col0" >118.83</td>
+      <td id="T_e26b8_row30_col1" class="data row30 col1" >113.61</td>
+      <td id="T_e26b8_row30_col2" class="data row30 col2" >118.33</td>
+      <td id="T_e26b8_row30_col3" class="data row30 col3" >115.54</td>
+      <td id="T_e26b8_row30_col4" class="data row30 col4" >184,642,000</td>
+      <td id="T_e26b8_row30_col5" class="data row30 col5" >114.16</td>
+      <td id="T_e26b8_row30_col6" class="data row30 col6" >–</td>
+      <td id="T_e26b8_row30_col7" class="data row30 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row31" class="row_heading level0 row31" >2020-09-16</th>
+      <td id="T_e26b8_row31_col0" class="data row31 col0" >116.00</td>
+      <td id="T_e26b8_row31_col1" class="data row31 col1" >112.04</td>
+      <td id="T_e26b8_row31_col2" class="data row31 col2" >115.23</td>
+      <td id="T_e26b8_row31_col3" class="data row31 col3" >112.13</td>
+      <td id="T_e26b8_row31_col4" class="data row31 col4" >154,679,000</td>
+      <td id="T_e26b8_row31_col5" class="data row31 col5" >110.79</td>
+      <td id="T_e26b8_row31_col6" class="data row31 col6" >–</td>
+      <td id="T_e26b8_row31_col7" class="data row31 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row32" class="row_heading level0 row32" >2020-09-17</th>
+      <td id="T_e26b8_row32_col0" class="data row32 col0" >112.20</td>
+      <td id="T_e26b8_row32_col1" class="data row32 col1" >108.71</td>
+      <td id="T_e26b8_row32_col2" class="data row32 col2" >109.72</td>
+      <td id="T_e26b8_row32_col3" class="data row32 col3" >110.34</td>
+      <td id="T_e26b8_row32_col4" class="data row32 col4" >178,011,000</td>
+      <td id="T_e26b8_row32_col5" class="data row32 col5" >109.02</td>
+      <td id="T_e26b8_row32_col6" class="data row32 col6" >–</td>
+      <td id="T_e26b8_row32_col7" class="data row32 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row33" class="row_heading level0 row33" >2020-09-18</th>
+      <td id="T_e26b8_row33_col0" class="data row33 col0" >110.88</td>
+      <td id="T_e26b8_row33_col1" class="data row33 col1" >106.09</td>
+      <td id="T_e26b8_row33_col2" class="data row33 col2" >110.40</td>
+      <td id="T_e26b8_row33_col3" class="data row33 col3" >106.84</td>
+      <td id="T_e26b8_row33_col4" class="data row33 col4" >287,104,900</td>
+      <td id="T_e26b8_row33_col5" class="data row33 col5" >105.57</td>
+      <td id="T_e26b8_row33_col6" class="data row33 col6" >–</td>
+      <td id="T_e26b8_row33_col7" class="data row33 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row34" class="row_heading level0 row34" >2020-09-21</th>
+      <td id="T_e26b8_row34_col0" class="data row34 col0" >110.19</td>
+      <td id="T_e26b8_row34_col1" class="data row34 col1" >103.10</td>
+      <td id="T_e26b8_row34_col2" class="data row34 col2" >104.54</td>
+      <td id="T_e26b8_row34_col3" class="data row34 col3" >110.08</td>
+      <td id="T_e26b8_row34_col4" class="data row34 col4" >195,713,800</td>
+      <td id="T_e26b8_row34_col5" class="data row34 col5" >108.77</td>
+      <td id="T_e26b8_row34_col6" class="data row34 col6" >–</td>
+      <td id="T_e26b8_row34_col7" class="data row34 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row35" class="row_heading level0 row35" >2020-09-22</th>
+      <td id="T_e26b8_row35_col0" class="data row35 col0" >112.86</td>
+      <td id="T_e26b8_row35_col1" class="data row35 col1" >109.16</td>
+      <td id="T_e26b8_row35_col2" class="data row35 col2" >112.68</td>
+      <td id="T_e26b8_row35_col3" class="data row35 col3" >111.81</td>
+      <td id="T_e26b8_row35_col4" class="data row35 col4" >183,055,400</td>
+      <td id="T_e26b8_row35_col5" class="data row35 col5" >110.48</td>
+      <td id="T_e26b8_row35_col6" class="data row35 col6" >–</td>
+      <td id="T_e26b8_row35_col7" class="data row35 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row36" class="row_heading level0 row36" >2020-09-23</th>
+      <td id="T_e26b8_row36_col0" class="data row36 col0" >112.11</td>
+      <td id="T_e26b8_row36_col1" class="data row36 col1" >106.77</td>
+      <td id="T_e26b8_row36_col2" class="data row36 col2" >111.62</td>
+      <td id="T_e26b8_row36_col3" class="data row36 col3" >107.12</td>
+      <td id="T_e26b8_row36_col4" class="data row36 col4" >150,718,700</td>
+      <td id="T_e26b8_row36_col5" class="data row36 col5" >105.84</td>
+      <td id="T_e26b8_row36_col6" class="data row36 col6" >–</td>
+      <td id="T_e26b8_row36_col7" class="data row36 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row37" class="row_heading level0 row37" >2020-09-24</th>
+      <td id="T_e26b8_row37_col0" class="data row37 col0" >110.25</td>
+      <td id="T_e26b8_row37_col1" class="data row37 col1" >105.00</td>
+      <td id="T_e26b8_row37_col2" class="data row37 col2" >105.17</td>
+      <td id="T_e26b8_row37_col3" class="data row37 col3" >108.22</td>
+      <td id="T_e26b8_row37_col4" class="data row37 col4" >167,743,300</td>
+      <td id="T_e26b8_row37_col5" class="data row37 col5" >106.93</td>
+      <td id="T_e26b8_row37_col6" class="data row37 col6" >–</td>
+      <td id="T_e26b8_row37_col7" class="data row37 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row38" class="row_heading level0 row38" >2020-09-25</th>
+      <td id="T_e26b8_row38_col0" class="data row38 col0" >112.44</td>
+      <td id="T_e26b8_row38_col1" class="data row38 col1" >107.67</td>
+      <td id="T_e26b8_row38_col2" class="data row38 col2" >108.43</td>
+      <td id="T_e26b8_row38_col3" class="data row38 col3" >112.28</td>
+      <td id="T_e26b8_row38_col4" class="data row38 col4" >149,981,400</td>
+      <td id="T_e26b8_row38_col5" class="data row38 col5" >110.94</td>
+      <td id="T_e26b8_row38_col6" class="data row38 col6" >–</td>
+      <td id="T_e26b8_row38_col7" class="data row38 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row39" class="row_heading level0 row39" >2020-09-28</th>
+      <td id="T_e26b8_row39_col0" class="data row39 col0" >115.32</td>
+      <td id="T_e26b8_row39_col1" class="data row39 col1" >112.78</td>
+      <td id="T_e26b8_row39_col2" class="data row39 col2" >115.01</td>
+      <td id="T_e26b8_row39_col3" class="data row39 col3" >114.96</td>
+      <td id="T_e26b8_row39_col4" class="data row39 col4" >137,672,400</td>
+      <td id="T_e26b8_row39_col5" class="data row39 col5" >113.59</td>
+      <td id="T_e26b8_row39_col6" class="data row39 col6" >–</td>
+      <td id="T_e26b8_row39_col7" class="data row39 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row40" class="row_heading level0 row40" >2020-09-29</th>
+      <td id="T_e26b8_row40_col0" class="data row40 col0" >115.31</td>
+      <td id="T_e26b8_row40_col1" class="data row40 col1" >113.57</td>
+      <td id="T_e26b8_row40_col2" class="data row40 col2" >114.55</td>
+      <td id="T_e26b8_row40_col3" class="data row40 col3" >114.09</td>
+      <td id="T_e26b8_row40_col4" class="data row40 col4" >99,382,200</td>
+      <td id="T_e26b8_row40_col5" class="data row40 col5" >112.73</td>
+      <td id="T_e26b8_row40_col6" class="data row40 col6" >–</td>
+      <td id="T_e26b8_row40_col7" class="data row40 col7" >–</td>
+    </tr>
+    <tr>
+      <th id="T_e26b8_level0_row41" class="row_heading level0 row41" >2020-09-30</th>
+      <td id="T_e26b8_row41_col0" class="data row41 col0" >117.26</td>
+      <td id="T_e26b8_row41_col1" class="data row41 col1" >113.62</td>
+      <td id="T_e26b8_row41_col2" class="data row41 col2" >113.79</td>
+      <td id="T_e26b8_row41_col3" class="data row41 col3" >115.81</td>
+      <td id="T_e26b8_row41_col4" class="data row41 col4" >142,675,200</td>
+      <td id="T_e26b8_row41_col5" class="data row41 col5" >114.43</td>
+      <td id="T_e26b8_row41_col6" class="data row41 col6" >–</td>
+      <td id="T_e26b8_row41_col7" class="data row41 col7" >–</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p><span class="tex2jax_ignore">All of the price data are adjusted for stock splits, meaning that they reflect the number of shares outstanding after the split. For example, we can see that Apple had a 4-for-1 split on August 31, 2020. So while the closing price the day before shows $124.81, in reality the closing price that day was $499.23.</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <em>adjusted close</em> <a class="reference external" href="https://help.yahoo.com/kb/SLN28256.html">also adjusts</a> for dividend payments, but does so in a way that a nonstandard way, so we will not use this series.</p>
+</div>
+<p>We can calculate two return series:</p>
+<ul class="simple">
+<li><p>The capital gains yield, which is simply the percent change in the price series. We’ll call this <code class="docutils literal notranslate"><span class="pre">retx</span></code> since this return excludes any dividend payments.</p></li>
+<li><p>The total return, which includes dividends. We’ll call this <code class="docutils literal notranslate"><span class="pre">ret</span></code>.</p></li>
+</ul>
+<p>The two returns will be the same whenever no dividend is paid.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prcs</span><span class="p">[</span><span class="s1">&#39;retx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prcs</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span>
+
+<span class="n">prcs</span><span class="p">[</span><span class="s1">&#39;ret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">prcs</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">prcs</span><span class="p">[</span><span class="s1">&#39;Dividends&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="n">prcs</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="n">prcs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2020-08-01&#39;</span><span class="p">:</span><span class="s1">&#39;2020-08-10&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Dividends&#39;</span><span class="p">,</span> <span class="s1">&#39;retx&#39;</span><span class="p">,</span> <span class="s1">&#39;ret&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Dividends</th>
+      <th>retx</th>
+      <th>ret</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2020-08-03</th>
+      <td>NaN</td>
+      <td>0.025198</td>
+      <td>0.025198</td>
+    </tr>
+    <tr>
+      <th>2020-08-04</th>
+      <td>NaN</td>
+      <td>0.006678</td>
+      <td>0.006678</td>
+    </tr>
+    <tr>
+      <th>2020-08-05</th>
+      <td>NaN</td>
+      <td>0.003625</td>
+      <td>0.003625</td>
+    </tr>
+    <tr>
+      <th>2020-08-06</th>
+      <td>NaN</td>
+      <td>0.034889</td>
+      <td>0.034889</td>
+    </tr>
+    <tr>
+      <th>2020-08-07</th>
+      <td>0.205</td>
+      <td>-0.024495</td>
+      <td>-0.022695</td>
+    </tr>
+    <tr>
+      <th>2020-08-10</th>
+      <td>NaN</td>
+      <td>0.014535</td>
+      <td>0.014535</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Note that</p>
+<div class="math notranslate nohighlight">
+\[\text{ret} - \text{retx} = \frac{D_t}{P_{t-1}},\]</div>
+<p>so we can recover the dividend from the difference in these two series by multiplying by the lagged price.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">divs</span> <span class="o">=</span> <span class="p">(</span><span class="n">prcs</span><span class="p">[</span><span class="s1">&#39;ret&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">prcs</span><span class="p">[</span><span class="s1">&#39;retx&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="n">prcs</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">()</span>
+
+<span class="n">divs</span><span class="p">[</span><span class="n">divs</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date
+2019-02-08    0.1825
+2019-05-10    0.1925
+2019-08-09    0.1925
+2019-11-07    0.1925
+2020-02-07    0.1925
+2020-05-08    0.2050
+2020-08-07    0.2050
+2020-11-06    0.2050
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<section id="compound-returns">
+<h2>Compound returns<a class="headerlink" href="#compound-returns" title="Permalink to this headline">#</a></h2>
+<p>Holding the asset for <span class="math notranslate nohighlight">\(k\)</span> periods would earn a gross return of</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+1+R_t[k] = \frac{P_t}{P_{t-k}} &amp;= \frac{P_t}{P_{t-1}} \times \frac{P_{t-1}}{P_{t-2}} \times \cdots \times \frac{P_{t-k+1}}{P_{t-k}} \\
+&amp;= (1+R_t)(1+R_{t-1})\cdots(1+R_{t-k+1}) \\
+&amp;= \prod_{j=0}^{k-1}(1+R_{t-j}).
+\end{align*}\]</div>
+<p>That is, the <span class="math notranslate nohighlight">\(k\)</span>-period return is simply the product of the <span class="math notranslate nohighlight">\(k\)</span> one-period returns; for this reason it is also called the <em>compound return</em>.</p>
+<p>Assets may generate a return that is compounded over varying intervals. For example, an asset generating a return per year of <span class="math notranslate nohighlight">\(R\)</span> but compouning <span class="math notranslate nohighlight">\(n\)</span> times per year will have a total return of</p>
+<div class="math notranslate nohighlight">
+\[\left(1+\frac{R}{n}\right)^n.\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+<span class="n">prds</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">52</span><span class="p">,</span> <span class="mi">365</span><span class="p">,</span> <span class="mi">24</span><span class="o">*</span><span class="mi">365</span><span class="p">]</span>
+<span class="n">vals</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="o">+</span><span class="n">R</span><span class="o">/</span><span class="n">n</span><span class="p">)</span><span class="o">**</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">prds</span><span class="p">]</span>
+<span class="n">tbl</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">prds</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Gross return&#39;</span><span class="p">])</span>
+<span class="n">tbl</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Frequency&#39;</span>
+
+<span class="n">tbl</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Gross return</th>
+    </tr>
+    <tr>
+      <th>Frequency</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>1.100000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1.102500</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.103813</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>1.104713</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>1.105065</td>
+    </tr>
+    <tr>
+      <th>365</th>
+      <td>1.105156</td>
+    </tr>
+    <tr>
+      <th>8760</th>
+      <td>1.105170</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>In the limit <span class="math notranslate nohighlight">\(n\to\infty\)</span> this leads to a <em>continuous compounding</em>,</p>
+<div class="math notranslate nohighlight">
+\[\lim _{n\to \infty }\left(1+{\frac {R}{n}}\right)^{n} = e^R.\]</div>
+<p>With continuous compounding, the asset value after one year is</p>
+<div class="math notranslate nohighlight">
+\[e^{0.1} \approx 1.10517.\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.1051709180756477
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="log-returns">
+<h2>Log returns<a class="headerlink" href="#log-returns" title="Permalink to this headline">#</a></h2>
+<p>The <em>log return</em>, or <em>continuously compounded return</em> is</p>
+<div class="math notranslate nohighlight">
+\[r_t = \ln(1+R_t) = \ln\left(\frac{P_t}{P_{t-1}}\right) = \Delta \ln(P_t),\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta x_t := x_t - x_{t-1}\)</span> is the <em>difference operator</em>.</p>
+<p>The multiperiod log return is simply the sum of the continuously compounded one-period returns.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+r_t[k] &amp;= \ln(1+R_t[k]) \\
+&amp; = \ln[(1+R_t)(1+R_{t-1}\cdots(1+R_{t-k+1})] \\
+&amp;= \ln(1+R_t) + \ln(1+R_{t-1}) + \cdots + \ln(1+R_{t-k+1}) \\
+&amp;= r_t + r_{t-1} + \cdots + r_{t-k+1}.
+\end{align*}\]</div>
+<p>Recall that the first-order <a class="reference internal" href="01a%20math.html#taylorseries"><span class="std std-ref">Taylor expansion</span></a> of</p>
+<div class="math notranslate nohighlight">
+\[\ln(1+R) \approx R,\]</div>
+<p>which implies that, for small returns, the log return will be close to the net return; this similarity breaks down as price changes become larger.</p>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Calculate the log return using the <code class="docutils literal notranslate"><span class="pre">ret</span></code> series. On what dates is the difference between the log return and the standard return greater than 0.005?</p>
+</div>
+</section>
+<section id="aggregating-returns">
+<h2>Aggregating returns<a class="headerlink" href="#aggregating-returns" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prcs</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;M&#39;</span><span class="p">)[</span><span class="s1">&#39;logret&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date
+2019-01-31    0.052546
+2019-02-28    0.043798
+2019-03-31    0.092603
+2019-04-30    0.054901
+2019-05-31   -0.132578
+2019-06-30    0.122677
+2019-07-31    0.073617
+2019-08-31   -0.016567
+2019-09-30    0.070423
+2019-10-31    0.104976
+2019-11-30    0.074660
+2019-12-31    0.094204
+2020-01-31    0.052602
+2020-02-29   -0.121798
+2020-03-31   -0.072314
+2020-04-30    0.144424
+2020-05-31    0.081604
+2020-06-30    0.137487
+2020-07-31    0.152834
+2020-08-31    0.196077
+2020-09-30   -0.108171
+2020-10-31   -0.061888
+2020-11-30    0.091207
+2020-12-31    0.108472
+Freq: M, Name: logret, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prcs</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;M&#39;</span><span class="p">)[</span><span class="s1">&#39;ret&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">product</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date
+2019-01-31    0.053951
+2019-02-28    0.044771
+2019-03-31    0.097026
+2019-04-30    0.056436
+2019-05-31   -0.124166
+2019-06-30    0.130519
+2019-07-31    0.076394
+2019-08-31   -0.016430
+2019-09-30    0.072962
+2019-10-31    0.110684
+2019-11-30    0.077517
+2019-12-31    0.098784
+2020-01-31    0.054010
+2020-02-29   -0.114673
+2020-03-31   -0.069761
+2020-04-30    0.155374
+2020-05-31    0.085026
+2020-06-30    0.147386
+2020-07-31    0.165132
+2020-08-31    0.216620
+2020-09-30   -0.102526
+2020-10-31   -0.060012
+2020-11-30    0.095495
+2020-12-31    0.114574
+Freq: M, Name: ret, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="constructing-a-price-index">
+<h2>Constructing a price index<a class="headerlink" href="#constructing-a-price-index" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">prcs</span><span class="p">[</span><span class="s1">&#39;ret&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">cumprod</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">prcs</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/01b returns_32_0.png" src="_images/01b returns_32_0.png" />
+</div>
+</div>
+</section>
+<section id="day-and-night-returns">
+<h2>Day and night returns<a class="headerlink" href="#day-and-night-returns" title="Permalink to this headline">#</a></h2>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>The <a class="reference external" href="https://finance.yahoo.com/quote/SPY?p=SPY">SPDR S&amp;P 500 Trust ETF</a>, introduced in 1993, is an <a class="reference external" href="https://www.investopedia.com/terms/e/etf.asp">exchange-traded fund</a> that tracks the performance of the S&amp;P 500 Index.</p>
+<ol class="simple">
+<li><p>Download the complete history of price data for this ETF.</p></li>
+<li><p>Calculate the return earned while the market is open (Open-to-Close) and the overnight return (Close-to-Open).</p></li>
+<li><p>Confirm that the total day-time and overnight return equals close-to-close return.</p></li>
+<li><p>Calculate the volatility of each return. Interpret your finding.</p></li>
+<li><p>Calculate and plot the cumulative return of the day and night returns. What do you learn from the graph?</p></li>
+<li><p>Calculate the day and night returns for each year. Create a bar chart showing the returns by year.</p></li>
+</ol>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="01a%20math.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Math background</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="01c%20prices.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">A model of prices</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    <div class="extra_footer">
+      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.01.
+    </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

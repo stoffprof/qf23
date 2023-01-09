@@ -1,0 +1,53 @@
+/*
+    New Admonitions
+    https://jupyterbook.org/advanced/html.html#an-example-custom-admonitions
+*/
+
+/*  
+    Precedence problems -- why require !important everywhere? 
+*/
+
+
+.admonition-key-fact {
+    border-left-color: rgba(var(--pst-color-info), 1) !important;
+}
+.admonition-key-fact .admonition-title {
+    background-color: rgba(var(--pst-color-info), .1) !important;
+}
+.admonition-key-fact .admonition-title:before {
+    color: rgba(var(--pst-color-info), 1) !important;
+    content: '\f084' !important;
+}
+
+.admonition-extra-credit {
+    border-left-color: rgba(var(--pst-color-success), 1) !important;
+}
+.admonition-extra-credit .admonition-title {
+    background-color: rgba(var(--pst-color-success), .1) !important;
+}
+.admonition-extra-credit .admonition-title:before {
+    color: rgba(var(--pst-color-success), 1) !important;
+    content: '\f19d' !important;
+}
+
+.admonition-exercise {
+    border-left-color: rgba(var(--pst-color-warning), 1) !important;
+}
+.admonition-exercise .admonition-title {
+    background-color: rgba(var(--pst-color-warning), .1) !important;
+}
+.admonition-exercise .admonition-title:before {
+    color: rgba(var(--pst-color-warning), 1) !important;
+    content: '\f303' !important;
+}
+
+.admonition-solution {
+    border-left-color: rgba(var(--pst-color-danger), 1) !important;
+}
+.admonition-solution .admonition-title {
+    background-color: rgba(var(--pst-color-danger), .1) !important;
+}
+.admonition-solution .admonition-title:before {
+    color: rgba(var(--pst-color-danger), 1) !important;
+    content: '\f530' !important;
+}

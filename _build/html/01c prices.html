@@ -1,0 +1,926 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>A model of prices &#8212; Quant Finance in Python</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/admonitions-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/custom-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"cov": "\\operatorname{Cov}", "var": "\\operatorname{Var}", "N": "\\mathcal{N}", "E": "\\mathbb{E}", "P": "\\mathbb{P}", "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="canonical" href="https://stoffprof.github.io/qf23/01c prices.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Notation" href="notation.html" />
+    <link rel="prev" title="Asset returns" href="01b%20returns.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/qf.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Quant Finance in Python</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a%20math.html">
+   Math background
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b%20returns.html">
+   Asset returns
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   A model of prices
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reference
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="notation.html">
+   Notation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sources.html">
+   Additional sources
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/01c prices.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>A model of prices</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="a-model-of-prices">
+<h1>A model of prices<a class="headerlink" href="#a-model-of-prices" title="Permalink to this headline">#</a></h1>
+<p>Consider the following simple model for how the price of an asset can change over time. At time 0, the prices is <span class="math notranslate nohighlight">\(P_0\)</span>. Over the next period of time, the price can either increase or decrease by a fixed amount <span class="math notranslate nohighlight">\(\Delta\)</span>. The probabilities of the increase or decrease are, respectively, <span class="math notranslate nohighlight">\(\pi\)</span> and <span class="math notranslate nohighlight">\(1-\pi\)</span>.</p>
+<figure class="align-center" id="binomial-fig-1">
+<a class="reference internal image-reference" href="_images/Binomial_1.png"><img alt="_images/Binomial_1.png" src="_images/Binomial_1.png" style="width: 275px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">One-period Binomial model.</span><a class="headerlink" href="#binomial-fig-1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>It’s easy to extend this model to allow for additional time intervals. After three intervals, we have:</p>
+<figure class="align-center" id="binomial-fig-2">
+<a class="reference internal image-reference" href="_images/Binomial_2.png"><img alt="_images/Binomial_2.png" src="_images/Binomial_2.png" style="width: 750px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Binomial model with 3 time periods.</span><a class="headerlink" href="#binomial-fig-2" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>After three intervals there are four possible outcomes:</p>
+<ul class="simple">
+<li><p>The price is <span class="math notranslate nohighlight">\(P_0 + 3\Delta\)</span>. There is one path leading to this outcome: in every interval the price follows the high path, so this happens with probability <span class="math notranslate nohighlight">\(\pi^3\)</span>.</p></li>
+<li><p>The price is <span class="math notranslate nohighlight">\(P_0 +\Delta\)</span>. There are three paths that lead to this outcome: a combination of two up moves and one down move. The probability of following each one of these paths is <span class="math notranslate nohighlight">\(\pi^2(1-\pi)\)</span>.</p></li>
+<li><p>The price is <span class="math notranslate nohighlight">\(P_0 -\Delta\)</span>. Again, there are three paths leading to this outcome: any combination of one up move and two down moves, each of which has probability of <span class="math notranslate nohighlight">\(\pi(1-\pi)^2\)</span>.</p></li>
+<li><p>The price is <span class="math notranslate nohighlight">\(P_0 -3\Delta\)</span>, which happens only if the price moves down in every period, implying a probability of <span class="math notranslate nohighlight">\((1-\pi)^3\)</span>.</p></li>
+</ul>
+<p>In general, after <span class="math notranslate nohighlight">\(n\)</span> periods, there will be <span class="math notranslate nohighlight">\(n+1\)</span> nodes. The number of paths to the <span class="math notranslate nohighlight">\(k\)</span>th terminal node (where we begin labelling the bottom node as “0”) is given by the <em>binomial coefficient</em>,</p>
+<div class="math notranslate nohighlight">
+\[\binom {n}{k} = \frac{n!}{k!(n-k)!}, \quad k\in\{0, 1, \ldots, n\}.\]</div>
+<p>The number of paths to the terminal nodes for varying values of <span class="math notranslate nohighlight">\(n\)</span> is shown below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">binom</span>
+
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:</span><span class="se">\t</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">binom</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1:	[1, 1]
+3:	[1, 3, 3, 1]
+5:	[1, 5, 10, 10, 5, 1]
+10:	[1, 10, 45, 120, 210, 252, 210, 120, 45, 10, 1]
+25:	[1, 25, 300, 2300, 12650, 53130, 177100, 480700, 1081575, 2042975, 3268760, 4457400, 5200300, 5200300, 4457400, 3268760, 2042975, 1081575, 480700, 177100, 53130, 12650, 2300, 300, 25, 1]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The probability of arriving at node <span class="math notranslate nohighlight">\(k\)</span> is therefore</p>
+<div class="math notranslate nohighlight" id="equation-binom-prob">
+<span class="eqno">(7)<a class="headerlink" href="#equation-binom-prob" title="Permalink to this equation">#</a></span>\[
+\P(k) = {\binom {n}{k}}\pi^{k}(1-\pi)^{n-k}, \quad k=0,1,2,\ldots,n.
+\]</div>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>Note that by defining <code class="docutils literal notranslate"><span class="pre">k</span></code> as a numpy array we are able to calculate the vector of all probabilities in a single line of code with no loop.</p>
+</aside>
+<p>For example, setting <span class="math notranslate nohighlight">\(\pi=0.5\)</span>, the probabilities associated with the four nodes in <a class="reference internal" href="#binomial-fig-2"><span class="std std-numref">Fig. 3</span></a> are:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">π</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">binom</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">π</span><span class="o">**</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">π</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="n">k</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.125, 0.375, 0.375, 0.125])
+</pre></div>
+</div>
+</div>
+</div>
+<p>This function in equation <a class="reference internal" href="#equation-binom-prob">(7)</a> is called the <em>probability mass function</em> (PMF) for a <em>binomial distribution</em>. It gives the probability for each possible outcome of the <em>random variable</em> <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<p>Rather than calculate the probability manually, we can call the <code class="docutils literal notranslate"><span class="pre">pmf</span></code> method from the SciPy <code class="docutils literal notranslate"><span class="pre">stats</span></code> <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/stats.html">library</a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scs</span><span class="o">.</span><span class="n">binom</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">π</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.125, 0.375, 0.375, 0.125])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Note that we are using two different functions called <code class="docutils literal notranslate"><span class="pre">binom</span></code> here. The first is <code class="docutils literal notranslate"><span class="pre">scipy.special.binom</span></code> which we imported and refer to as <code class="docutils literal notranslate"><span class="pre">binom</span></code>; this gives the binomial coefficent. The second is <code class="docutils literal notranslate"><span class="pre">scipy.stats.binom</span></code>, which is a class for calculating properties of the binomial distribution. While the two are related, they are conceptually distinct.</p>
+</div>
+<p>The price at terminal node <span class="math notranslate nohighlight">\(k\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[P_n = P_0 + (2k-n)\Delta.\]</div>
+<p>For technical reasons, it is necessary to make <span class="math notranslate nohighlight">\(\Delta\)</span> depend on <span class="math notranslate nohighlight">\(\pi\)</span>. Specifically, we set</p>
+<div class="math notranslate nohighlight">
+\[\Delta = \sqrt{\pi(1-\pi)}.\]</div>
+<div class="admonition-extra-credit dropdown admonition">
+<p class="admonition-title">Extra credit</p>
+<p>In a standard binomial model, the price at each step can go up by <span class="math notranslate nohighlight">\(u\)</span> or down by <span class="math notranslate nohighlight">\(d\)</span>, so after one period the price is either <span class="math notranslate nohighlight">\(S_0 u\)</span> or <span class="math notranslate nohighlight">\(S_0 d.\)</span> In the model above, we’re assuming that we have log-prices, so we add the price changes rather than multiplying.</p>
+<p><span id="id1">Cox, Ross, and Rubinstein [<a class="reference internal" href="bibliography.html#id4" title="John C Cox, Stephen A Ross, and Mark Rubinstein. Option pricing: a simplified approach. Journal of Financial Economics, 7(3):229–263, 1979. URL: https://doi.org/10.1016/0304-405X(79)90015-1.">1979</a>]</span> show that, for a tree to lead to a stock price with variance <span class="math notranslate nohighlight">\(\sigma^2\)</span>, it must be that</p>
+<div class="math notranslate nohighlight">
+\[u = e^{\sigma\sqrt{T/n}}.\]</div>
+<p>In our model, <span class="math notranslate nohighlight">\(\Delta = \ln(u)\)</span>, so</p>
+<div class="math notranslate nohighlight">
+\[\Delta = \sigma\sqrt{T/n}.\]</div>
+<p>Now, it can be shown that, in the limit, a binomial distribution converges to a Normal distribution with a mean of <span class="math notranslate nohighlight">\(n\pi\)</span> and variance of <span class="math notranslate nohighlight">\(n\pi(1-\pi)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\frac{k-n\pi}{\sqrt{n\pi(1-\pi)}} \sim N(0,1).\]</div>
+<p>Therefore,</p>
+<div class="math notranslate nohighlight">
+\[\sigma = \sqrt{n\pi(1-\pi)}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\Delta = \sqrt{\pi(1-\pi)T}.\]</div>
+<p>For simplification, we are assuming that <span class="math notranslate nohighlight">\(T=1\)</span>.</p>
+</div>
+<p>Using the 3-period model from above, the table below shows for each node:</p>
+<ul class="simple">
+<li><p>the number of “up” moves;</p></li>
+<li><p>the number of “down” moves;</p></li>
+<li><p>the net number of steps, <span class="math notranslate nohighlight">\(\Delta\)</span>;</p></li>
+<li><p>the number of possible paths leading to the node;</p></li>
+<li><p>the price at that node; and</p></li>
+<li><p>the probability of arriving at that node.</p></li>
+</ul>
+<p>We assume that <span class="math notranslate nohighlight">\(P_0=50\)</span>. With <span class="math notranslate nohighlight">\(\pi=0.5\)</span>, we have <span class="math notranslate nohighlight">\(\Delta=0.5\)</span>.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">P0</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="k">def</span> <span class="nf">make_paths</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">π</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="n">Δ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">π</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">π</span><span class="p">))</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">paths</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;n_up&#39;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span>
+                          <span class="s1">&#39;n_down&#39;</span><span class="p">:</span> <span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">,</span>
+                          <span class="s1">&#39;Δs&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="o">*</span><span class="n">k</span> <span class="o">-</span> <span class="n">n</span><span class="p">,</span>
+                          <span class="s1">&#39;paths&#39;</span><span class="p">:</span> <span class="n">binom</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))})</span>
+    <span class="n">paths</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">P0</span> <span class="o">+</span> <span class="n">Δ</span> <span class="o">*</span> <span class="n">paths</span><span class="p">[</span><span class="s1">&#39;Δs&#39;</span><span class="p">]</span> 
+    <span class="n">paths</span><span class="p">[</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scs</span><span class="o">.</span><span class="n">binom</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">n</span><span class="p">,</span> <span class="n">π</span><span class="p">)</span>
+    
+    <span class="n">paths</span><span class="p">[</span><span class="s1">&#39;paths&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">paths</span><span class="p">[</span><span class="s1">&#39;paths&#39;</span><span class="p">],</span> <span class="n">downcast</span><span class="o">=</span><span class="s1">&#39;integer&#39;</span><span class="p">)</span>
+    <span class="n">paths</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;node&#39;</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
+
+<span class="n">make_paths</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>n_up</th>
+      <th>n_down</th>
+      <th>Δs</th>
+      <th>paths</th>
+      <th>price</th>
+      <th>prob</th>
+    </tr>
+    <tr>
+      <th>node</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>3</td>
+      <td>-3</td>
+      <td>1</td>
+      <td>48.5</td>
+      <td>0.125</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>2</td>
+      <td>-1</td>
+      <td>3</td>
+      <td>49.5</td>
+      <td>0.375</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>50.5</td>
+      <td>0.375</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>51.5</td>
+      <td>0.125</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Extending the model to 15 steps, we have:</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">paths</span> <span class="o">=</span> <span class="n">make_paths</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">paths</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>n_up</th>
+      <th>n_down</th>
+      <th>Δs</th>
+      <th>paths</th>
+      <th>price</th>
+      <th>prob</th>
+    </tr>
+    <tr>
+      <th>node</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>15</td>
+      <td>-15</td>
+      <td>1</td>
+      <td>42.5</td>
+      <td>0.000031</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>14</td>
+      <td>-13</td>
+      <td>15</td>
+      <td>43.5</td>
+      <td>0.000458</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>13</td>
+      <td>-11</td>
+      <td>105</td>
+      <td>44.5</td>
+      <td>0.003204</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>12</td>
+      <td>-9</td>
+      <td>455</td>
+      <td>45.5</td>
+      <td>0.013885</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>11</td>
+      <td>-7</td>
+      <td>1365</td>
+      <td>46.5</td>
+      <td>0.041656</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>5</td>
+      <td>10</td>
+      <td>-5</td>
+      <td>3003</td>
+      <td>47.5</td>
+      <td>0.091644</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>6</td>
+      <td>9</td>
+      <td>-3</td>
+      <td>5005</td>
+      <td>48.5</td>
+      <td>0.152740</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>7</td>
+      <td>8</td>
+      <td>-1</td>
+      <td>6435</td>
+      <td>49.5</td>
+      <td>0.196381</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>8</td>
+      <td>7</td>
+      <td>1</td>
+      <td>6435</td>
+      <td>50.5</td>
+      <td>0.196381</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>9</td>
+      <td>6</td>
+      <td>3</td>
+      <td>5005</td>
+      <td>51.5</td>
+      <td>0.152740</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>10</td>
+      <td>5</td>
+      <td>5</td>
+      <td>3003</td>
+      <td>52.5</td>
+      <td>0.091644</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>11</td>
+      <td>4</td>
+      <td>7</td>
+      <td>1365</td>
+      <td>53.5</td>
+      <td>0.041656</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>12</td>
+      <td>3</td>
+      <td>9</td>
+      <td>455</td>
+      <td>54.5</td>
+      <td>0.013885</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>13</td>
+      <td>2</td>
+      <td>11</td>
+      <td>105</td>
+      <td>55.5</td>
+      <td>0.003204</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>14</td>
+      <td>1</td>
+      <td>13</td>
+      <td>15</td>
+      <td>56.5</td>
+      <td>0.000458</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>15</td>
+      <td>0</td>
+      <td>15</td>
+      <td>1</td>
+      <td>57.5</td>
+      <td>0.000031</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>The <em>expected value</em> of <span class="math notranslate nohighlight">\(P_n\)</span> is the probability-weighted sum of all possible prices at time <span class="math notranslate nohighlight">\(n\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\E(P_n) = \sum_{k=0}^n \pi_k P^{(k)},\]</div>
+<p>where <span class="math notranslate nohighlight">\(P^{(k)}\)</span> gives the price at terminal node <span class="math notranslate nohighlight">\(k\)</span>. The expected value is often denoted by the Greek letter <span class="math notranslate nohighlight">\(\mu\)</span> (“mu”).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">μ</span> <span class="o">=</span> <span class="p">(</span><span class="n">paths</span><span class="p">[</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">paths</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="n">μ</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>50.000000000000014
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice that the expected value is not a possible outcome: there is no path that ends with a price of 50. So while the mean might be one of the possible outcomes, there’s not guarantee that it will be.</p>
+<p>Closely related to the expected value is the <em>variance</em> of <span class="math notranslate nohighlight">\(P_n\)</span>. This is the probability-weighted sum of the squares of the difference between the price at each node and the expected value of <span class="math notranslate nohighlight">\(P_n\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\var(P_n) = \sum_{k=0}^n \pi_k \left(P^{(k)}-\E(P_n)\right)^2.\]</div>
+<p>Variance is often denoted by <span class="math notranslate nohighlight">\(\sigma^2\)</span> (“sigma-squared”).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">paths</span><span class="p">[</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">paths</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">μ</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.749999999999999
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <em>standard deviation</em> is the square root of the variance, and therefore denoted by <span class="math notranslate nohighlight">\(\sigma\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ms</span><span class="p">(</span><span class="n">paths</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculate the mean and standard deviation of the terminal price&#39;&#39;&#39;</span>
+    <span class="n">μ</span> <span class="o">=</span> <span class="p">(</span><span class="n">paths</span><span class="p">[</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">paths</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">μ</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">paths</span><span class="p">[</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">paths</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">μ</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(50.000000000000014, 1.9364916731037083)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Consider how the distribution of possible outcomes changes as we increase the number of time steps.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">paths_dist</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="n">make_paths</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">paths</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">],</span> <span class="n">paths</span><span class="p">[</span><span class="s1">&#39;prob&#39;</span><span class="p">],</span> <span class="n">align</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> time steps: $\mu$=</span><span class="si">{:.0f}</span><span class="s1">, $\sigma$=</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">ms</span><span class="p">(</span><span class="n">paths</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">ax</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+
+<span class="n">paths_dist</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="n">ax1</span><span class="p">)</span>
+<span class="n">paths_dist</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">ax2</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">())</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ax1</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">())</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/01c prices_32_0.png" src="_images/01c prices_32_0.png" />
+</div>
+</div>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>What happens to this distribution when we change the probability, <span class="math notranslate nohighlight">\(\pi\)</span>?</p>
+</div>
+<p>There are <span class="math notranslate nohighlight">\(2^n\)</span> paths that a price can take over <span class="math notranslate nohighlight">\(n\)</span> time steps. For example, with <span class="math notranslate nohighlight">\(n=25\)</span> there are over 33.5 million paths.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">npaths</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">binom</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:,.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">npaths</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>33,554,432
+</pre></div>
+</div>
+</div>
+</div>
+<p>While the code below isn’t a formal proof, it should convince you that</p>
+<div class="math notranslate nohighlight">
+\[\sum_{k=0}^n \binom{n}{k} = 2^n.\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">]:</span>
+    <span class="k">assert</span> <span class="mi">2</span><span class="o">**</span><span class="n">n</span> <span class="o">==</span> <span class="nb">sum</span><span class="p">(</span><span class="n">binom</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Suppose we model each week of a year as being a single time step. How many possible paths are there to the terminal nodes?</p>
+</div>
+<div class="admonition-solution dropdown admonition">
+<p class="admonition-title">Solution</p>
+<p>With <span class="math notranslate nohighlight">\(n=52\)</span> there are over 4.5 quadrillion paths:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">52</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:,.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre><span></span>4,503,599,627,370,496
+</pre></div>
+</div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="01b%20returns.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Asset returns</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="notation.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Notation</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    <div class="extra_footer">
+      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.01.
+    </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
