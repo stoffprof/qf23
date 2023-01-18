@@ -1,0 +1,1096 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Parameter estimation &#8212; Quant Finance in Python</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/admonitions-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/custom-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"cov": "\\operatorname{Cov}", "var": "\\operatorname{Var}", "N": "\\mathcal{N}", "E": "\\mathbb{E}", "P": "\\mathbb{P}", "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="canonical" href="https://stoffprof.github.io/qf23/02f Estimation.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Notation" href="notation.html" />
+    <link rel="prev" title="Covariance" href="02e%20Covariance.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/qf.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Quant Finance in Python</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a%20math.html">
+   Math background
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b%20returns.html">
+   Asset returns
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01c%20prices.html">
+   A model of prices
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Econometrics
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="probability.html">
+   Probability
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="02a%20MSE.html">
+     Prediction: First look
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02b%20Probability%20theory.html">
+     Probability theory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02d%20Pseudorandom%20number%20generation.html">
+     Pseudorandom number generation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02c%20Distributions.html">
+     Probability distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02e%20Covariance.html">
+     Covariance
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Parameter estimation
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reference
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="notation.html">
+   Notation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sources.html">
+   Additional sources
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/02f Estimation.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sample-mean">
+   Sample mean
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-central-limit-theorem">
+   The Central Limit Theorem
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-cauchy-distribution">
+   The Cauchy distribution
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#estimating-higher-moments">
+   Estimating higher moments
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sample-covariance-and-correlation">
+   Sample covariance and correlation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#hypothesis-testing">
+   Hypothesis testing
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Parameter estimation</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sample-mean">
+   Sample mean
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-central-limit-theorem">
+   The Central Limit Theorem
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-cauchy-distribution">
+   The Cauchy distribution
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#estimating-higher-moments">
+   Estimating higher moments
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sample-covariance-and-correlation">
+   Sample covariance and correlation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#hypothesis-testing">
+   Hypothesis testing
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="parameter-estimation">
+<h1>Parameter estimation<a class="headerlink" href="#parameter-estimation" title="Permalink to this headline">#</a></h1>
+<p>It is important to distinguish between the <em>population</em> parameters of a distribution and their <em>sample estimates</em>. To understand the difference, let’s begin by imagining a giant ball pit with 10,000 balls. Each ball is either red or green, but we don’t know how many of each color there are.</p>
+<a class="adobe reference internal image-reference" href="_images/ball_pit.png"><img alt="Baby in ball pit. Adobe Stock photo 268103982" class="adobe align-right" src="_images/ball_pit.png" style="width: 450px;" /></a>
+<p>You have three minutes to make the best possible estimate of how many red balls there are. This clearly isn’t enough time to look at every ball in the pit, so we will have to come up with another way to estimate the proportion of red balls.</p>
+<p>A good solution is to take a random sample of the balls in the pit and use that sample to infer something about the rest of the balls that we didn’t examine.</p>
+<p>In this example, the number of red balls, <span class="math notranslate nohighlight">\(Y\)</span>, is described by a Binomial distribution, <span class="math notranslate nohighlight">\(Y\sim B(N,p)\)</span>. Each ball is either red (a “success”) or not (a “failure”). We have <span class="math notranslate nohighlight">\(N=10000\)</span> “trials.” We know that each ball has a probability of success <span class="math notranslate nohighlight">\(p\)</span>, but we don’t know what that probability is. (If our ball pit looked like the one in the picture, with more than two colors, we would use the <a class="reference external" href="https://en.wikipedia.org/wiki/Multinomial_distribution">Multinomial distribution</a> instead.)</p>
+<p>For example, suppose that in the three minutes we are able to look at 180 balls, and we find that 66 of them are red. Our <em>sample estimate</em> of the proportion of red balls is <span class="math notranslate nohighlight">\({66\over 180} = 0.3667\)</span>. This is an estimate of the unknown <em>population</em> paramter <span class="math notranslate nohighlight">\(p\)</span>, which we’ll denote by <span class="math notranslate nohighlight">\(\hat p\)</span>. We can think of this estimate as a prediction about the truth for this larger population that we don’t know. (In machine learning, the population value is also called the <em>ground truth</em>.)</p>
+<p>We saw previously that the expected value of a Binomial distributed random variable is <span class="math notranslate nohighlight">\(\E(Y) = Np\)</span>, so using our estimate <span class="math notranslate nohighlight">\(\hat p\)</span> we would estimate that there are</p>
+<div class="math notranslate nohighlight">
+\[N\times \hat p = 10000 \times 0.3667 = 3667\]</div>
+<p>red balls in the ball pit.</p>
+<p>The entire field of statistics seeks to understand properties of an estimate like this. One result, which is probably pretty intuitive, is that the bigger our sample, the more accurate our estimate will be. If instead of looking at 180 balls we were able to look at 500 balls, we could be more confident that our estimate of <span class="math notranslate nohighlight">\(p\)</span> that is closer to the truth; with a sample of 9,000 balls we’d know with very high certainty that we are close to the truth. Actually, we can use statistical reasoning to know how close we can expect our estimate to be to the truth, as we’ll see below.</p>
+<section id="sample-mean">
+<h2>Sample mean<a class="headerlink" href="#sample-mean" title="Permalink to this headline">#</a></h2>
+<p>In general, we estimate distribution parameters using sample analogues of population values. That is, we replace population values with their corresponding estimates from the sample. Recall that the expected value of a random variable is</p>
+<div class="math notranslate nohighlight">
+\[\E(X) = \sum_{\omega\in\Omega} \P(\omega)\, X(\omega).\]</div>
+<p>We have data for a sample of <span class="math notranslate nohighlight">\(n\)</span> observations from the population, <span class="math notranslate nohighlight">\(x_1, \ldots, x_n\)</span>. If we assume that each observation in our sample is equally likely to be in the sample — that is, we are <em>sampling randomly</em>—then the probability of any outcome <span class="math notranslate nohighlight">\(x_i\)</span> is simply <span class="math notranslate nohighlight">\(1/n\)</span>. Therefore, the sample estimate of <span class="math notranslate nohighlight">\(\E(X)\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[\hat \mu_x:= \bar x = \sum_{i=1}^n \frac{1}{n} x_i =  \frac{1}{n} \sum_{i=1}^n x_i.\]</div>
+<p>That is, we simply replace the population parameter <span class="math notranslate nohighlight">\(\P(x_i)\)</span> with its sample analgoue—the probability of observing the value in the sample, or <span class="math notranslate nohighlight">\(1/n\)</span>.</p>
+<p>We can use simulations to see how these estimates work. Here, we’ll simulate a ball pit that has exactly 4,000 red balls so the population parameter <span class="math notranslate nohighlight">\(p=0.4\)</span>. The “pit” is simply an array of length 10,000, with 4,000 ones and 6,000 zeros.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a ball pit with 4000 red balls and 6000 green balls</span>
+<span class="c1"># red=1, green=0</span>
+<span class="n">balls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">4000</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">6000</span><span class="p">)</span>
+
+<span class="c1"># Randomize the balls</span>
+<span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">balls</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Count red balls and total balls</span>
+<span class="n">balls</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">balls</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(4000, 10000)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Look at first 20 balls</span>
+<span class="n">balls</span><span class="p">[:</span><span class="mi">20</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Take a sample of 180 balls</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">balls</span><span class="p">,</span> <span class="mi">180</span><span class="p">)</span>
+
+<span class="n">sample</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+       0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1,
+       1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0,
+       0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1,
+       0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1,
+       0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1,
+       0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0,
+       0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0,
+       0, 1, 0, 1])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># estimate p with the sample mean</span>
+<span class="n">p_hat</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Our estimate of p is </span><span class="si">{:0.3f}</span><span class="s1">, implying an estimate </span><span class="si">{:.0f}</span><span class="s1"> red balls.&#39;</span>
+      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p_hat</span><span class="p">,</span> <span class="n">p_hat</span><span class="o">*</span><span class="mi">10000</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Our estimate of p is 0.433, implying an estimate 4333 red balls.
+</pre></div>
+</div>
+</div>
+</div>
+<p>As we sample more of the data, our estimate becomes more accurate. We might get lucky looking at only 25 observations, but we’ll get far more reliable estimates looking at 5,000 observations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;n</span><span class="se">\t</span><span class="s1">p_hat</span><span class="se">\t</span><span class="s1">Red balls&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">25</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">]:</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">balls</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">p_hat</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="se">\t</span><span class="si">{:0.3f}</span><span class="se">\t</span><span class="si">{:.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p_hat</span><span class="p">,</span> <span class="n">p_hat</span><span class="o">*</span><span class="mi">10000</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>n	p_hat	Red balls
+-------------------------
+25	0.360	3600
+100	0.340	3400
+250	0.380	3800
+1000	0.391	3910
+5000	0.399	3992
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-central-limit-theorem">
+<h2>The Central Limit Theorem<a class="headerlink" href="#the-central-limit-theorem" title="Permalink to this headline">#</a></h2>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>With 10,000 balls, there is a mind-boggling number of possible samples of 180 balls we could take: approximately <span class="math notranslate nohighlight">\(10^{390}\)</span>. For comparison, the universe is <a class="reference external" href="https://en.wikipedia.org/wiki/Eddington_number">estimated</a> to have about <span class="math notranslate nohighlight">\(10^{80}\)</span> atoms.</p>
+</aside>
+<p>Any sample we take from the population is just one of the possible samples that we could have taken. It is clear having more observations in a sample makes the estimate more precise, but by how much? In other words, how much variation can we expect there to be between samples? If we repeatedly take samples of 180 balls, will the <span class="math notranslate nohighlight">\(\hat p\)</span> estimates in each sample be similar?</p>
+<p>Let’s again use a simulation to see much the estimates vary across samples. The plot below shows three histograms from the following experiment. First, we set a sample size to be <span class="math notranslate nohighlight">\(n \in \{25, 125, 750\}\)</span>. For each <span class="math notranslate nohighlight">\(n\)</span>, we then take 1,000 independent samples from the population of 10,000 balls and calculate <span class="math notranslate nohighlight">\(\hat p_i\)</span>, <span class="math notranslate nohighlight">\(i=1,\ldots, 1000\)</span>.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p_hats</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Distribution of $\hat</span><span class="si">{p}</span><span class="s1">$ with samples of size $n$&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">750</span><span class="p">],</span> <span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">()):</span>
+    <span class="n">p_hats</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">balls</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">p_hats</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="mi">15</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$n=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">600</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span><span class="o">&gt;</span><span class="mi">25</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;$n=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02f Estimation_19_0.png" src="_images/02f Estimation_19_0.png" />
+</div>
+</div>
+<p>There are three things to notice about the figure:</p>
+<ol class="simple">
+<li><p>All of the distributions are centered close to the true value of <span class="math notranslate nohighlight">\(p=0.4\)</span>. On average, the sample mean is correct.</p></li>
+<li><p>The general shape of each distribution is similar to the familiar <em>bell curve</em> of the normal distribution.</p></li>
+<li><p>There is more variation in the estimate <span class="math notranslate nohighlight">\(\hat p\)</span> across samples when we have a smaller sample size. When <span class="math notranslate nohighlight">\(n=25\)</span>, the average estimate is still around 0.4, but in some samples the estimate is less than 0.2 and in other samples it’s above 0.7. As we increase the sample size, the distribution becomes more tightly distributed around the mean. When <span class="math notranslate nohighlight">\(n=750\)</span>, almost all of the sample estimates are very close to 0.4.</p></li>
+</ol>
+<p>The code below calculates the cutoff values for a range that contains 95% of the sample estimates for each of the three sample sizes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">p_hats</span><span class="p">:</span>
+    <span class="n">qs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">p_hats</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;n=</span><span class="si">{}</span><span class="s1">:</span><span class="se">\t</span><span class="s1">(</span><span class="si">{:0.3f}</span><span class="s1">, </span><span class="si">{:0.3f}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">qs</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>n=25:	(0.200, 0.600)
+n=125:	(0.312, 0.488)
+n=750:	(0.365, 0.436)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The first fact—that the average of the sample mean from different samples is the true mean—is a general fact about the sample mean. In particular, using properties of the expectations operator, we can see that</p>
+<div class="math notranslate nohighlight">
+\[\E(\bar x_n) = \E\left[\frac{1}{n} \sum_{i=1}^n x_i\right] = \frac{1}{n}\sum_{i=1}^n \E(X) = \frac{1}{n}\cdot n \cdot\E(X) = \E(X).\]</div>
+<p>That is, the expected value of the sample mean is the true parameter <span class="math notranslate nohighlight">\(\mu_x\)</span>. The technical term for this is that the sample mean is an <em>unbiased</em> estimate of <span class="math notranslate nohighlight">\(\mu\)</span>.</p>
+<div class="admonition-key-fact admonition">
+<p class="admonition-title">Key fact</p>
+<p>Closely related to the fact that <span class="math notranslate nohighlight">\(\E(\bar x_n) = \E(X)\)</span> is an important result known as the <strong>Law of Large Numbers</strong> (LLN), which says that</p>
+<div class="math notranslate nohighlight">
+\[\lim_{n\to\infty} \bar x = \mu,\]</div>
+<p>or that <span class="math notranslate nohighlight">\(\bar x\)</span> <em>converges to</em> <span class="math notranslate nohighlight">\(\mu\)</span>. This is a statistical “law” that says that—provided certain technical criteria about the random variable <span class="math notranslate nohighlight">\(X\)</span> are met—we can get arbitrarily close to knowing <span class="math notranslate nohighlight">\(\mu\)</span> by sampling enough data. An example where the LLN fails is the <a class="reference internal" href="#cauchy"><span class="std std-ref">Cauchy distribution</span></a>, which we’ll see below.</p>
+</div>
+<p>The figure below illustrates the LLN for a Bernoulli random variable. Each dot is an observation from the distribution. The solid line shows the value of <span class="math notranslate nohighlight">\(\bar x_n\)</span> after <span class="math notranslate nohighlight">\(n\)</span> draws. As we have more observations, this average converges to the population value <span class="math notranslate nohighlight">\(\mu\)</span>.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">250</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">flips</span> <span class="o">=</span> <span class="n">scs</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># cumulative frequency of Heads</span>
+<span class="n">sample_mean</span> <span class="o">=</span> <span class="n">flips</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">flips</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">flips</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sample_mean</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">bar x_n$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">*</span><span class="n">n</span><span class="p">,</span> <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$\mu$&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02f Estimation_27_0.png" src="_images/02f Estimation_27_0.png" />
+</div>
+</div>
+<p>We can also calculate the variance of the sample mean, which is</p>
+<div class="math notranslate nohighlight">
+\[\var(\bar x_n) = \var\left[\frac{1}{n} \sum_{i=1}^n x_i\right] = \frac{1}{n^2} \var\left[\sum_{i=1}^n x_i\right] = \frac{\var(X)}{n} = \frac{\sigma^2}{n}.\]</div>
+<p>As we get more data (that is, <span class="math notranslate nohighlight">\(n \to \infty\)</span>), the variance of the sample mean approaches zero. This is consistent with what we saw above—that we become more certain of exactly what the population mean really is when we have a larger sample.</p>
+<div class="admonition-key-fact admonition">
+<p class="admonition-title">Key fact</p>
+<p>All three facts above are summarized by a fundamentally important result in statistics, the <strong>Central Limit Theorem</strong>, which says that</p>
+<div class="math notranslate nohighlight">
+\[\bar x_n \stackrel{d}{\to} \N\left(\mu, \frac{\sigma^2}{n}\right),\]</div>
+<p>where <span class="math notranslate nohighlight">\(\stackrel{d}{\to}\)</span> means “converges in distribution”. The theoretical standard deviation of the mean, <span class="math notranslate nohighlight">\(\frac{\sigma}{\sqrt{n}},\)</span> is called the <em>standard error of the mean</em>.</p>
+<p>This is a general statement about <em>any</em> probability distribution (as long as the second moment is finite). In other words, with few exceptions, <em>whatever</em> the underlying distribution of <span class="math notranslate nohighlight">\(X\)</span> is, its sample mean converges to a normal distribution. This allows us to make very specific statments about how confident we are about observing any particular result.</p>
+</div>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Let <span class="math notranslate nohighlight">\(Z=\sqrt{n}\left(\frac{\bar x_n - \mu}{\sigma}\right).\)</span> Show that <span class="math notranslate nohighlight">\(\E(Z) = 0\)</span> and <span class="math notranslate nohighlight">\(\var(Z)=1\)</span>.</p>
+</div>
+<div class="admonition-solution dropdown admonition">
+<p class="admonition-title">Solution</p>
+<p>Recall that <span class="math notranslate nohighlight">\(\var(a + bX) = b^2\var(X)\)</span> for constants <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span>. Here, <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(\mu\)</span> are constants, not random variables. Therefore,</p>
+<div class="math notranslate nohighlight">
+\[\E(Z) = \frac{\sqrt{n}}{\sigma} (\E(\bar x_n) - \mu) = \frac{\sqrt{n}}{\sigma} (\mu - \mu) = 0,\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\var(Z) = \frac{n}{\sigma^2} \var(\bar x_n) = \frac{n}{\sigma^2} \frac{\sigma^2}{n} = 1.\]</div>
+</div>
+<p>The central limit theorem tells us what the distribution of the sample mean is. The figure below displays again the histogram for the means from 1,000 samples of size <span class="math notranslate nohighlight">\(n=25\)</span>, along with a normal distribution with <span class="math notranslate nohighlight">\(\mu=p=0.4\)</span> and <span class="math notranslate nohighlight">\(\sigma^2 = p(1-p)/n\)</span>.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">25</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">p_hats</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">)</span>
+
+<span class="n">μ</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">sem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="mf">0.6</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
+<span class="n">pdf</span> <span class="o">=</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">μ</span><span class="p">,</span> <span class="n">sem</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pdf</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02f Estimation_32_0.png" src="_images/02f Estimation_32_0.png" />
+</div>
+</div>
+<p>The Normal PDF fits the actual distribution of the mean quite well. In most real-world situations we won’t know the true value of <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma^2\)</span>, but we already know how to estimate them. Given these two parameter estimates, we can then use the CLT to tell us how confident we can be about these estimates.</p>
+<p>For example, if we draw one sample of 180 balls we might get the following:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">180</span>
+
+<span class="n">sample</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">balls</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="n">μ</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">σ</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="c1"># standard error of the mean</span>
+<span class="n">sem</span> <span class="o">=</span> <span class="n">σ</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">μ</span><span class="p">,</span> <span class="n">sem</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.37222222222222223, 0.03603029893993332)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The sample mean is <span class="pasted-inline"><code class="output text_plain docutils literal notranslate"><span class="pre">0.372</span></code></span> and the standard error of the mean is <span class="pasted-inline"><code class="output text_plain docutils literal notranslate"><span class="pre">0.036</span></code></span>. Our best guess for the proportion of red balls is therefore <span class="pasted-inline"><code class="output text_plain docutils literal notranslate"><span class="pre">0.372</span></code></span>, but the CLT also tells us that this estimate has a standard error of <span class="pasted-inline"><code class="output text_plain docutils literal notranslate"><span class="pre">0.036</span></code></span>. Since 95% of the probability in a Normal distribution is within ±1.96 standard deviations of the mean, this means that we can should expect that 95% of the time the true population value of the <span class="math notranslate nohighlight">\(p\)</span> will be between <span class="pasted-inline"><code class="output text_plain docutils literal notranslate"><span class="pre">0.302</span></code></span> and <span class="pasted-inline"><code class="output text_plain docutils literal notranslate"><span class="pre">0.443</span></code></span>.</p>
+</section>
+<section id="the-cauchy-distribution">
+<span id="cauchy"></span><h2>The Cauchy distribution<a class="headerlink" href="#the-cauchy-distribution" title="Permalink to this headline">#</a></h2>
+<p>The LLN does not always hold. Some distributions generate such extreme outliers that the mean, variance, and other moments do not even exist! Yes, we can always calculate a <em>sample</em> mean or variance, but this isn’t a useful estimate of anything.</p>
+<p>An example of such a case is the Cauchy distribution. Its PDF is</p>
+<div class="math notranslate nohighlight">
+\[f(x;x_0, \gamma) = \frac{1}{\pi\gamma\left[1 + \left(\frac{x-x_0}{\gamma}\right)^2\right]}\]</div>
+<p>where <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(\gamma\)</span> are the location and scale parameters, respectively. Looking at its PDF and CDF, it is not immediately apparent that something is unusual about this distribution. The PDF looks a lot like the Normal. But if you look closely, you see that the tails looks suspiciously fat. And therein lies the problem.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cauchy pdf/cdf</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">cauchy</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">γ</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cauchy</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">γ</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$x_0=</span><span class="si">{}</span><span class="s1">,\gamma=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span><span class="n">γ</span><span class="p">))</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cauchy</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">γ</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$x_0=</span><span class="si">{}</span><span class="s1">,\gamma=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span><span class="n">γ</span><span class="p">))</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
+    
+<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Probability density function&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Cumulative distribution function&#39;</span><span class="p">)</span>
+
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.25</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.75</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02f Estimation_39_0.png" src="_images/02f Estimation_39_0.png" />
+</div>
+</div>
+<p>In fact, the mean, variance, and higher central moments of the Cauchy distribution are all undefined. The condition for the LLN that <span class="math notranslate nohighlight">\(E(|X|)&lt;\infty\)</span> therefore fails, and the LLN does not hold.</p>
+<p>We can see this in the simulation below. Note the significant scale change in this figure relative to the earlier example; some of the observations are extremely large, and these outliers throw off the scale of the chart—and lead to the phenomenon that there simply is no mean for these random variables. However much data we collect, the average value of the data will continue to jump around.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">250</span>
+<span class="n">draws</span> <span class="o">=</span> <span class="n">cauchy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">cummean</span> <span class="o">=</span> <span class="n">draws</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span><span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cummean</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">bar X_n$&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">draws</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cummean</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">bar X_n$&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02f Estimation_41_0.png" src="_images/02f Estimation_41_0.png" />
+</div>
+</div>
+</section>
+<section id="estimating-higher-moments">
+<h2>Estimating higher moments<a class="headerlink" href="#estimating-higher-moments" title="Permalink to this headline">#</a></h2>
+<p>The sample estimates variance, skewness, and kurtosis are, respectively,</p>
+<div class="math notranslate nohighlight">
+\[\hat{\sigma}_x^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar x)^2,\]</div>
+<div class="math notranslate nohighlight">
+\[\hat{S}(x) = \frac{1}{(n-1)\hat{\sigma}_x^3}\sum_{i=1}^n (x_i - \bar x)^3,\]</div>
+<div class="math notranslate nohighlight">
+\[\hat{K}(x) = \frac{1}{(n-1)\hat{\sigma}_x^4}\sum_{i=1}^n (x_i - \bar x)^4.\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># estimate the variance from a sample of 10 draws</span>
+<span class="n">scs</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.20999999999999996
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compare to the population variance</span>
+<span class="n">p</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.24
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># equivalently</span>
+<span class="n">scs</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.24
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Note the difference between <code class="docutils literal notranslate"><span class="pre">scs.bernoulli(p).var()</span></code> and <code class="docutils literal notranslate"><span class="pre">scs.bernoulli(p).rvs(10).var()</span></code>. The former gives the <em>population</em> variance for a Bernoulli distribution, while the latter gives the <em>sample variance</em> from 10 draws of random variables from this distribution.</p>
+</div>
+<p>If <span class="math notranslate nohighlight">\(X\)</span> is normally distributed, <span class="math notranslate nohighlight">\(\hat{S}(x)\)</span> and <span class="math notranslate nohighlight">\(\hat{K}(x)-3\)</span> are asymptotically normally distributed with mean zero and variances <span class="math notranslate nohighlight">\(6/T\)</span> and <span class="math notranslate nohighlight">\(24/T\)</span>, respectively.</p>
+</section>
+<section id="sample-covariance-and-correlation">
+<h2>Sample covariance and correlation<a class="headerlink" href="#sample-covariance-and-correlation" title="Permalink to this headline">#</a></h2>
+<p>The sample covariance is</p>
+<div class="math notranslate nohighlight">
+\[\hat \cov(x,y) := \frac{1}{n-1} \sum_{i=1}^n (x_i-\bar x)(y_i - \bar y).\]</div>
+<p>The sample correlation coefficient is</p>
+<div class="math notranslate nohighlight">
+\[\hat \rho_{x,y} := \frac{\sum_{i=1}^n (x_i-\bar x)(y_i - \bar y)}{\hat \sigma_x \hat \sigma_y}.\]</div>
+<p>Let’s apply these to some simulated data. We’ll take 10 draws from <span class="math notranslate nohighlight">\(X \sim \N(0,1)\)</span> and then define</p>
+<div class="math notranslate nohighlight">
+\[y_i = 2 + 3 x_i + \varepsilon_i,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\varepsilon_i \sim \N(0,1)\)</span> and is independent of <span class="math notranslate nohighlight">\(x_i\)</span>.</p>
+<p>So while the <span class="math notranslate nohighlight">\(x_i\)</span> and <span class="math notranslate nohighlight">\(\varepsilon_i\)</span> are independent, <span class="math notranslate nohighlight">\(y_i\)</span> obviously depends on <span class="math notranslate nohighlight">\(x_i\)</span>.</p>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Given this relation between <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> calculate the theoretical value of <span class="math notranslate nohighlight">\(\cov(X,Y)\)</span>. Simply apply the formulas for <span class="math notranslate nohighlight">\(\cov(aX,bY)\)</span> and <span class="math notranslate nohighlight">\(\cov(a+X,b+Y)\)</span> to this case. Write down the variance–covariance matrix for <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> so you can compare it to the estimates we get below.</p>
+</div>
+<div class="admonition-solution dropdown admonition">
+<p class="admonition-title">Solution</p>
+<p>Since <span class="math notranslate nohighlight">\(X\sim\N(0,1)\)</span>, it’s variance is 1. The variance of <span class="math notranslate nohighlight">\(Y\)</span> is therefore</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\var(Y) &amp;= \var(2 + 3X + 3\varepsilon) \\
+&amp;= 3^2\var(X) + 3^2\var(\epsilon) \\
+&amp;= 18.
+\end{align*}\]</div>
+<p>The covariance is</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\cov(X,Y) &amp;= \cov(X, 2 + 3X + 3\varepsilon) \\
+&amp;= \cov(X, 2) + 3\cov(X,X) + 3\cov(X,\varepsilon) \\
+&amp;= 0 + 3\var(X) + 0 \\
+&amp;= 3,
+\end{align*}\]</div>
+<p>where we have used the fact that <span class="math notranslate nohighlight">\(\cov(X,\epsilon)=0\)</span>, since the two random variables are independent. The variance–covariance matrix is therefore</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Sigma = \begin{pmatrix}
+1 &amp; 3 \\
+3 &amp; 18 \\
+\end{pmatrix}.
+\end{split}\]</div>
+<p>The correlation is</p>
+<div class="math notranslate nohighlight">
+\[\rho_{X,Y} = \frac{3}{1 \times \sqrt{18}} = \frac{1}{\sqrt{2}} \approx 0.707.\]</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">554321</span><span class="p">)</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s a plot of each of the <span class="math notranslate nohighlight">\((x_i,y_i)\)</span> pairs:</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02f Estimation_57_0.png" src="_images/02f Estimation_57_0.png" />
+</div>
+</div>
+<p>Calculating the sample covariance and correlation is simple:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0.45969233, 1.12805832],
+       [1.12805832, 7.90773061]])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[1.        , 0.59165971],
+       [0.59165971, 1.        ]])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Experiment with this simulation by increasing <span class="math notranslate nohighlight">\(N\)</span>. Verify that the sample covariance and correlation matrix converge to their theoretical values.</p>
+</div>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Experiment by changing the other parameters in the the equation for <span class="math notranslate nohighlight">\(Y\)</span> and see if the sample mean and variance of the <span class="math notranslate nohighlight">\(y_i\)</span> behave as you expect.</p>
+</div>
+<div class="admonition-solution dropdown admonition">
+<p class="admonition-title">Solution</p>
+<p>If we generalize the equation for <span class="math notranslate nohighlight">\(Y\)</span> to be</p>
+<div class="math notranslate nohighlight">
+\[Y = a + bX + c\varepsilon,\]</div>
+<p>we can see that</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Sigma = \begin{pmatrix}
+1 &amp; b \\
+b &amp; b^2 + c^2 \\
+\end{pmatrix},
+\end{split}\]</div>
+<p>and therefore</p>
+<div class="math notranslate nohighlight">
+\[\rho_{X,Y} = \frac{b}{\sqrt{b^2+c^2}} = \frac{1}{\sqrt{1+\frac{c^2}{b^2}}}.\]</div>
+</div>
+</section>
+<section id="hypothesis-testing">
+<h2>Hypothesis testing<a class="headerlink" href="#hypothesis-testing" title="Permalink to this headline">#</a></h2>
+<p>Typically we estimate parameters of a model to test some hypothesis. For example, a large literature investigates whether the equity premium (the excess return of the market portfolio over the riskfree rate) is predictable. A typical regression looks like this:</p>
+<div class="math notranslate nohighlight">
+\[{\rm{Equity}}\,{\rm{Premium}}_t = \gamma_0 + \gamma_1 x_{t - 1} + \varepsilon_t.\]</div>
+<p>The coefficient <span class="math notranslate nohighlight">\(\gamma_1\)</span> measures how important some variable <span class="math notranslate nohighlight">\(x\)</span> is in predicting the equity premium. As <span id="id1">Welch and Goyal [<a class="reference internal" href="bibliography.html#id2" title="Ivo Welch and Amit Goyal. A comprehensive look at the empirical performance of equity premium prediction. The Review of Financial Studies, 21(4):1455–1508, 2008. URL: https://doi.org/10.1093/rfs/hhm014.">2008</a>]</span> note, the most prominent <span class="math notranslate nohighlight">\(x\)</span> variables explored in the literature are the dividend price ratio and dividend yield, the earnings price ratio and dividend-earnings (payout) ratio, various interest rates and spreads, the inflation rates, the book-to-market ratio, volatility, the investment-capital ratio, the consumption, wealth, and income ratio, and aggregate net or equity issuing activity.</p>
+<p>To perform a formal statistical test, we begin by stating a <em>null hypothesis</em>. In this case, we might decide that the null hypothesis is that there is no predictability:</p>
+<div class="math notranslate nohighlight">
+\[H_0: \gamma_1 = 0.\]</div>
+<p>The <em>alternative</em> is that <span class="math notranslate nohighlight">\(\gamma_1 \neq 0.\)</span> Since either a positive or negative sign on <span class="math notranslate nohighlight">\(x_{t-1}\)</span> would imply that the variable helps predict the equity premium, we will take evidence that <span class="math notranslate nohighlight">\(\gamma_1&lt;0\)</span> or <span class="math notranslate nohighlight">\(\gamma_1&gt;0\)</span> as evidence against the null.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The null hypothesis is what we believe to be true in the absense of evidence against it. In our judicial system, the null hypothesis is that a person is innocent. Only when there is strong evidence against this do we declare that the person is guilty.</p>
+<p>Two types of errors are possible in such a setting. First, we might wrongly conclude that the null hypothsis is false. This is what happens when a person is mistakenly convicted of a crime they did not commit. Second, we might fail to overturn the null hypothesis even though it is in fact false. This is akin to a guilty person going free. The first mistake is called a <em>type 1 error</em> and the second is a <em>type 2 error</em>. There is always a tradeoff between these two types of errors: any test that we devise must prioritize minimizing one or the other type of error. Obviously in our legal system we try to minimize type 1 errors on the undertanding that we will sometimes let guilty people go.</p>
+</div>
+<p>As we’ll see in the next chapter, we can use data to estimate <span class="math notranslate nohighlight">\(\gamma_0\)</span> and <span class="math notranslate nohighlight">\(\gamma_1\)</span>. These estimates are functions of the random realizations of data, and so the estimates are themselves random variables.</p>
+<div class="math notranslate nohighlight">
+\[R_{i,t} = \mu_i + \varepsilon_{i,t}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\varepsilon_{i,t}\sim \N(0,\sigma_i^2)\)</span>.</p>
+<p>For now, though, let’s consider a very simple example. Suppose we wish to test the hypothesis</p>
+<div class="math notranslate nohighlight">
+\[H_0: \mu = 0.\]</div>
+<p>Our estimate for the expected value, <span class="math notranslate nohighlight">\(\mu\)</span>, is simply <span class="math notranslate nohighlight">\(\bar x\)</span>. We saw that the central limit theorem says that <span class="math notranslate nohighlight">\(E(\bar x) = \mu\)</span> and <span class="math notranslate nohighlight">\(\var(\bar x) = \frac{\sigma^2}{n}\)</span>. This means that <em>under the null hypothesis</em> the distribution of <span class="math notranslate nohighlight">\(\bar x\)</span> would look like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
+
+<span class="c1"># pdf</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">250</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.025</span><span class="p">)</span>
+
+<span class="c1"># fill in the tails</span>
+<span class="n">px1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">px1</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">px1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">px2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">p</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">px2</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">px2</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="kc">None</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02f Estimation_76_0.png" src="_images/02f Estimation_76_0.png" />
+</div>
+</div>
+<p>(To keep things simple, we’re assuming that the variance is just one. Obviously we can generalize that.)</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="02e%20Covariance.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Covariance</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="notation.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Notation</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    <div class="extra_footer">
+      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.01.
+    </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

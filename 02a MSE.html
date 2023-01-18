@@ -4,8 +4,9 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; Quant Finance in Python</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Prediction: First look &#8212; Quant Finance in Python</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -54,9 +55,13 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <link rel="canonical" href="https://stoffprof.github.io/qf23/genindex.html" />
-    <link rel="index" title="Index" href="#" />
+    <script>window.MathJax = {"tex": {"macros": {"cov": "\\operatorname{Cov}", "var": "\\operatorname{Var}", "N": "\\mathcal{N}", "E": "\\mathbb{E}", "P": "\\mathbb{P}", "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="canonical" href="https://stoffprof.github.io/qf23/02a MSE.html" />
+    <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Probability theory" href="02b%20Probability%20theory.html" />
+    <link rel="prev" title="Probability" href="probability.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -143,19 +148,19 @@ const thebe_selector_output = ".output, .cell_output"
   Econometrics
  </span>
 </p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1 has-children">
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="probability.html">
    Probability
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="02a%20MSE.html">
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
      Prediction: First look
     </a>
    </li>
@@ -255,6 +260,17 @@ title="Toggle navigation"
         
     </div>
     <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+    </ul>
+  </div>
+</div>
+
 <button onclick="toggleFullScreen()"
   class="headerbtn"
   data-toggle="tooltip"
@@ -269,6 +285,52 @@ title="Fullscreen mode"
 
 </button>
 
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/02a MSE.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
     </div>
 </div>
 
@@ -280,7 +342,7 @@ title="Fullscreen mode"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1></h1>
+                <h1>Prediction: First look</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -292,13 +354,65 @@ title="Fullscreen mode"
                 
               <div>
                 
-
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+  <section class="tex2jax_ignore mathjax_ignore" id="prediction-first-look">
+<h1>Prediction: First look<a class="headerlink" href="#prediction-first-look" title="Permalink to this headline">#</a></h1>
+<p>Suppose we observe <span class="math notranslate nohighlight">\(i=1,\ldots,N\)</span> outcomes of some data generating process (DGP), <span class="math notranslate nohighlight">\(y_i\)</span>. We wish to <em>predict</em> the next observation. What would be a good way to guess what the next outcome from this DGP will be?</p>
+<p>One approach is to choose a prediction, <span class="math notranslate nohighlight">\(\hat y\)</span>, that would have been a good guess in the outcomes we have already seen. The question is then: what do we mean by a “good guess”? Clearly we have to define some measure for how good a prediction would have been. There are many ways we might choose to define this, but a very common approach is to say that we want to minimize the <em>Mean Squared Error</em>.</p>
+<div class="math notranslate nohighlight" id="equation-eq-mse">
+<span class="eqno">(8)<a class="headerlink" href="#equation-eq-mse" title="Permalink to this equation">#</a></span>\[\operatorname{MSE} := \frac{1}{N} \sum_{i=1}^N (y_i - \hat y)^2\]</div>
+<p>The MSE is just the average of the squared errors: the difference between each observation <span class="math notranslate nohighlight">\(y_i\)</span> and the corresponding prediction <span class="math notranslate nohighlight">\(\hat y\)</span>. (In this case the prediction for every observation is the same — <span class="math notranslate nohighlight">\(\hat y\)</span> doesn’t vary by <span class="math notranslate nohighlight">\(i\)</span> — but later we’ll think about ways to make to make the prediction vary by observation.)</p>
+<p>By defining the error term as the <em>squared</em> difference between the observation and the prediction we are implicitly assuming that larger differences are much larger than small differences. This assumption may or may not reflect how much we care about errors in different settings. We could define the error differently, say as the absolute value of the difference:</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{N} \sum_{i=1}^N |y_i - \hat y|.\]</div>
+<p>This is just one of many possible alternatives. But the MSE has a lot of desirable characterstics — not the least of which is that it is a smooth function with continuous derivatives and therefore amenable to being optimized using calculus.</p>
+<p>To solve for the value of <span class="math notranslate nohighlight">\(\hat y\)</span> that minimizes the MSE, we set the derivative equal to zero. The derivative is</p>
+<div class="math notranslate nohighlight">
+\[\frac{d \operatorname{MSE}}{d\hat y} = -\frac{2}{N} \sum_{i=1}^N (y_i - \hat y).\]</div>
+<p>Setting equal to zero and rearranging, we have</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^N \hat y = \sum_{i=1}^N y_i \quad \Longrightarrow \quad N \hat y = \sum_{i=1}^N y_i\]</div>
+<p>implying that</p>
+<div class="math notranslate nohighlight">
+\[\hat y = \frac{1}{N} \sum_{i=1}^N y_i.\]</div>
+<p>That is, the best prediction is simply the <em>average</em> or <em>mean</em> of the <span class="math notranslate nohighlight">\(y_i\)</span> that we have observed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The second derivative of the MSE function is positive everywhere, so we know we have found the global minimum. The MSE is a <em>convex function</em>, meaning it is shaped like a multidimensional bowl with a single point at the bottom. Convex functions are <a class="reference external" href="https://web.stanford.edu/~boyd/cvxbook/">much easier to minimize</a> than non-convex functions, as we can use simple algorithms that take advantage of calculus to find the global minimum.</p>
 </div>
+<p>Following convention, we will usually denote the mean of a values <span class="math notranslate nohighlight">\(y_i\)</span> by <span class="math notranslate nohighlight">\(\bar y\)</span> (“y-bar”). If we substitute <span class="math notranslate nohighlight">\(\bar y\)</span> as the predictor in <a class="reference internal" href="#equation-eq-mse">(8)</a> we have</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{equation*}
+\frac{1}{N} \sum_{i=1}^N (y_i - \bar y)^2.
+\end{equation*}\]</div>
+<p>This expression is the <em>variance</em> of the <span class="math notranslate nohighlight">\(y_i\)</span>. It provides a summary of how spread out the individual values of <span class="math notranslate nohighlight">\(y_i\)</span> around the mean <span class="math notranslate nohighlight">\(\bar y\)</span>.</p>
+<div class="admonition-extra-credit admonition">
+<p class="admonition-title">Extra credit</p>
+<p>It might appear at this point that the MSE and variance are the same. This happens to be true in this case, but will not be true in general. The MSE is actually the sum of the variance and another term, the squared <em>bias</em>, which in this particular case is zero. The famous formula</p>
+<div class="math notranslate nohighlight">
+\[\operatorname{MSE} ({\hat {\theta }})=\operatorname {Var} _{\theta }({\hat {\theta }})+\operatorname {Bias} ({\hat {\theta }},\theta )^{2}\]</div>
+<p>formalizes this relation for an estimate <span class="math notranslate nohighlight">\(\hat \theta\)</span> of a parameter <span class="math notranslate nohighlight">\(\theta\)</span>. See <a class="reference external" href="https://en.wikipedia.org/wiki/Mean_squared_error#:~:text=The%20MSE%20can%20be%20written,MSE%20and%20variance%20are%20equivalent.">here</a> for additional discussion.</p>
+</div>
+</section>
 
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
 
               </div>
               
@@ -307,6 +421,20 @@ title="Fullscreen mode"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="probability.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Probability</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="02b%20Probability%20theory.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Probability theory</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
             </footer>
         </div>

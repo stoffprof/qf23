@@ -145,6 +145,55 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
+  Econometrics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="probability.html">
+   Probability
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02a%20MSE.html">
+     Prediction: First look
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02b%20Probability%20theory.html">
+     Probability theory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02d%20Pseudorandom%20number%20generation.html">
+     Pseudorandom number generation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02c%20Distributions.html">
+     Probability distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02e%20Covariance.html">
+     Covariance
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02f%20Estimation.html">
+     Parameter estimation
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
   Reference
  </span>
 </p>
@@ -807,7 +856,26 @@ S &amp;= a+a x+a x^{2}+a x^{3} + \cdots \\
 <p>for all <span class="math notranslate nohighlight">\(x\)</span> in <span class="math notranslate nohighlight">\((a,b)\)</span>. Moreover,</p>
 <div class="math notranslate nohighlight">
 \[\int_a^b f(x) \, dx = F(b) - F(a).\]</div>
-<p>That is, the area under the curve <span class="math notranslate nohighlight">\(f(x)\)</span> from the <span class="math notranslate nohighlight">\(a\)</span> to <span class="math notranslate nohighlight">\(b\)</span> is the difference in the integral evaluated at those points.</p>
+<p>That is, the area under the curve <span class="math notranslate nohighlight">\(f(x)\)</span> from points <span class="math notranslate nohighlight">\(a\)</span> to <span class="math notranslate nohighlight">\(b\)</span> is the difference in the integral evaluated at those points.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpy.polynomial</span> <span class="kn">import</span> <span class="n">Polynomial</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">])</span>
+
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/01a math_36_0.png" src="_images/01a math_36_0.png" />
+</div>
+</div>
 </section>
 <section id="the-gaussian-integral">
 <span id="sec-gauss-integral"></span><h2>The Gaussian integral<a class="headerlink" href="#the-gaussian-integral" title="Permalink to this headline">#</a></h2>
@@ -822,7 +890,7 @@ S &amp;= a+a x+a x^{2}+a x^{3} + \cdots \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/01a math_39_0.png" src="_images/01a math_39_0.png" />
+<img alt="_images/01a math_40_0.png" src="_images/01a math_40_0.png" />
 </div>
 </div>
 <p>Somewhat incredibly, the area under this curve — called the Gaussian integral, named for <a class="reference external" href="https://en.wikipedia.org/wiki/Carl_Friedrich_Gauss">Carl Friedrich Gauss</a> — is <span class="math notranslate nohighlight">\(\sqrt{\pi}\)</span>:</p>
@@ -857,7 +925,7 @@ S &amp;= a+a x+a x^{2}+a x^{3} + \cdots \\
 <p>Then</p>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{equation*}
-{\large\int_{-\infty }^{\infty }} \exp(-z^2)\,dz \; = \; \frac{1}{\sqrt{2c^2}} {\large\int_{-\infty }^{\infty }}\exp\left\{-\frac{1}{2}\left(\frac{x-b}{c}\right)^2\right\}dx,
+{\large\int_{-\infty }^{\infty }} e^{-z^2}\,dz \; = \; \frac{1}{\sqrt{2c^2}} {\large\int_{-\infty }^{\infty }}\exp\left\{-\frac{1}{2}\left(\frac{x-b}{c}\right)^2\right\}dx,
 \end{equation*}\]</div>
 <p>so</p>
 <div class="math notranslate nohighlight">
@@ -893,7 +961,7 @@ S &amp;= a+a x+a x^{2}+a x^{3} + \cdots \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/01a math_44_0.png" src="_images/01a math_44_0.png" />
+<img alt="_images/01a math_45_0.png" src="_images/01a math_45_0.png" />
 </div>
 </div>
 <p>Another useful fact about the gamma function is that</p>
@@ -1043,7 +1111,7 @@ S &amp;= a+a x+a x^{2}+a x^{3} + \cdots \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/01a math_55_0.png" src="_images/01a math_55_0.png" />
+<img alt="_images/01a math_56_0.png" src="_images/01a math_56_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1053,7 +1121,7 @@ S &amp;= a+a x+a x^{2}+a x^{3} + \cdots \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/01a math_56_0.png" src="_images/01a math_56_0.png" />
+<img alt="_images/01a math_57_0.png" src="_images/01a math_57_0.png" />
 </div>
 </div>
 <p>Notice that as we increase the number of terms in the polynomial the approximation (black dotted line) stays closer to the true function (red) for a wider range of values.</p>
@@ -1122,7 +1190,7 @@ S &amp;= a+a x+a x^{2}+a x^{3} + \cdots \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/01a math_64_0.png" src="_images/01a math_64_0.png" />
+<img alt="_images/01a math_65_0.png" src="_images/01a math_65_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1132,7 +1200,7 @@ S &amp;= a+a x+a x^{2}+a x^{3} + \cdots \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/01a math_65_0.png" src="_images/01a math_65_0.png" />
+<img alt="_images/01a math_66_0.png" src="_images/01a math_66_0.png" />
 </div>
 </div>
 <section id="vector-norms">
@@ -1162,7 +1230,7 @@ S &amp;= a+a x+a x^{2}+a x^{3} + \cdots \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/01a math_69_0.png" src="_images/01a math_69_0.png" />
+<img alt="_images/01a math_70_0.png" src="_images/01a math_70_0.png" />
 </div>
 </div>
 <p>This is the distance between the origin and the point <span class="math notranslate nohighlight">\((3,-4)\)</span>, which, by the Pythagorean theorm, is <span class="math notranslate nohighlight">\(5\)</span>. The function works just as easily in higher dimensions:</p>

@@ -1,0 +1,979 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Probability distributions &#8212; Quant Finance in Python</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/admonitions-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/custom-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"cov": "\\operatorname{Cov}", "var": "\\operatorname{Var}", "N": "\\mathcal{N}", "E": "\\mathbb{E}", "P": "\\mathbb{P}", "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="canonical" href="https://stoffprof.github.io/qf23/02c Distributions.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Covariance" href="02e%20Covariance.html" />
+    <link rel="prev" title="Pseudorandom number generation" href="02d%20Pseudorandom%20number%20generation.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/qf.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Quant Finance in Python</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a%20math.html">
+   Math background
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b%20returns.html">
+   Asset returns
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01c%20prices.html">
+   A model of prices
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Econometrics
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="probability.html">
+   Probability
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="02a%20MSE.html">
+     Prediction: First look
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02b%20Probability%20theory.html">
+     Probability theory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02d%20Pseudorandom%20number%20generation.html">
+     Pseudorandom number generation
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Probability distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02e%20Covariance.html">
+     Covariance
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02f%20Estimation.html">
+     Parameter estimation
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reference
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="notation.html">
+   Notation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sources.html">
+   Additional sources
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/02c Distributions.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Probability distributions
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#poisson-distribution">
+     Poisson distribution
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#log-normal-distribution">
+     Log-normal distribution
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#chi-squared-distribution">
+     Chi-squared distribution
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#students-t-distribution">
+     Student’s
+     <span class="math notranslate nohighlight">
+      \(t\)
+     </span>
+     distribution
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#f-distribution">
+     <span class="math notranslate nohighlight">
+      \(F\)
+     </span>
+     distribution
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#other-distributions">
+   Other distributions
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Probability distributions</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Probability distributions
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#poisson-distribution">
+     Poisson distribution
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#log-normal-distribution">
+     Log-normal distribution
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#chi-squared-distribution">
+     Chi-squared distribution
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#students-t-distribution">
+     Student’s
+     <span class="math notranslate nohighlight">
+      \(t\)
+     </span>
+     distribution
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#f-distribution">
+     <span class="math notranslate nohighlight">
+      \(F\)
+     </span>
+     distribution
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#other-distributions">
+   Other distributions
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="probability-distributions">
+<h1>Probability distributions<a class="headerlink" href="#probability-distributions" title="Permalink to this headline">#</a></h1>
+<p>We have already seen how different probability distributions are related: if we repeat Bernoulli trials, the resulting random variable has a binomial distribution. In the limit as <span class="math notranslate nohighlight">\(n\)</span> increases, this gives us the normal distribution.</p>
+<p>Many other probability distributions can be constructed by combining random variables in different ways. These various distributions can be useful for describing all kinds of real-world phenomena.</p>
+<p>In this section we focus on just a handful of distributions that are especially relevent when working with financial data.</p>
+<section id="poisson-distribution">
+<h2>Poisson distribution<a class="headerlink" href="#poisson-distribution" title="Permalink to this headline">#</a></h2>
+<p>Consider again the binomial distribution as <span class="math notranslate nohighlight">\(n\to\infty\)</span>, but assume that the probability <span class="math notranslate nohighlight">\(p\)</span> is defined such that the product of <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(p\)</span> remains constant. In particular, assume that for any <span class="math notranslate nohighlight">\(n\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[np = \lambda\]</div>
+<p>for some constant <span class="math notranslate nohighlight">\(\lambda &gt; 0\)</span>. In other words, for each <span class="math notranslate nohighlight">\(n\)</span>, we let <span class="math notranslate nohighlight">\(p_{n} = \frac{\lambda}{n}\)</span> be a sequence of probabilities. It <a class="reference external" href="https://en.wikipedia.org/wiki/Poisson_limit_theorem">can be shown that</a></p>
+<div class="math notranslate nohighlight">
+\[\lim _{n\to \infty }{n \choose k}p_{n}^{k}(1-p_{n})^{n-k}=e^{-\lambda }{\frac {\lambda ^{k}}{k!}}.\]</div>
+<p>The function in the limit gives the PMF of a random variable <span class="math notranslate nohighlight">\(X\)</span> with a Poisson distribution:</p>
+<div class="math notranslate nohighlight">
+\[\!f(k; \lambda)= \P(X=k)= \frac{\lambda^k e^{-\lambda}}{k!}.\]</div>
+<p>Both panels of the figure below show a Poisson distribution with <span class="math notranslate nohighlight">\(\lambda=5\)</span>, along with a Binomial distribution. In both panels, <span class="math notranslate nohighlight">\(np=5\)</span>, but in the left panel <span class="math notranslate nohighlight">\(n=25\)</span> while in the right <span class="math notranslate nohighlight">\(n=250\)</span>. It is clear that the Binomial probabilities get closer to the Poisson probabilities with the larger value of <span class="math notranslate nohighlight">\(n\)</span>.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">λ</span><span class="o">=</span><span class="mi">5</span>
+
+<span class="n">domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">p_poiss</span> <span class="o">=</span> <span class="n">scs</span><span class="o">.</span><span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">λ</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">n</span><span class="p">,</span><span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span><span class="mi">250</span><span class="p">],</span> <span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">()):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">λ</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">p_binom</span> <span class="o">=</span> <span class="n">scs</span><span class="o">.</span><span class="n">binom</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">p_binom</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$B(</span><span class="si">{}</span><span class="s1">,</span><span class="si">{}</span><span class="s1">)$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">n</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">p_poiss</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$Pois(</span><span class="si">{}</span><span class="s1">)$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">λ</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02c Distributions_7_0.png" src="_images/02c Distributions_7_0.png" />
+</div>
+</div>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">One of the first practical applications of the Poisson distribution was made by Ladislaus Bortkiewicz in 1898 when he was given the task of investigating the number of soldiers in the Prussian army killed accidentally by horse kicks <a href="https://t.co/7QqAxV7e5v">pic.twitter.com/7QqAxV7e5v</a></p>&mdash; Fermat&#39;s Library (@fermatslibrary) <a href="https://twitter.com/fermatslibrary/status/1410219746205765633?ref_src=twsrc%5Etfw">June 30, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</aside>
+<p>The Poisson distribution is useful for modelling events that occur rarely in a short interval of time, but where there are many such intervals. Examples include:</p>
+<ul class="simple">
+<li><p>how many creditors may default on a loan in a year;</p></li>
+<li><p>how many car accidents occur in a group of insured drivers;</p></li>
+<li><p>how many customers enter a store in a day;</p></li>
+<li><p>how many people call a customer support line in an hour.</p></li>
+</ul>
+<p>The parameter <span class="math notranslate nohighlight">\(\lambda &gt; 0\)</span> gives the rate per period at which events are expected to occur. It equals both the mean and the variance of the distribution.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;E(X) = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scs</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">λ</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Var(X) = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scs</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">λ</span><span class="p">)</span><span class="o">.</span><span class="n">var</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>E(X) = 5.0
+Var(X) = 5.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-extra-credit dropdown admonition">
+<p class="admonition-title">Extra credit</p>
+<p>To find the expected value of a Poisson random variable <span class="math notranslate nohighlight">\(X\)</span>, start with the definition of expectation:</p>
+<p>\begin{aligned}
+\E(X) &amp;= \sum_{k=0}^{\infty} \P(X=k) \cdot k  \
+&amp;= \sum_{k=0}^{\infty} \frac{\lambda^{k} e^{-\lambda}}{k!} k \
+&amp;=e^{-\lambda} \sum_{k=1}^{\infty} \frac{k \lambda^{k}}{k!} \
+&amp;=\lambda e^{-\lambda} \sum_{k=1}^{\infty} \frac{\lambda^{k-1}}{(k-1)!} \
+&amp;=\lambda e^{-\lambda} \sum_{j=0}^{\infty} \frac{\lambda^{j}}{j!}.
+\end{aligned}</p>
+<p>The infinite sum is</p>
+<div class="math notranslate nohighlight">
+\[1 + \lambda + \frac{\lambda^2}{2} + \frac{\lambda^3}{3!} + \cdots = e^{\lambda},\]</div>
+<p>which can be seen by taking a <a class="reference internal" href="01a%20math.html#taylorseries"><span class="std std-ref">Taylor series</span></a> of <span class="math notranslate nohighlight">\(e^x\)</span> at zero. Therefore,</p>
+<div class="math notranslate nohighlight">
+\[\E(X) =\lambda e^{-\lambda} e^{\lambda} = \lambda.\]</div>
+<p>To find the variance, we can find <span class="math notranslate nohighlight">\(\E(X^2)\)</span> using a similar approach:</p>
+<p>\begin{aligned}
+\E(X^2) &amp;= \sum_{k=0}^{\infty} \frac{\lambda^{k} e^{-\lambda}}{k!} k^2 \
+&amp;=e^{-\lambda} \sum_{k=1}^{\infty} \frac{k , \lambda , \lambda^{k-1}}{(k-1)!} \
+&amp;=\lambda e^{-\lambda} \sum_{k=1}^{\infty} k \frac{\lambda^{k-1}}{(k-1)!} \
+&amp;=\lambda e^{-\lambda} \sum_{j=0}^{\infty} (j+1)\frac{\lambda^{j}}{j!}.
+\end{aligned}</p>
+<p>The summation term is</p>
+<p>\begin{aligned}
+\sum_{j=0}^{\infty} (j+1)\frac{\lambda^{j}}{j!} &amp;= \sum_{j=0}^{\infty} j\frac{\lambda^{j}}{j!} + \sum_{j=0}^{\infty}\frac{\lambda^{j}}{j!} \
+&amp;= \lambda \sum_{j=1}^{\infty} \frac{\lambda^{j-1}}{(j-1)!} ; + ; e^{\lambda} \
+&amp;= \lambda \sum_{i=0}^{\infty} \frac{\lambda^{i}}{i!} ; + ; e^{\lambda} \
+&amp;= \lambda e^{\lambda} + e^{\lambda} \
+&amp;= e^{\lambda}(\lambda+1).
+\end{aligned}</p>
+<p>Therefore,</p>
+<div class="math notranslate nohighlight">
+\[\E(X^2) = \lambda(\lambda+1),\]</div>
+<p>so</p>
+<div class="math notranslate nohighlight">
+\[\var(X) = \E(X^2) - \E(X)^2 = \lambda.\]</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">prop_cycle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">prop_cycle</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">λ</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mi">12</span><span class="p">]):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">scs</span><span class="o">.</span><span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">λ</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;$\lambda=</span><span class="si">{</span><span class="n">λ</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    
+    <span class="n">P</span> <span class="o">=</span> <span class="n">scs</span><span class="o">.</span><span class="n">poisson</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">λ</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;$\lambda=</span><span class="si">{</span><span class="n">λ</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">k</span><span class="p">],</span> <span class="p">[</span><span class="n">P</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">P</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Probability mass function&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;P(X=k)&#39;</span><span class="p">)</span>
+
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Cumulative distribution function&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;P(X≤k)&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.25</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.75</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02c Distributions_12_0.png" src="_images/02c Distributions_12_0.png" />
+</div>
+</div>
+<p>Note that the PMF is define only over the integers; the lines between the dots are simply visual aids. Note also that <span class="math notranslate nohighlight">\(\lambda\)</span> can be any positive real number.</p>
+</section>
+<section id="log-normal-distribution">
+<h2>Log-normal distribution<a class="headerlink" href="#log-normal-distribution" title="Permalink to this headline">#</a></h2>
+<p>Suppose <span class="math notranslate nohighlight">\(Y \sim \N(\mu,\sigma^2)\)</span>, and define</p>
+<div class="math notranslate nohighlight">
+\[X=e^Y.\]</div>
+<p>Then <span class="math notranslate nohighlight">\(X\)</span> has a Log-normal distribution with PDF</p>
+<div class="math notranslate nohighlight">
+\[f_X(x; \mu, \sigma)={\frac {1}{\sigma x {\sqrt {2\pi }}}}\exp\left\{-{\frac {1}{2}}\left({\frac {\ln x-\mu }{\sigma }}\right)^{2}\right\}.\]</div>
+<p>The distribution is defined only for <span class="math notranslate nohighlight">\(x&gt;0\)</span>. (Given its definition, regardless of the realization of <span class="math notranslate nohighlight">\(Y\)</span>, the value for <span class="math notranslate nohighlight">\(X\)</span> will always be positive.)</p>
+<p>The plots below show PDFs and CDFs for log-normal random variables as we vary <span class="math notranslate nohighlight">\(\sigma\)</span> but fix <span class="math notranslate nohighlight">\(\mu=0\)</span>.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">σ</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">lognorm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">σ</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$\sigma=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">σ</span><span class="p">))</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">lognorm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">σ</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$\sigma=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">σ</span><span class="p">))</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+    
+<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Probability density function&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Cumulative distribution function&#39;</span><span class="p">)</span>
+
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.25</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.75</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02c Distributions_17_0.png" src="_images/02c Distributions_17_0.png" />
+</div>
+</div>
+<p>Notice that despite holding <span class="math notranslate nohighlight">\(\mu\)</span> constant, the location of the PDF shifts as we change <span class="math notranslate nohighlight">\(\sigma\)</span>. The mean of the distribution must therefore depend also on <span class="math notranslate nohighlight">\(\sigma\)</span>, and in  fact is given by</p>
+<div class="math notranslate nohighlight">
+\[\E(X) = \exp\left\{\left(\mu +{\frac {\sigma ^{2}}{2}}\right)\right\}.\]</div>
+<div class="admonition-extra-credit dropdown admonition">
+<p class="admonition-title">Extra credit</p>
+<p>The math behind this result is a little tricky, but really we just need to remember how to <a class="reference external" href="https://en.wikipedia.org/wiki/Completing_the_square">complete the square</a>. (Despite being known for thousands of years, methods to complete the square continue to be developed. In 2020 a professor at Carnegie Mellon shared <a class="reference external" href="https://www.nytimes.com/2020/02/05/science/quadratic-equations-algebra.html">a new method</a> for understanding the process.)</p>
+<p>Start with the definition of expected value:</p>
+<p>\begin{aligned}
+\E\left(e^y\right) &amp;=\int_{-\infty}^{\infty} e^y \cdot f_Y(y) , dy \
+&amp;=\int_{-\infty}^{\infty} e^y \cdot \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2}\left(\frac{y-\mu}{\sigma}\right)^{2}} dy \
+&amp;=\int_{-\infty}^{\infty} \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2 \sigma^{2}}\left(y^{2}-2 \mu y+\mu^{2}-2 \sigma^{2} y\right)} dy \
+&amp;=\int_{-\infty}^{\infty} \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2 \sigma^{2}}\left(y^{2}-2\left(\mu+\sigma^{2}\right) y+\mu^{2}\right)} dy
+\end{aligned}</p>
+<p>Here’s where we complete the square. We can write</p>
+<p>\begin{aligned}
+\exp\left[{-\frac{1}{2 \sigma^{2}}\left(y^{2}-2\left(\mu+\sigma^{2}\right) y+\mu^{2}\right)}\right] &amp;= \exp\left[{-\frac{1}{2 \sigma^{2}}\left(y - (\mu+\sigma^2)\right)^2} +\frac{1}{2 \sigma^{2}}(2\mu\sigma^2 + \sigma^4)\right] \
+&amp;= \exp\left[{-\frac{1}{2 \sigma^{2}}\left(y - (\mu+\sigma^2)\right)^2}\right] \cdot \exp\left[\mu + \frac{\sigma^2}{2}\right]
+\end{aligned}</p>
+<p>Therefore,</p>
+<p>\begin{aligned}
+\E\left(e^y\right)&amp;=\int_{-\infty}^{\infty} \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2 \sigma^{2}}\left(y-\left(\mu+\sigma^{2}\right)\right)^{2}} e^{\left(\mu+\frac{1}{2} \sigma^{2}\right)} dy \
+&amp;=e^{\left(\mu+\frac{1}{2} \sigma^{2}\right)} \int_{-\infty}^{\infty} \underbrace{\frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2 \sigma^{2}}\left(y-(\mu+\sigma)^{2}\right)^{2}}}_{\text{PDF of normal}} dy  \
+&amp;=e^{\left(\mu+\frac{1}{2} \sigma^{2}\right)}.
+\end{aligned}</p>
+<p>Here, we’ve used the fact that the function over the brace is the PDF of a normal distribution, and therefore integrating over the whole real line equals one. (This PDF is of a random variable that has a mean of <span class="math notranslate nohighlight">\((\mu + \sigma)^2\)</span> but that is irrelevant; all that matters is that it is a PDF and therefore the integral must be one.)</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">σ</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">σ</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>   <span class="c1"># μ=0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.6487212707001282
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scs</span><span class="o">.</span><span class="n">lognorm</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.6487212707001282
+</pre></div>
+</div>
+</div>
+</div>
+<p>The median is <span class="math notranslate nohighlight">\(e^{\mu}\)</span>, which can easily be seen from the plots of the CDFs above.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scs</span><span class="o">.</span><span class="n">lognorm</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>The log-normal distribution is often used in various financial applications. One reason is that, since the price of a stock can never be negative, it makes sense to model the price with a distribution that also never gives negative values.</p>
+</section>
+<section id="chi-squared-distribution">
+<h2>Chi-squared distribution<a class="headerlink" href="#chi-squared-distribution" title="Permalink to this headline">#</a></h2>
+<p>Suppose <span class="math notranslate nohighlight">\(Z_i \sim \N(0,1)\)</span> and we calculate</p>
+<div class="math notranslate nohighlight">
+\[X = \sum_{i=1}^k Z_i^2.\]</div>
+<p>Then <span class="math notranslate nohighlight">\(X\)</span> follows a <a class="reference external" href="https://en.wikipedia.org/wiki/Chi-squared_distribution">chi-squared</a> distribution with <span class="math notranslate nohighlight">\(k\)</span> degrees of freedom, <span class="math notranslate nohighlight">\(X\sim \chi^2_k\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">df1</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">df1</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$k=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">df1</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>  
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;$\chi^2(k)$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02c Distributions_27_0.png" src="_images/02c Distributions_27_0.png" />
+</div>
+</div>
+<p>If <span class="math notranslate nohighlight">\(X\sim\chi^2(k)\)</span> then <span class="math notranslate nohighlight">\(\E(X)=k\)</span> and <span class="math notranslate nohighlight">\(\var(X)=2k.\)</span></p>
+</section>
+<section id="students-t-distribution">
+<h2>Student’s <span class="math notranslate nohighlight">\(t\)</span> distribution<a class="headerlink" href="#students-t-distribution" title="Permalink to this headline">#</a></h2>
+<p>Suppose <span class="math notranslate nohighlight">\(Z \sim \N(0,1)\)</span> and <span class="math notranslate nohighlight">\(Q \sim \chi^2_{\nu}\)</span>. Then</p>
+<div class="math notranslate nohighlight">
+\[X = \frac{Z}{\sqrt{Q/\nu}}\]</div>
+<p>follows a Student’s <span class="math notranslate nohighlight">\(t\)</span> distribution with <span class="math notranslate nohighlight">\(\nu\)</span> degrees of freedom. Its PDF is</p>
+<div class="math notranslate nohighlight">
+\[f(x; \nu) = \frac{\Gamma\!\left(\frac{\nu+1}{2}\right)}{\sqrt{\nu\pi}\,\Gamma\!\left(\frac{\nu}{2} \right)} \left(1+\frac{x^2}{\nu} \right)^{-\frac{\nu+1}{2}},\]</div>
+<p>where the degrees of freedom parameter <span class="math notranslate nohighlight">\(\nu&gt;0\)</span> (the Greek letter <em>nu</em>) controls the shape of the distribution.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>The <span class="math notranslate nohighlight">\(t\)</span> distribution was discovered by <a class="reference external" href="https://en.wikipedia.org/wiki/William_Sealy_Gosset#Life_and_career">William Sealy Gosset</a>, who published under the pseudonym “Student”. Gosset worked as the Head Experimental Brewer at Guiness, and much of his statistical work relates to problems of sampling. To avoid the publication of trade secrets, Guiness allowed its researchers to publish their work on the condition that they didn’t mention beer, Guinness, or their  surname.</p>
+</aside>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$N(0,1)$&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">ν</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">50</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ν</span><span class="p">),</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$t(</span><span class="si">{}</span><span class="s1">)$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ν</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">((</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02c Distributions_33_0.png" src="_images/02c Distributions_33_0.png" />
+</div>
+</div>
+<p>Note that as <span class="math notranslate nohighlight">\(\nu \rightarrow \infty\)</span>, the distribution converges to a standard normal distribution.</p>
+<div class="admonition-extra-credit dropdown admonition">
+<p class="admonition-title">Extra credit</p>
+<p>The proof of this convergence is relatively easy if we use the <a class="reference external" href="https://stats.stackexchange.com/a/449117/5166">observation that</a></p>
+<div class="math notranslate nohighlight">
+\[\lim_{\nu\to\infty} \frac{\Gamma\!\left(\frac{\nu+1}{2}\right)}{\Gamma\!\left(\frac{\nu}{2} \right)} = \sqrt{\tfrac{\nu}{2}}.\]</div>
+<p>We have</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+\lim_{\nu\to\infty} f(x; \nu) &amp;= \frac{1}{\sqrt{\nu\pi}} \cdot \sqrt{\tfrac{\nu}{2}} \cdot \lim_{\nu\to\infty} \left(1 + \frac{x^2}{\nu}\right)^{-\frac{\nu+1}{2}} \\
+&amp;= \frac{1}{\sqrt{2\pi}} \cdot \lim_{\nu\to\infty} \left\{ \left(1 + \frac{x^2}{\nu}\right)^{-\frac{1}{2}}  \left[\left(1 + \frac{x^2}{\nu}\right)^{\nu}\right]^{-\frac{1}{2}}\right\} \\
+&amp;= \frac{1}{\sqrt{2\pi}} \left[e^{x^2}\right]^{-\frac{1}{2}} \\
+&amp;= \frac{1}{\sqrt{2\pi}} \, \exp\left(-\frac{x^2}{2}\right),
+\end{align*}\]</div>
+<p>which is the PDF of the standard normal distribution.</p>
+</div>
+<p>Since it has more mass in the extremes at extreme values than does a normal distribution, the <span class="math notranslate nohighlight">\(t\)</span> distribution is said to have <em>fat tails</em>.</p>
+<p>A random variable <span class="math notranslate nohighlight">\(X \sim t(\nu)\)</span> has mean</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\E(X) = \begin{cases}
+0 &amp; \text{ if } \nu&gt;1\\
+\text{undefined} &amp; \text{ if } \nu\leq 1 
+\end{cases}\end{split}\]</div>
+<p>and variance</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\var(X) = \begin{cases}
+\frac{\nu}{\nu-2} &amp; \text{ if } \nu&gt;2 \\
+\infty &amp; \text{ if } 1&lt;\nu\leq 2 \\
+\text{undefined} &amp; \text{ if } \nu\leq 1.
+\end{cases}
+\end{split}\]</div>
+</section>
+<section id="f-distribution">
+<h2><span class="math notranslate nohighlight">\(F\)</span> distribution<a class="headerlink" href="#f-distribution" title="Permalink to this headline">#</a></h2>
+<p>Given two independent chi-square distributed random variables, <span class="math notranslate nohighlight">\(Q_1\)</span> and <span class="math notranslate nohighlight">\(Q_2\)</span>, with <span class="math notranslate nohighlight">\(k_1\)</span> and <span class="math notranslate nohighlight">\(k_2\)</span> degrees of freedom, respectively, the ratio</p>
+<div class="math notranslate nohighlight">
+\[X = \frac {Q_{1}/k_{1}}{Q_{2}/k_{2}}\]</div>
+<p>follows an <span class="math notranslate nohighlight">\(F\)</span> distribution with <span class="math notranslate nohighlight">\(k_1\)</span> and <span class="math notranslate nohighlight">\(k_2\)</span> degrees of freedom.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="n">k2</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="k">for</span> <span class="n">k1</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$k_1=</span><span class="si">{}</span><span class="s1">, k_2=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;$F(k_1,k_2)$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02c Distributions_40_0.png" src="_images/02c Distributions_40_0.png" />
+</div>
+</div>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Use a simulation to verify the claimed relation between a standard normal distribution, the <span class="math notranslate nohighlight">\(\chi^2\)</span> distribution, and the <span class="math notranslate nohighlight">\(F\)</span> distribution.</p>
+<ol class="simple">
+<li><p>Start by drawing 10 realizations of <span class="math notranslate nohighlight">\(X \sim \N(0,1).\)</span> Calculate <span class="math notranslate nohighlight">\(S = \sum x_i^2\)</span>. Repeat this 1000 times. Show that the mean and variance of are close to the what you would expect from theory. You don’t actually have to repeat the 10 draws 1000 times. You can draw a <span class="math notranslate nohighlight">\(1000\times 10\)</span> array and then calculate the sum of squares within each row to get 1000 values and then calulate the mean and variance of those.</p></li>
+<li><p>Now create 1000 draws from a different chi-square by taking the sum of squares of 15 draws from a standard normal. For each of these 1000 examples, calculate the ratio <span class="math notranslate nohighlight">\(\frac{S_{1}/k_{1}}{S_{2}/k_{2}}\)</span> where <span class="math notranslate nohighlight">\(k_1\)</span> and <span class="math notranslate nohighlight">\(k_2\)</span> are the corresponding degrees of freedom. This will give you 1000 draws from an <span class="math notranslate nohighlight">\(F\)</span> distribution. Show that the mean and variance also match what is predicted by theory.</p></li>
+</ol>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">=</span> <span class="p">(</span><span class="n">X1</span><span class="o">/</span><span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">X2</span><span class="o">/</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="n">F</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">F</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.1438112865369205, 0.5380713620827265)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="math notranslate nohighlight">
+\[\frac{k_{2}}{k_{2}-2}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">15</span> <span class="o">/</span> <span class="mi">13</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.1538461538461537
+</pre></div>
+</div>
+</div>
+</div>
+<div class="math notranslate nohighlight">
+\[\frac{2\,k_2^2(k_1+k_2-2)}{k_1(k_2-2)^2(k_2-4)}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">15</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">15</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="p">(</span><span class="mi">15</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">15</span><span class="o">-</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.556750941366326
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="other-distributions">
+<h1>Other distributions<a class="headerlink" href="#other-distributions" title="Permalink to this headline">#</a></h1>
+<p>Many probability distributions have been developed by researchers seeking to describe various probabilistic phenomena. As we’ve seen with the connections between the several distributions above, distributions are usually related to others by making particular assumptions or by taking limits of parameters. The figure below, from <span id="id1">Leemis and McQueston [<a class="reference internal" href="bibliography.html#id11" title="Lawrence M. Leemis and Jacquelyn T. McQueston. Univariate distribution relationships. The American Statistician, 62(1):45–53, 2008. URL: https://doi.org/10.1198/000313008X270448.">2008</a>]</span>, shows the relationships between many (but by no means all) probability distributions. You can see, for example, that both the Poisson and Normal are limiting distributions of the Binomial distribution.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>An <a class="reference external" href="http://www.math.wm.edu/~leemis/chart/UDR/UDR.html">interactive version</a> of this chart was created by some students at William &amp; Mary and provides additional information about each of the listed distributions.</p>
+</aside>
+<a class="reference internal image-reference" href="_images/distributions.png"><img alt="Distributions" class="align-center" src="_images/distributions.png" style="width: 900px;" /></a>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="02d%20Pseudorandom%20number%20generation.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Pseudorandom number generation</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="02e%20Covariance.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Covariance</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    <div class="extra_footer">
+      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.01.
+    </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
