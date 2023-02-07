@@ -60,7 +60,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="canonical" href="https://stoffprof.github.io/qf23/02f Estimation.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Notation" href="notation.html" />
+    <link rel="next" title="Regression" href="regression.html" />
     <link rel="prev" title="Covariance" href="02e%20Covariance.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -187,6 +187,28 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
      Parameter estimation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="regression.html">
+   Regression
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04a%20Regression%20theory.html">
+     Linear regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04b%20Regression%20applications.html">
+     Implementing regressions
     </a>
    </li>
   </ul>
@@ -978,6 +1000,7 @@ b &amp; b^2 + c^2 \\
 <div class="math notranslate nohighlight">
 \[{\rm{Equity}}\,{\rm{Premium}}_t = \gamma_0 + \gamma_1 x_{t - 1} + \varepsilon_t.\]</div>
 <p>The coefficient <span class="math notranslate nohighlight">\(\gamma_1\)</span> measures how important some variable <span class="math notranslate nohighlight">\(x\)</span> is in predicting the equity premium. As <span id="id1">Welch and Goyal [<a class="reference internal" href="bibliography.html#id2" title="Ivo Welch and Amit Goyal. A comprehensive look at the empirical performance of equity premium prediction. The Review of Financial Studies, 21(4):1455–1508, 2008. URL: https://doi.org/10.1093/rfs/hhm014.">2008</a>]</span> note, the most prominent <span class="math notranslate nohighlight">\(x\)</span> variables explored in the literature are the dividend price ratio and dividend yield, the earnings price ratio and dividend-earnings (payout) ratio, various interest rates and spreads, the inflation rates, the book-to-market ratio, volatility, the investment-capital ratio, the consumption, wealth, and income ratio, and aggregate net or equity issuing activity.</p>
+<p>As we’ll see in the next chapter, we can use data to estimate <span class="math notranslate nohighlight">\(\gamma_0\)</span> and <span class="math notranslate nohighlight">\(\gamma_1\)</span>. These estimates are functions of the random realizations of data, and so the estimates are themselves random variables.</p>
 <p>To perform a formal statistical test, we begin by stating a <em>null hypothesis</em>. In this case, we might decide that the null hypothesis is that there is no predictability:</p>
 <div class="math notranslate nohighlight">
 \[H_0: \gamma_1 = 0.\]</div>
@@ -987,43 +1010,48 @@ b &amp; b^2 + c^2 \\
 <p>The null hypothesis is what we believe to be true in the absense of evidence against it. In our judicial system, the null hypothesis is that a person is innocent. Only when there is strong evidence against this do we declare that the person is guilty.</p>
 <p>Two types of errors are possible in such a setting. First, we might wrongly conclude that the null hypothsis is false. This is what happens when a person is mistakenly convicted of a crime they did not commit. Second, we might fail to overturn the null hypothesis even though it is in fact false. This is akin to a guilty person going free. The first mistake is called a <em>type 1 error</em> and the second is a <em>type 2 error</em>. There is always a tradeoff between these two types of errors: any test that we devise must prioritize minimizing one or the other type of error. Obviously in our legal system we try to minimize type 1 errors on the undertanding that we will sometimes let guilty people go.</p>
 </div>
-<p>As we’ll see in the next chapter, we can use data to estimate <span class="math notranslate nohighlight">\(\gamma_0\)</span> and <span class="math notranslate nohighlight">\(\gamma_1\)</span>. These estimates are functions of the random realizations of data, and so the estimates are themselves random variables.</p>
+<p>Consider another simple example. Suppose the return on a asset <span class="math notranslate nohighlight">\(i\)</span> during time <span class="math notranslate nohighlight">\(t\)</span> is assumed to be</p>
 <div class="math notranslate nohighlight">
 \[R_{i,t} = \mu_i + \varepsilon_{i,t}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\varepsilon_{i,t}\sim \N(0,\sigma_i^2)\)</span>.</p>
-<p>For now, though, let’s consider a very simple example. Suppose we wish to test the hypothesis</p>
+<p>where <span class="math notranslate nohighlight">\(\mu_i\)</span> is the assets expected return and <span class="math notranslate nohighlight">\(\varepsilon_{i,t}\sim \N(0,\sigma_i^2)\)</span> is the statistical noise in the return.</p>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>In this model, what is <span class="math notranslate nohighlight">\(\E(R_i)\)</span>? What is <span class="math notranslate nohighlight">\(\var(R_i)\)</span>?</p>
+</div>
+<p>Suppose we wish to test the hypothesis</p>
 <div class="math notranslate nohighlight">
-\[H_0: \mu = 0.\]</div>
-<p>Our estimate for the expected value, <span class="math notranslate nohighlight">\(\mu\)</span>, is simply <span class="math notranslate nohighlight">\(\bar x\)</span>. We saw that the central limit theorem says that <span class="math notranslate nohighlight">\(E(\bar x) = \mu\)</span> and <span class="math notranslate nohighlight">\(\var(\bar x) = \frac{\sigma^2}{n}\)</span>. This means that <em>under the null hypothesis</em> the distribution of <span class="math notranslate nohighlight">\(\bar x\)</span> would look like this:</p>
-<div class="cell docutils container">
+\[H_0: \mu_i = 0.\]</div>
+<p>Our estimate for the expected value, <span class="math notranslate nohighlight">\(\mu\)</span>, is simply the average of the <span class="math notranslate nohighlight">\(R_{i,t}\)</span>. We saw that the central limit theorem says that <span class="math notranslate nohighlight">\(E(\bar R) = \mu\)</span> and <span class="math notranslate nohighlight">\(\var(\bar R) = \frac{\sigma^2}{T}\)</span>. This means that <em>under the null hypothesis</em> the distribution of <span class="math notranslate nohighlight">\(\bar R\)</span> would look like this:</p>
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
 
 <span class="c1"># pdf</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">250</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.025</span><span class="p">)</span>
 
 <span class="c1"># fill in the tails</span>
 <span class="n">px1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">px1</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">px1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">px1</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">px1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
 <span class="n">px2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">p</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">px2</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">px2</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">px2</span><span class="p">,</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">px2</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="kc">None</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/02f Estimation_76_0.png" src="_images/02f Estimation_76_0.png" />
+<img alt="_images/02f Estimation_75_0.png" src="_images/02f Estimation_75_0.png" />
 </div>
 </div>
-<p>(To keep things simple, we’re assuming that the variance is just one. Obviously we can generalize that.)</p>
+<p>(To keep things simple, this graph is created assuming the variance is just one. Obviously we can generalize that without changing the main idea.)</p>
 </section>
 </section>
 
@@ -1061,10 +1089,10 @@ b &amp; b^2 + c^2 \\
             <p class="prev-next-title">Covariance</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="notation.html" title="next page">
+    <a class='right-next' id="next-link" href="regression.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Notation</p>
+        <p class="prev-next-title">Regression</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -1076,7 +1104,7 @@ b &amp; b^2 + c^2 \\
         <footer class="col footer"><p>
   
     <div class="extra_footer">
-      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.01.
+      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.02.
     </div>
 </p>
         </footer>

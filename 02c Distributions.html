@@ -191,6 +191,28 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="regression.html">
+   Regression
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04a%20Regression%20theory.html">
+     Linear regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04b%20Regression%20applications.html">
+     Implementing regressions
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -542,13 +564,14 @@ Var(X) = 5.0
 <div class="admonition-extra-credit dropdown admonition">
 <p class="admonition-title">Extra credit</p>
 <p>To find the expected value of a Poisson random variable <span class="math notranslate nohighlight">\(X\)</span>, start with the definition of expectation:</p>
-<p>\begin{aligned}
-\E(X) &amp;= \sum_{k=0}^{\infty} \P(X=k) \cdot k  \
-&amp;= \sum_{k=0}^{\infty} \frac{\lambda^{k} e^{-\lambda}}{k!} k \
-&amp;=e^{-\lambda} \sum_{k=1}^{\infty} \frac{k \lambda^{k}}{k!} \
-&amp;=\lambda e^{-\lambda} \sum_{k=1}^{\infty} \frac{\lambda^{k-1}}{(k-1)!} \
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\E(X) &amp;= \sum_{k=0}^{\infty} \P(X=k) \cdot k  \\
+&amp;= \sum_{k=0}^{\infty} \frac{\lambda^{k} e^{-\lambda}}{k!} k \\
+&amp;=e^{-\lambda} \sum_{k=1}^{\infty} \frac{k \lambda^{k}}{k!} \\
+&amp;=\lambda e^{-\lambda} \sum_{k=1}^{\infty} \frac{\lambda^{k-1}}{(k-1)!} \\
 &amp;=\lambda e^{-\lambda} \sum_{j=0}^{\infty} \frac{\lambda^{j}}{j!}.
-\end{aligned}</p>
+\end{aligned}\end{split}\]</div>
 <p>The infinite sum is</p>
 <div class="math notranslate nohighlight">
 \[1 + \lambda + \frac{\lambda^2}{2} + \frac{\lambda^3}{3!} + \cdots = e^{\lambda},\]</div>
@@ -556,20 +579,22 @@ Var(X) = 5.0
 <div class="math notranslate nohighlight">
 \[\E(X) =\lambda e^{-\lambda} e^{\lambda} = \lambda.\]</div>
 <p>To find the variance, we can find <span class="math notranslate nohighlight">\(\E(X^2)\)</span> using a similar approach:</p>
-<p>\begin{aligned}
-\E(X^2) &amp;= \sum_{k=0}^{\infty} \frac{\lambda^{k} e^{-\lambda}}{k!} k^2 \
-&amp;=e^{-\lambda} \sum_{k=1}^{\infty} \frac{k , \lambda , \lambda^{k-1}}{(k-1)!} \
-&amp;=\lambda e^{-\lambda} \sum_{k=1}^{\infty} k \frac{\lambda^{k-1}}{(k-1)!} \
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\E(X^2) &amp;= \sum_{k=0}^{\infty} \frac{\lambda^{k} e^{-\lambda}}{k!} k^2 \\
+&amp;=e^{-\lambda} \sum_{k=1}^{\infty} \frac{k \, \lambda \, \lambda^{k-1}}{(k-1)!} \\
+&amp;=\lambda e^{-\lambda} \sum_{k=1}^{\infty} k \frac{\lambda^{k-1}}{(k-1)!} \\
 &amp;=\lambda e^{-\lambda} \sum_{j=0}^{\infty} (j+1)\frac{\lambda^{j}}{j!}.
-\end{aligned}</p>
+\end{aligned}\end{split}\]</div>
 <p>The summation term is</p>
-<p>\begin{aligned}
-\sum_{j=0}^{\infty} (j+1)\frac{\lambda^{j}}{j!} &amp;= \sum_{j=0}^{\infty} j\frac{\lambda^{j}}{j!} + \sum_{j=0}^{\infty}\frac{\lambda^{j}}{j!} \
-&amp;= \lambda \sum_{j=1}^{\infty} \frac{\lambda^{j-1}}{(j-1)!} ; + ; e^{\lambda} \
-&amp;= \lambda \sum_{i=0}^{\infty} \frac{\lambda^{i}}{i!} ; + ; e^{\lambda} \
-&amp;= \lambda e^{\lambda} + e^{\lambda} \
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\sum_{j=0}^{\infty} (j+1)\frac{\lambda^{j}}{j!} &amp;= \sum_{j=0}^{\infty} j\frac{\lambda^{j}}{j!} + \sum_{j=0}^{\infty}\frac{\lambda^{j}}{j!} \\
+&amp;= \lambda \sum_{j=1}^{\infty} \frac{\lambda^{j-1}}{(j-1)!} \; + \; e^{\lambda} \\
+&amp;= \lambda \sum_{i=0}^{\infty} \frac{\lambda^{i}}{i!} \; + \; e^{\lambda} \\
+&amp;= \lambda e^{\lambda} + e^{\lambda} \\
 &amp;= e^{\lambda}(\lambda+1).
-\end{aligned}</p>
+\end{aligned}\end{split}\]</div>
 <p>Therefore,</p>
 <div class="math notranslate nohighlight">
 \[\E(X^2) = \lambda(\lambda+1),\]</div>
@@ -662,25 +687,28 @@ Var(X) = 5.0
 \[\E(X) = \exp\left\{\left(\mu +{\frac {\sigma ^{2}}{2}}\right)\right\}.\]</div>
 <div class="admonition-extra-credit dropdown admonition">
 <p class="admonition-title">Extra credit</p>
-<p>The math behind this result is a little tricky, but really we just need to remember how to <a class="reference external" href="https://en.wikipedia.org/wiki/Completing_the_square">complete the square</a>. (Despite being known for thousands of years, methods to complete the square continue to be developed. In 2020 a professor at Carnegie Mellon shared <a class="reference external" href="https://www.nytimes.com/2020/02/05/science/quadratic-equations-algebra.html">a new method</a> for understanding the process.)</p>
+<p>The math behind this result is a little tricky, but really we just need to remember how to <a class="reference external" href="https://en.wikipedia.org/wiki/Completing_the_square">complete the square</a>. In 2020 a professor at Carnegie Mellon shared <a class="reference external" href="https://www.nytimes.com/2020/02/05/science/quadratic-equations-algebra.html">a new method</a> to complete a square, which modifies a technique that has been known for thousands of years.)</p>
 <p>Start with the definition of expected value:</p>
-<p>\begin{aligned}
-\E\left(e^y\right) &amp;=\int_{-\infty}^{\infty} e^y \cdot f_Y(y) , dy \
-&amp;=\int_{-\infty}^{\infty} e^y \cdot \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2}\left(\frac{y-\mu}{\sigma}\right)^{2}} dy \
-&amp;=\int_{-\infty}^{\infty} \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2 \sigma^{2}}\left(y^{2}-2 \mu y+\mu^{2}-2 \sigma^{2} y\right)} dy \
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\E\left(e^y\right) &amp;=\int_{-\infty}^{\infty} e^y \cdot f_Y(y) \, dy \\
+&amp;=\int_{-\infty}^{\infty} e^y \cdot \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2}\left(\frac{y-\mu}{\sigma}\right)^{2}} dy \\
+&amp;=\int_{-\infty}^{\infty} \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2 \sigma^{2}}\left(y^{2}-2 \mu y+\mu^{2}-2 \sigma^{2} y\right)} dy \\
 &amp;=\int_{-\infty}^{\infty} \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2 \sigma^{2}}\left(y^{2}-2\left(\mu+\sigma^{2}\right) y+\mu^{2}\right)} dy
-\end{aligned}</p>
+\end{aligned}\end{split}\]</div>
 <p>Here’s where we complete the square. We can write</p>
-<p>\begin{aligned}
-\exp\left[{-\frac{1}{2 \sigma^{2}}\left(y^{2}-2\left(\mu+\sigma^{2}\right) y+\mu^{2}\right)}\right] &amp;= \exp\left[{-\frac{1}{2 \sigma^{2}}\left(y - (\mu+\sigma^2)\right)^2} +\frac{1}{2 \sigma^{2}}(2\mu\sigma^2 + \sigma^4)\right] \
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\exp\left[{-\frac{1}{2 \sigma^{2}}\left(y^{2}-2\left(\mu+\sigma^{2}\right) y+\mu^{2}\right)}\right] &amp;= \exp\left[{-\frac{1}{2 \sigma^{2}}\left(y - (\mu+\sigma^2)\right)^2} +\frac{1}{2 \sigma^{2}}(2\mu\sigma^2 + \sigma^4)\right] \\
 &amp;= \exp\left[{-\frac{1}{2 \sigma^{2}}\left(y - (\mu+\sigma^2)\right)^2}\right] \cdot \exp\left[\mu + \frac{\sigma^2}{2}\right]
-\end{aligned}</p>
+\end{aligned}\end{split}\]</div>
 <p>Therefore,</p>
-<p>\begin{aligned}
-\E\left(e^y\right)&amp;=\int_{-\infty}^{\infty} \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2 \sigma^{2}}\left(y-\left(\mu+\sigma^{2}\right)\right)^{2}} e^{\left(\mu+\frac{1}{2} \sigma^{2}\right)} dy \
-&amp;=e^{\left(\mu+\frac{1}{2} \sigma^{2}\right)} \int_{-\infty}^{\infty} \underbrace{\frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2 \sigma^{2}}\left(y-(\mu+\sigma)^{2}\right)^{2}}}_{\text{PDF of normal}} dy  \
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\E\left(e^y\right)&amp;=\int_{-\infty}^{\infty} \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2 \sigma^{2}}\left(y-\left(\mu+\sigma^{2}\right)\right)^{2}} e^{\left(\mu+\frac{1}{2} \sigma^{2}\right)} dy \\
+&amp;=e^{\left(\mu+\frac{1}{2} \sigma^{2}\right)} \int_{-\infty}^{\infty} \underbrace{\frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2 \sigma^{2}}\left(y-(\mu+\sigma)^{2}\right)^{2}}}_{\text{PDF of normal}} dy  \\
 &amp;=e^{\left(\mu+\frac{1}{2} \sigma^{2}\right)}.
-\end{aligned}</p>
+\end{aligned}\end{split}\]</div>
 <p>Here, we’ve used the fact that the function over the brace is the PDF of a normal distribution, and therefore integrating over the whole real line equals one. (This PDF is of a random variable that has a mean of <span class="math notranslate nohighlight">\((\mu + \sigma)^2\)</span> but that is irrelevant; all that matters is that it is a PDF and therefore the integral must be one.)</p>
 </div>
 <div class="cell docutils container">
@@ -959,7 +987,7 @@ Var(X) = 5.0
         <footer class="col footer"><p>
   
     <div class="extra_footer">
-      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.01.
+      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.02.
     </div>
 </p>
         </footer>
