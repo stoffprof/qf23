@@ -216,6 +216,40 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
+  Factors
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="06%20Calculating%20beta.html">
+   Factor regressions
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Portfolio optimization
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="05a%20Diversification.html">
+   Diversification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05b%20Efficient%20portfolios.html">
+   The efficient frontier
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05c%20Numerical%20optimization.html">
+   Numerical optimization
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
   Reference
  </span>
 </p>
@@ -1577,8 +1611,8 @@ MSE(\beta_0,\beta_1) = \frac{1}{N} \sum_{i=1}^N \left[y_i - (\beta_0 + \beta_1 x
 \frac{\partial MSE}{\partial \beta_1} = -\frac{2}{N} \sum_i x_i \left[y_i - (\beta_0 + \beta_1 x_i)\right].
 \end{equation*}\]</div>
 <p>In vector notation, this is</p>
-<div class="amsmath math notranslate nohighlight" id="equation-ab188711-2894-4de3-87b0-1aa056a6a5ce">
-<span class="eqno">(10)<a class="headerlink" href="#equation-ab188711-2894-4de3-87b0-1aa056a6a5ce" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-b823bf68-5c62-455f-9335-fb80ba04d156">
+<span class="eqno">(10)<a class="headerlink" href="#equation-b823bf68-5c62-455f-9335-fb80ba04d156" title="Permalink to this equation">#</a></span>\[\begin{equation}
 \frac{\partial}{\partial \beta} \frac{(y-X\beta)'(y-X\beta)}{N} = -\frac{2}{N} X'(y-X\beta) = \frac{2}{N} X'(X\beta-y).
 \end{equation}\]</div>
 <p>This vector is called the <em>gradient</em> of the function.</p>
@@ -2267,7 +2301,7 @@ n \sum(x-\bar{x})(y-\bar{y}) &amp;= n \sum(x y-x \bar{y}-\bar{x} y+\bar{x} \bar{
         <footer class="col footer"><p>
   
     <div class="extra_footer">
-      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.02.
+      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.03.
     </div>
 </p>
         </footer>

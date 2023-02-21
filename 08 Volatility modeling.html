@@ -1,0 +1,1484 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Volatility modeling &#8212; Quant Finance in Python</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/admonitions-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/custom-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"cov": "\\operatorname{Cov}", "var": "\\operatorname{Var}", "N": "\\mathcal{N}", "E": "\\mathbb{E}", "P": "\\mathbb{P}", "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="canonical" href="https://stoffprof.github.io/qf23/08 Volatility modeling.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Notation" href="notation.html" />
+    <link rel="prev" title="Markov Switching model" href="07b%20Markov%20switching%20model.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/qf.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Quant Finance in Python</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a%20math.html">
+   Math background
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b%20returns.html">
+   Asset returns
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01c%20prices.html">
+   A model of prices
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Econometrics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="probability.html">
+   Probability
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02a%20MSE.html">
+     Prediction: First look
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02b%20Probability%20theory.html">
+     Probability theory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02d%20Pseudorandom%20number%20generation.html">
+     Pseudorandom number generation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02c%20Distributions.html">
+     Probability distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02e%20Covariance.html">
+     Covariance
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02f%20Estimation.html">
+     Parameter estimation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="regression.html">
+   Regression
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04a%20Regression%20theory.html">
+     Linear regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04b%20Regression%20applications.html">
+     Implementing regressions
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Factors
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="06%20Calculating%20beta.html">
+   Factor regressions
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Portfolio optimization
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="05a%20Diversification.html">
+   Diversification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05b%20Efficient%20portfolios.html">
+   The efficient frontier
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05c%20Numerical%20optimization.html">
+   Numerical optimization
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Time series modeling
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="07a%20Time%20series%20analysis.html">
+   Time series models
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07aa%20Applications.html">
+   Applications
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07b%20Markov%20switching%20model.html">
+   Markov Switching model
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Volatility modeling
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reference
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="notation.html">
+   Notation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sources.html">
+   Additional sources
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/08 Volatility modeling.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#garch">
+   GARCH
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#egarch">
+   EGARCH
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#error-distributions">
+     Error distributions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#estimation">
+     Estimation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gjr-garch">
+   GJR-GARCH
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tarch">
+   TARCH
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Volatility modeling</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#garch">
+   GARCH
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#egarch">
+   EGARCH
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#error-distributions">
+     Error distributions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#estimation">
+     Estimation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gjr-garch">
+   GJR-GARCH
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tarch">
+   TARCH
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="volatility-modeling">
+<h1>Volatility modeling<a class="headerlink" href="#volatility-modeling" title="Permalink to this headline">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pandas_datareader</span> <span class="k">as</span> <span class="nn">pdr</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.arima.model</span> <span class="kn">import</span> <span class="n">ARIMA</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">acf</span><span class="p">,</span> <span class="n">pacf</span>
+
+<span class="c1"># This code will supress certain unnecessary warnings from the statsmodels package</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tools.sm_exceptions</span> <span class="kn">import</span> <span class="n">ValueWarning</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s1">&#39;statsmodels&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s1">&#39;statsmodels&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">ValueWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ll be using the <code class="docutils literal notranslate"><span class="pre">arch</span></code> <a class="reference external" href="https://pypi.org/project/arch/">package</a>, so be sure to have that installed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">arch</span> <span class="kn">import</span> <span class="n">arch_model</span>
+<span class="kn">from</span> <span class="nn">arch.univariate</span> <span class="kn">import</span> <span class="n">ARX</span><span class="p">,</span> <span class="n">GARCH</span><span class="p">,</span> <span class="n">EGARCH</span><span class="p">,</span> <span class="n">ConstantMean</span><span class="p">,</span> <span class="n">StudentsT</span><span class="p">,</span> <span class="n">SkewStudent</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spy</span> <span class="o">=</span> <span class="n">pdr</span><span class="o">.</span><span class="n">get_data_yahoo</span><span class="p">(</span><span class="s1">&#39;SPY&#39;</span><span class="p">,</span> <span class="mi">1995</span><span class="p">,</span> <span class="mi">2022</span><span class="p">)</span>
+
+<span class="n">spy</span> <span class="o">=</span> <span class="n">spy</span><span class="p">[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+<span class="n">spy</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ret&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spy</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/08 Volatility modeling_7_0.png" src="_images/08 Volatility modeling_7_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span><span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">spy</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auto_ylims</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ACF of $r$&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_pacf</span><span class="p">(</span><span class="n">spy</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auto_ylims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;PACF of $r^2$&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/08 Volatility modeling_8_0.png" src="_images/08 Volatility modeling_8_0.png" />
+</div>
+</div>
+<section id="garch">
+<h2>GARCH<a class="headerlink" href="#garch" title="Permalink to this headline">#</a></h2>
+<p>If we specify an ARMA model for <span class="math notranslate nohighlight">\(\sigma^2\)</span>, the model is called a generalized autoregressive conditional heteroskedasticity (GARCH) model.</p>
+<div class="math notranslate nohighlight">
+\[ r_t  =  \mu + \varepsilon_t, \quad \varepsilon_t  =  \sigma_t e_t,\]</div>
+<div class="math notranslate nohighlight">
+\[\sigma^2_t   =  \omega + \alpha \varepsilon_{t-1}^2 + \beta \sigma_{t-1}^2,\]</div>
+<div class="math notranslate nohighlight">
+\[e_t  \sim  N(0,1).\]</div>
+<p>Notice that as <span class="math notranslate nohighlight">\(\sigma_t\)</span> changes, the volatility of <span class="math notranslate nohighlight">\(\varepsilon_t\)</span> changes. Obviously, if <span class="math notranslate nohighlight">\(\sigma_t=1\)</span> then <span class="math notranslate nohighlight">\(\varepsilon_t=e_t\)</span> has a variance of 1. But suppose that <span class="math notranslate nohighlight">\(\sigma_t=1.5\)</span>. Now</p>
+<div class="math notranslate nohighlight">
+\[\var(\varepsilon_t) = \var(1.5\times e_t) = 1.5^2 \times \var(e_t) = 1.5^2,\]</div>
+<p>so the volatility of <span class="math notranslate nohighlight">\(\varepsilon_t\)</span> is 1.5. In other words, the volatility of the noise term is controlled entirely by <span class="math notranslate nohighlight">\(\sigma_t\)</span>, which we allow to vary over time.</p>
+<p>More generally, a GARCH(<span class="math notranslate nohighlight">\(p,q\)</span>) model specifies a variance of</p>
+<div class="math notranslate nohighlight">
+\[\sigma_t^2 = \omega +\sum_{i=1}^{q}\alpha_i\varepsilon_{t-i}^{2}+\sum _{i=1}^{p}\beta_i\sigma _{t-i}^{2}.\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># scaling helps with log-likelihood maximization</span>
+<span class="n">spy</span> <span class="o">=</span> <span class="n">spy</span><span class="o">*</span><span class="mi">100</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod1</span> <span class="o">=</span> <span class="n">ConstantMean</span><span class="p">(</span><span class="n">spy</span><span class="p">)</span>
+<span class="n">mod1</span><span class="o">.</span><span class="n">volatility</span> <span class="o">=</span> <span class="n">GARCH</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">q</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">res1</span> <span class="o">=</span> <span class="n">mod1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="s1">&#39;on&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res1</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration:      1,   Func. Count:      6,   Neg. LLF: 1645953742.754961
+Iteration:      2,   Func. Count:     15,   Neg. LLF: 3805736125.047031
+Iteration:      3,   Func. Count:     22,   Neg. LLF: 12942.908506348966
+Iteration:      4,   Func. Count:     29,   Neg. LLF: 9506.552460357936
+Iteration:      5,   Func. Count:     35,   Neg. LLF: 9361.76331879045
+Iteration:      6,   Func. Count:     41,   Neg. LLF: 9676.768033278962
+Iteration:      7,   Func. Count:     47,   Neg. LLF: 9386.351177653953
+Iteration:      8,   Func. Count:     53,   Neg. LLF: 9328.426692438145
+Iteration:      9,   Func. Count:     58,   Neg. LLF: 9328.24299955133
+Iteration:     10,   Func. Count:     63,   Neg. LLF: 9328.241630273564
+Iteration:     11,   Func. Count:     68,   Neg. LLF: 9328.241626589304
+Iteration:     12,   Func. Count:     72,   Neg. LLF: 9328.24162659041
+                     Constant Mean - GARCH Model Results                      
+==============================================================================
+Dep. Variable:                    ret   R-squared:                       0.000
+Mean Model:             Constant Mean   Adj. R-squared:                  0.000
+Vol Model:                      GARCH   Log-Likelihood:               -9328.24
+Distribution:                  Normal   AIC:                           18664.5
+Method:            Maximum Likelihood   BIC:                           18691.8
+                                        No. Observations:                 6798
+Date:                Mon, Apr 11 2022   Df Residuals:                     6797
+Time:                        11:16:15   Df Model:                            1
+                                Mean Model                                
+==========================================================================
+                 coef    std err          t      P&gt;|t|    95.0% Conf. Int.
+--------------------------------------------------------------------------
+mu             0.0815  9.719e-03      8.381  5.261e-17 [6.240e-02,  0.101]
+                              Volatility Model                              
+============================================================================
+                 coef    std err          t      P&gt;|t|      95.0% Conf. Int.
+----------------------------------------------------------------------------
+omega          0.0229  4.674e-03      4.900  9.570e-07 [1.374e-02,3.206e-02]
+alpha[1]       0.1231  1.293e-02      9.523  1.678e-21   [9.780e-02,  0.148]
+beta[1]        0.8617  1.315e-02     65.535      0.000     [  0.836,  0.887]
+============================================================================
+
+Covariance estimator: robust
+</pre></div>
+</div>
+</div>
+</div>
+<p>The estimated model is</p>
+<div class="math notranslate nohighlight">
+\[r_t = 0.0815 + \varepsilon_t,\]</div>
+<div class="math notranslate nohighlight">
+\[\sigma_t^2 = 0.0229 + 0.1231 \varepsilon_{t-1}^2 + 0.8617 \sigma_{t-1}^2.\]</div>
+<p>Notice that <span class="math notranslate nohighlight">\(\alpha+\beta \approx 1\)</span>. This is commonly observed with financial data, and the related <em>IGARCH</em> model requires <span class="math notranslate nohighlight">\(\alpha+\beta=1\)</span> as a constraint in the estimation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res1</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>mu          0.081452
+omega       0.022903
+alpha[1]    0.123144
+beta[1]     0.861669
+Name: params, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <em>conditional volatility</em> is the estimate of the time series of <span class="math notranslate nohighlight">\(\sigma^2\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res1</span><span class="o">.</span><span class="n">conditional_volatility</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date
+1995-01-04    0.444635
+1995-01-05    0.461084
+1995-01-06    0.454873
+1995-01-09    0.448599
+1995-01-10    0.443122
+                ...   
+2021-12-27    1.126419
+2021-12-28    1.155539
+2021-12-29    1.084778
+2021-12-30    1.018397
+2021-12-31    0.965578
+Name: cond_vol, Length: 6798, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Annualized volatility</span>
+<span class="p">(</span><span class="n">res1</span><span class="o">.</span><span class="n">conditional_volatility</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">252</span><span class="p">))</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">4</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/08 Volatility modeling_18_0.png" src="_images/08 Volatility modeling_18_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Standardized residuals</span>
+<span class="n">std_resid</span> <span class="o">=</span> <span class="n">res1</span><span class="o">.</span><span class="n">resid</span> <span class="o">/</span> <span class="n">res1</span><span class="o">.</span><span class="n">conditional_volatility</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">std_resid</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">4</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/08 Volatility modeling_20_0.png" src="_images/08 Volatility modeling_20_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">std_resid</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auto_ylims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/08 Volatility modeling_21_0.png" src="_images/08 Volatility modeling_21_0.png" />
+</div>
+</div>
+<p>We don’t have to assume a constant mean for the return process. Instead, we can combine an AR process in the return with GARCH volatility. For example, we can fit an AR(3) model to the data. We’ll start with just an AR(3), and then add in the GARCH process for the volatility.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># AR(3)</span>
+<span class="n">ar3</span> <span class="o">=</span> <span class="n">ARIMA</span><span class="p">(</span><span class="n">spy</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ar3</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                               SARIMAX Results                                
+==============================================================================
+Dep. Variable:                    ret   No. Observations:                 6798
+Model:                 ARIMA(3, 0, 0)   Log Likelihood              -10905.486
+Date:                Mon, 11 Apr 2022   AIC                          21820.971
+Time:                        11:20:29   BIC                          21855.093
+Sample:                             0   HQIC                         21832.747
+                               - 6798                                         
+Covariance Type:                  opg                                         
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0489      0.014      3.541      0.000       0.022       0.076
+ar.L1         -0.0938      0.006    -14.585      0.000      -0.106      -0.081
+ar.L2         -0.0305      0.005     -6.105      0.000      -0.040      -0.021
+ar.L3         -0.0059      0.006     -0.937      0.349      -0.018       0.006
+sigma2         1.4485      0.010    139.690      0.000       1.428       1.469
+===================================================================================
+Ljung-Box (L1) (Q):                   0.00   Jarque-Bera (JB):             34081.64
+Prob(Q):                              0.99   Prob(JB):                         0.00
+Heteroskedasticity (H):               0.68   Skew:                            -0.22
+Prob(H) (two-sided):                  0.00   Kurtosis:                        13.96
+===================================================================================
+
+Warnings:
+[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod2</span> <span class="o">=</span> <span class="n">ARX</span><span class="p">(</span><span class="n">spy</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mod2</span><span class="o">.</span><span class="n">volatility</span> <span class="o">=</span> <span class="n">GARCH</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">q</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">res2</span> <span class="o">=</span> <span class="n">mod2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res2</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                           AR - GARCH Model Results                           
+==============================================================================
+Dep. Variable:                    ret   R-squared:                       0.005
+Mean Model:                        AR   Adj. R-squared:                  0.005
+Vol Model:                      GARCH   Log-Likelihood:               -9317.94
+Distribution:                  Normal   AIC:                           18649.9
+Method:            Maximum Likelihood   BIC:                           18697.6
+                                        No. Observations:                 6795
+Date:                Mon, Apr 11 2022   Df Residuals:                     6791
+Time:                        11:20:41   Df Model:                            4
+                                  Mean Model                                  
+==============================================================================
+                 coef    std err          t      P&gt;|t|        95.0% Conf. Int.
+------------------------------------------------------------------------------
+Const          0.0891  1.041e-02      8.562  1.112e-17     [6.873e-02,  0.110]
+ret[1]        -0.0479  1.292e-02     -3.711  2.066e-04 [-7.327e-02,-2.262e-02]
+ret[2]        -0.0138  1.418e-02     -0.976      0.329  [-4.163e-02,1.396e-02]
+ret[3]        -0.0307  1.344e-02     -2.282  2.251e-02 [-5.702e-02,-4.325e-03]
+                              Volatility Model                              
+============================================================================
+                 coef    std err          t      P&gt;|t|      95.0% Conf. Int.
+----------------------------------------------------------------------------
+omega          0.0228  4.696e-03      4.852  1.221e-06 [1.358e-02,3.199e-02]
+alpha[1]       0.1224  1.308e-02      9.358  8.157e-21   [9.678e-02,  0.148]
+beta[1]        0.8624  1.333e-02     64.714      0.000     [  0.836,  0.889]
+============================================================================
+
+Covariance estimator: robust
+</pre></div>
+</div>
+</div>
+</div>
+<p>In a model with <span class="math notranslate nohighlight">\(k\)</span> lags of the time series, the conditional volatility will be missing for <span class="math notranslate nohighlight">\(k\)</span> periods.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res2</span><span class="o">.</span><span class="n">conditional_volatility</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date
+1995-01-04         NaN
+1995-01-05         NaN
+1995-01-06         NaN
+1995-01-09    0.480336
+1995-01-10    0.471049
+                ...   
+2021-12-27    1.122058
+2021-12-28    1.164854
+2021-12-29    1.092453
+2021-12-30    1.026000
+2021-12-31    0.971042
+Name: cond_vol, Length: 6798, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can “prune” the model by dropping insignificant parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod2</span> <span class="o">=</span> <span class="n">ARX</span><span class="p">(</span><span class="n">spy</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">mod2</span><span class="o">.</span><span class="n">volatility</span> <span class="o">=</span> <span class="n">GARCH</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">q</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">res2</span> <span class="o">=</span> <span class="n">mod2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res2</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                           AR - GARCH Model Results                           
+==============================================================================
+Dep. Variable:                    ret   R-squared:                       0.005
+Mean Model:                        AR   Adj. R-squared:                  0.004
+Vol Model:                      GARCH   Log-Likelihood:               -9318.51
+Distribution:                  Normal   AIC:                           18649.0
+Method:            Maximum Likelihood   BIC:                           18690.0
+                                        No. Observations:                 6795
+Date:                Mon, Apr 11 2022   Df Residuals:                     6792
+Time:                        11:24:03   Df Model:                            3
+                                  Mean Model                                  
+==============================================================================
+                 coef    std err          t      P&gt;|t|        95.0% Conf. Int.
+------------------------------------------------------------------------------
+Const          0.0880  1.018e-02      8.638  5.728e-18     [6.800e-02,  0.108]
+ret[1]        -0.0473  1.290e-02     -3.669  2.431e-04 [-7.259e-02,-2.204e-02]
+ret[3]        -0.0303  1.340e-02     -2.262  2.369e-02 [-5.656e-02,-4.047e-03]
+                              Volatility Model                              
+============================================================================
+                 coef    std err          t      P&gt;|t|      95.0% Conf. Int.
+----------------------------------------------------------------------------
+omega          0.0228  4.686e-03      4.872  1.105e-06 [1.364e-02,3.201e-02]
+alpha[1]       0.1227  1.302e-02      9.430  4.105e-21   [9.722e-02,  0.148]
+beta[1]        0.8621  1.326e-02     64.994      0.000     [  0.836,  0.888]
+============================================================================
+
+Covariance estimator: robust
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">std_resid2</span> <span class="o">=</span> <span class="n">res2</span><span class="o">.</span><span class="n">resid</span> <span class="o">/</span> <span class="n">res2</span><span class="o">.</span><span class="n">conditional_volatility</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">std_resid2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/08 Volatility modeling_29_0.png" src="_images/08 Volatility modeling_29_0.png" />
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">std_resid</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auto_ylims</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ACF of $\hat</span><span class="si">{e}</span><span class="s1">$&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">.1</span><span class="p">)</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_pacf</span><span class="p">(</span><span class="n">std_resid</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auto_ylims</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ACF of $\hat</span><span class="si">{e}</span><span class="s1">^2$&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">.1</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/08 Volatility modeling_30_0.png" src="_images/08 Volatility modeling_30_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">acfn</span><span class="p">,</span> <span class="n">qstats</span><span class="p">,</span> <span class="n">pvals</span> <span class="o">=</span> <span class="n">acf</span><span class="p">(</span><span class="n">std_resid</span><span class="p">,</span> <span class="n">qstat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="n">pvals</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.01088589, 0.03223421, 0.01681522, 0.02567064, 0.00156695,
+       0.00225048, 0.00453889, 0.00797874, 0.01103002, 0.01190306,
+       0.01897974, 0.01361292, 0.01844378, 0.01766818, 0.01221789,
+       0.01595429, 0.01843343, 0.02231906, 0.03169609, 0.03998965,
+       0.05311965, 0.06044416, 0.07929233, 0.09921871, 0.05257112,
+       0.0450282 , 0.03486942, 0.04184343, 0.04443817, 0.05351798])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">acf</span><span class="p">(</span><span class="n">std_resid</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">qstat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="mi">30</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.25122747, 0.00707337, 0.0170609 , 0.02337362, 0.03722292,
+       0.04581681, 0.07634837, 0.11609946, 0.14545138, 0.03826229,
+       0.05660476, 0.06758301, 0.06185944, 0.08462738, 0.08066328,
+       0.09848987, 0.12286877, 0.14942988, 0.18870702, 0.23301418,
+       0.2577372 , 0.30872018, 0.33929623, 0.36527916, 0.39712879,
+       0.17860459, 0.18614917, 0.13817988, 0.16833678, 0.15657364])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="egarch">
+<h2>EGARCH<a class="headerlink" href="#egarch" title="Permalink to this headline">#</a></h2>
+<p>The EGARCH(<span class="math notranslate nohighlight">\(p,q\)</span>) model specifies the log-volatility process as follows:</p>
+<div class="math notranslate nohighlight" id="equation-egarch-vol1">
+<span class="eqno">(19)<a class="headerlink" href="#equation-egarch-vol1" title="Permalink to this equation">#</a></span>\[\ln\sigma _{{t}}^{2}=\omega +\sum _{{k=1}}^{{q}}\alpha_{{k}}g(e_{{t-k}})+\sum _{{k=1}}^{{p}}\beta_{{k}}\ln \sigma _{{t-k}}^{{2}},\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[g(e_t) := \theta e_t + \lambda \left[|e_t| - E(|e_t|)\right].\]</div>
+<p>Modeling the log of volatility ensures that volatility is always positive, so no additional constraints are required. And the weighted error structure allows for an asymmetric effect of a return innovation on the volatility:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}g(e_t) = 
+\left\{\begin{matrix}
+ (\theta+\lambda)e_t - \lambda E(|e_t|) &amp; \quad \text{if } e_t\geq 0, \\ 
+ (\theta-\lambda)e_t - \lambda E(|e_t|) &amp; \quad \text{if } e_t&lt; 0. \\ 
+\end{matrix}\right.\end{split}\]</div>
+<p>That is, when an innovation <span class="math notranslate nohighlight">\(e_{t-k}\)</span> is positive, log-variance increases by <span class="math notranslate nohighlight">\(\alpha_k(\theta+\lambda)\)</span>, but when the innovation is negative the log-variance decreases by <span class="math notranslate nohighlight">\(\alpha_k(\theta-\lambda)\)</span>. This asymmetry allows for a “leverage effect” as we’ll soon see. (In either case, we also reduce the log-variance by <span class="math notranslate nohighlight">\(\lambda E(|e_t|)\)</span>, which we’ll soon see is simply a number we can calculate.)</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">arch</span></code> package parameterizes the model as EGARCH(<span class="math notranslate nohighlight">\(p,o,q\)</span>) with</p>
+<div class="math notranslate nohighlight" id="equation-egarch-vol2">
+<span class="eqno">(20)<a class="headerlink" href="#equation-egarch-vol2" title="Permalink to this equation">#</a></span>\[\ln\sigma_{t}^{2} = \omega +\sum_{k=1}^{p}\alpha_{k}\left(\left|e_{t-k}\right|-E(|e_t|)\right)
++\sum_{k=1}^{o}\gamma_{k} e_{t-k} +\sum_{k=1}^{q}\beta_{k}\ln\sigma_{t-k}^{2}.\]</div>
+<p>Comparing <a class="reference internal" href="#equation-egarch-vol1">(19)</a> and <a class="reference internal" href="#equation-egarch-vol2">(20)</a>, we see that:</p>
+<ul class="simple">
+<li><p>implementing the typical EGARCH(<span class="math notranslate nohighlight">\(p,q\)</span>) model implies that <span class="math notranslate nohighlight">\(p=o\)</span>;</p></li>
+<li><p><span class="math notranslate nohighlight">\(\gamma_k\)</span> maps to <span class="math notranslate nohighlight">\(\theta\alpha_k\)</span> in equation (1); and</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha_k\)</span> (in equation 2) maps to <span class="math notranslate nohighlight">\(\lambda\alpha_k\)</span> in equation (1).</p></li>
+</ul>
+<p>The <span class="math notranslate nohighlight">\(\gamma_k\)</span> parameter is called the <em>leverage</em> parameter. If <span class="math notranslate nohighlight">\(\gamma_k=0\)</span> then there is no asymmetry in the volaility — positive and negative values of <span class="math notranslate nohighlight">\(e_t\)</span> have the same effect on <span class="math notranslate nohighlight">\(\sigma_t^2\)</span>. If, however, <span class="math notranslate nohighlight">\(\gamma&lt;0\)</span>, then negative shocks will lead to larger increases in volatility than positive shocks.</p>
+<section id="error-distributions">
+<h3>Error distributions<a class="headerlink" href="#error-distributions" title="Permalink to this headline">#</a></h3>
+<p>Three distributions are often used for the innovation <span class="math notranslate nohighlight">\(e_t\)</span>:</p>
+<ul class="simple">
+<li><p>the Normal distribution;</p></li>
+<li><p>the Student’s T distribution; or</p></li>
+<li><p>the Generalized Error Distribution.</p></li>
+</ul>
+<p>Each distributional assumption leads to a different value of <span class="math notranslate nohighlight">\(E(|e_{t}|)\)</span>. With a Normal distribution we have</p>
+<div class="math notranslate nohighlight">
+\[E(|e_{t}|)=\sqrt{2/\pi}.\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">t</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span> <span class="k">as</span> <span class="n">π</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate E(|e|) for e~N(0,1)</span>
+
+<span class="n">norm</span><span class="p">()</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7978845608028651
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="n">π</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7978845608028654
+</pre></div>
+</div>
+</div>
+</div>
+<p>With a Student’s T distribution,</p>
+<div class="math notranslate nohighlight">
+\[ E(|e_t|) = \frac{2\sqrt{\nu-2} \Gamma[(\nu+1)/2]}{(\nu-1) \Gamma(\nu/2)\sqrt{\pi}},\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Gamma(z)\)</span> is the gamma function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">exp_abs_e</span><span class="p">(</span><span class="n">ν</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate E(|e_t|) for a Student&#39;s T distribution&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">gamma</span> <span class="k">as</span> <span class="n">Γ</span> 
+    <span class="k">return</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ν</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">Γ</span><span class="p">((</span><span class="n">ν</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">((</span><span class="n">ν</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">Γ</span><span class="p">(</span><span class="n">ν</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">π</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">exp_abs_e</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7351051938957227
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># standardized T-distribution</span>
+<span class="n">s</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df</span><span class="o">/</span><span class="p">(</span><span class="n">df</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">t_std</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+
+<span class="n">t_std</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7351051938957227
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_1">Generalized Error Distribution</a> is an alternative distribution that nests the Normal distribution, as well as several other continuous distributions.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gennorm</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">β</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">]:</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gennorm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">β</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">s</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\beta=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">β</span><span class="p">))</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gennorm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">β</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">s</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\beta=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">β</span><span class="p">))</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Generalized Error Distribution&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Probability density function&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Cumulative distribution function&#39;</span><span class="p">)</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/08 Volatility modeling_49_0.png" src="_images/08 Volatility modeling_49_0.png" />
+</div>
+</div>
+</section>
+<section id="estimation">
+<h3>Estimation<a class="headerlink" href="#estimation" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod3</span> <span class="o">=</span> <span class="n">ARX</span><span class="p">(</span><span class="n">spy</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mod3</span><span class="o">.</span><span class="n">volatility</span> <span class="o">=</span> <span class="n">EGARCH</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">res3</span> <span class="o">=</span> <span class="n">mod3</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res3</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration:      1,   Func. Count:      8,   Neg. LLF: 23967397231135.21
+Iteration:      2,   Func. Count:     20,   Neg. LLF: 366017986737545.5
+Iteration:      3,   Func. Count:     31,   Neg. LLF: 24418148819768.273
+Iteration:      4,   Func. Count:     42,   Neg. LLF: 324455003450.04645
+Iteration:      5,   Func. Count:     53,   Neg. LLF: 22654209705255.023
+Iteration:      6,   Func. Count:     64,   Neg. LLF: 29085.27547306702
+Iteration:      7,   Func. Count:     74,   Neg. LLF: 9176.493053995988
+Iteration:      8,   Func. Count:     82,   Neg. LLF: 9172.507298647359
+Iteration:      9,   Func. Count:     89,   Neg. LLF: 9172.505306222632
+Iteration:     10,   Func. Count:     96,   Neg. LLF: 9172.50525648429
+Iteration:     11,   Func. Count:    103,   Neg. LLF: 9172.505250922835
+Iteration:     12,   Func. Count:    109,   Neg. LLF: 9172.505250923823
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 9172.505250922835
+            Iterations: 12
+            Function evaluations: 109
+            Gradient evaluations: 12
+                          AR - EGARCH Model Results                           
+==============================================================================
+Dep. Variable:                    ret   R-squared:                       0.005
+Mean Model:                        AR   Adj. R-squared:                  0.005
+Vol Model:                     EGARCH   Log-Likelihood:               -9172.51
+Distribution:                  Normal   AIC:                           18357.0
+Method:            Maximum Likelihood   BIC:                           18398.0
+                                        No. Observations:                 6797
+Date:                Mon, Apr 11 2022   Df Residuals:                     6795
+Time:                        11:49:56   Df Model:                            2
+                                  Mean Model                                  
+==============================================================================
+                 coef    std err          t      P&gt;|t|        95.0% Conf. Int.
+------------------------------------------------------------------------------
+Const          0.0491  9.675e-03      5.075  3.881e-07   [3.014e-02,6.806e-02]
+ret[1]        -0.0374  1.351e-02     -2.771  5.593e-03 [-6.394e-02,-1.096e-02]
+                               Volatility Model                              
+=============================================================================
+                 coef    std err          t      P&gt;|t|       95.0% Conf. Int.
+-----------------------------------------------------------------------------
+omega      1.9563e-03  3.015e-03      0.649      0.516 [-3.954e-03,7.866e-03]
+alpha[1]       0.1674  1.757e-02      9.525  1.644e-21      [  0.133,  0.202]
+gamma[1]      -0.1418  1.466e-02     -9.673  3.932e-22      [ -0.171, -0.113]
+beta[1]        0.9704  4.502e-03    215.542      0.000      [  0.962,  0.979]
+=============================================================================
+
+Covariance estimator: robust
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod4</span> <span class="o">=</span> <span class="n">ARX</span><span class="p">(</span><span class="n">spy</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mod4</span><span class="o">.</span><span class="n">volatility</span> <span class="o">=</span> <span class="n">EGARCH</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">res4</span> <span class="o">=</span> <span class="n">mod4</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res4</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                          AR - EGARCH Model Results                           
+==============================================================================
+Dep. Variable:                    ret   R-squared:                       0.005
+Mean Model:                        AR   Adj. R-squared:                  0.005
+Vol Model:                     EGARCH   Log-Likelihood:               -9160.71
+Distribution:                  Normal   AIC:                           18339.4
+Method:            Maximum Likelihood   BIC:                           18400.8
+                                        No. Observations:                 6797
+Date:                Mon, Apr 11 2022   Df Residuals:                     6795
+Time:                        11:50:51   Df Model:                            2
+                                  Mean Model                                  
+==============================================================================
+                 coef    std err          t      P&gt;|t|        95.0% Conf. Int.
+------------------------------------------------------------------------------
+Const          0.0481  9.882e-03      4.868  1.125e-06   [2.874e-02,6.748e-02]
+ret[1]        -0.0375  1.537e-02     -2.443  1.458e-02 [-6.767e-02,-7.419e-03]
+                               Volatility Model                              
+=============================================================================
+                 coef    std err          t      P&gt;|t|       95.0% Conf. Int.
+-----------------------------------------------------------------------------
+omega      3.2516e-03  5.434e-03      0.598      0.550 [-7.399e-03,1.390e-02]
+alpha[1]       0.0817  9.369e-02      0.872      0.383      [ -0.102,  0.265]
+alpha[2]       0.1996  5.230e-02      3.816  1.359e-04    [9.705e-02,  0.302]
+gamma[1]      -0.1492  6.803e-02     -2.193  2.828e-02   [ -0.283,-1.588e-02]
+gamma[2]      -0.0793      0.178     -0.445      0.656      [ -0.428,  0.270]
+beta[1]        0.3861      0.771      0.501      0.617      [ -1.126,  1.898]
+beta[2]        0.5626      0.749      0.751      0.452      [ -0.905,  2.030]
+=============================================================================
+
+Covariance estimator: robust
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod5</span> <span class="o">=</span> <span class="n">ARX</span><span class="p">(</span><span class="n">spy</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mod5</span><span class="o">.</span><span class="n">volatility</span> <span class="o">=</span> <span class="n">EGARCH</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mod5</span><span class="o">.</span><span class="n">distribution</span> <span class="o">=</span> <span class="n">StudentsT</span><span class="p">()</span>
+<span class="n">res5</span> <span class="o">=</span> <span class="n">mod5</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res5</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                             AR - EGARCH Model Results                              
+====================================================================================
+Dep. Variable:                          ret   R-squared:                       0.005
+Mean Model:                              AR   Adj. R-squared:                  0.005
+Vol Model:                           EGARCH   Log-Likelihood:               -9018.93
+Distribution:      Standardized Student&#39;s t   AIC:                           18051.9
+Method:                  Maximum Likelihood   BIC:                           18099.6
+                                              No. Observations:                 6797
+Date:                      Mon, Apr 11 2022   Df Residuals:                     6795
+Time:                              11:50:52   Df Model:                            2
+                                  Mean Model                                  
+==============================================================================
+                 coef    std err          t      P&gt;|t|        95.0% Conf. Int.
+------------------------------------------------------------------------------
+Const          0.0703  8.986e-03      7.825  5.085e-15   [5.270e-02,8.792e-02]
+ret[1]        -0.0404  1.166e-02     -3.468  5.248e-04 [-6.327e-02,-1.758e-02]
+                               Volatility Model                               
+==============================================================================
+                  coef    std err          t      P&gt;|t|       95.0% Conf. Int.
+------------------------------------------------------------------------------
+omega      -1.0556e-03  2.695e-03     -0.392      0.695 [-6.337e-03,4.226e-03]
+alpha[1]        0.1588  1.315e-02     12.073  1.467e-33      [  0.133,  0.185]
+gamma[1]       -0.1562  1.128e-02    -13.850  1.271e-43      [ -0.178, -0.134]
+beta[1]         0.9781  3.333e-03    293.471      0.000      [  0.972,  0.985]
+                              Distribution                              
+========================================================================
+                 coef    std err          t      P&gt;|t|  95.0% Conf. Int.
+------------------------------------------------------------------------
+nu             6.6298      0.538     12.326  6.600e-35 [  5.576,  7.684]
+========================================================================
+
+Covariance estimator: robust
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for the log-variance equation</span>
+<span class="n">exp_abs_e</span><span class="p">(</span><span class="n">res5</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;nu&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7562446836441398
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="gjr-garch">
+<h2>GJR-GARCH<a class="headerlink" href="#gjr-garch" title="Permalink to this headline">#</a></h2>
+<p>Glosten, Jagannathan, and Runkle (1993) develop another model that allows asymmetric effects on volatility, which became known as GJR-GARCH. They specify the following process for the variance:</p>
+<div class="math notranslate nohighlight">
+\[\sigma^2_t  =  \omega + \alpha \varepsilon_{t-1}^2 + \gamma \varepsilon_{t-1}^2 I\{\varepsilon_{t-1}&lt;0\}+ \beta \sigma_{t-1}^2 \]</div>
+<p>where <span class="math notranslate nohighlight">\(I\{\cdot\}\)</span> is an <em>indicator variable</em> that equals one when the condition it evaluates is true, and zero otherwise.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod6</span> <span class="o">=</span> <span class="n">ARX</span><span class="p">(</span><span class="n">spy</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mod6</span><span class="o">.</span><span class="n">volatility</span> <span class="o">=</span> <span class="n">GARCH</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">o</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">q</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">res6</span> <span class="o">=</span> <span class="n">mod6</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res6</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                         AR - GJR-GARCH Model Results                         
+==============================================================================
+Dep. Variable:                    ret   R-squared:                       0.005
+Mean Model:                        AR   Adj. R-squared:                  0.005
+Vol Model:                  GJR-GARCH   Log-Likelihood:               -9200.06
+Distribution:                  Normal   AIC:                           18412.1
+Method:            Maximum Likelihood   BIC:                           18453.1
+                                        No. Observations:                 6797
+Date:                Mon, Apr 11 2022   Df Residuals:                     6795
+Time:                        11:51:49   Df Model:                            2
+                                  Mean Model                                  
+==============================================================================
+                 coef    std err          t      P&gt;|t|        95.0% Conf. Int.
+------------------------------------------------------------------------------
+Const          0.0486  9.700e-03      5.014  5.341e-07   [2.962e-02,6.764e-02]
+ret[1]        -0.0364  1.375e-02     -2.650  8.045e-03 [-6.338e-02,-9.490e-03]
+                               Volatility Model                              
+=============================================================================
+                 coef    std err          t      P&gt;|t|       95.0% Conf. Int.
+-----------------------------------------------------------------------------
+omega          0.0233  5.330e-03      4.374  1.221e-05  [1.287e-02,3.376e-02]
+alpha[1]   9.8748e-03  1.117e-02      0.884      0.377 [-1.202e-02,3.177e-02]
+gamma[1]       0.1784  2.768e-02      6.444  1.161e-10      [  0.124,  0.233]
+beta[1]        0.8804  1.873e-02     47.002      0.000      [  0.844,  0.917]
+=============================================================================
+
+Covariance estimator: robust
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res6</span><span class="o">.</span><span class="n">std_resid</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/08 Volatility modeling_59_0.png" src="_images/08 Volatility modeling_59_0.png" />
+</div>
+</div>
+</section>
+<section id="tarch">
+<h2>TARCH<a class="headerlink" href="#tarch" title="Permalink to this headline">#</a></h2>
+<p>The Threshold Autoregressive Conditional Heteroskedasticity model uses an indicator variable as in GJR–GARCH but also models the volatility using the absolute value of the innovations rather than modeling variance with the squares:</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma_t  =  \omega + \alpha \left|\varepsilon_{t-1}\right| + \gamma \left|\varepsilon_{t-1}\right| I\{\varepsilon_{t-1}&lt;0\}+ \beta \sigma_{t-1}.
+\]</div>
+<p>This is implemented by specifying a <code class="docutils literal notranslate"><span class="pre">power</span></code> variable of 1, rather than the default value of 2.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod7</span> <span class="o">=</span> <span class="n">ARX</span><span class="p">(</span><span class="n">spy</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mod7</span><span class="o">.</span><span class="n">volatility</span> <span class="o">=</span> <span class="n">GARCH</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">power</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">res7</span> <span class="o">=</span> <span class="n">mod7</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res7</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                        AR - TARCH/ZARCH Model Results                        
+==============================================================================
+Dep. Variable:                    ret   R-squared:                       0.005
+Mean Model:                        AR   Adj. R-squared:                  0.005
+Vol Model:                TARCH/ZARCH   Log-Likelihood:               -9153.01
+Distribution:                  Normal   AIC:                           18318.0
+Method:            Maximum Likelihood   BIC:                           18359.0
+                                        No. Observations:                 6797
+Date:                Mon, Apr 11 2022   Df Residuals:                     6795
+Time:                        11:51:57   Df Model:                            2
+                                  Mean Model                                 
+=============================================================================
+                 coef    std err          t      P&gt;|t|       95.0% Conf. Int.
+-----------------------------------------------------------------------------
+Const          0.0436  5.458e-03      7.984  1.415e-15  [3.288e-02,5.428e-02]
+ret[1]        -0.0358  2.321e-02     -1.541      0.123 [-8.126e-02,9.717e-03]
+                               Volatility Model                              
+=============================================================================
+                 coef    std err          t      P&gt;|t|       95.0% Conf. Int.
+-----------------------------------------------------------------------------
+omega          0.0315  4.551e-03      6.911  4.809e-12  [2.253e-02,4.037e-02]
+alpha[1]       0.0108  1.154e-02      0.937      0.349 [-1.181e-02,3.343e-02]
+gamma[1]       0.1728  1.816e-02      9.518  1.766e-21      [  0.137,  0.208]
+beta[1]        0.8953  1.066e-02     84.013      0.000      [  0.874,  0.916]
+=============================================================================
+
+Covariance estimator: robust
+</pre></div>
+</div>
+</div>
+</div>
+<p>More general models can be obtained by specifying different values for the power, <span class="math notranslate nohighlight">\(k\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma_t^\kappa   = \omega + \alpha \left|\varepsilon_{t-1}\right|^\kappa + \gamma \left|\varepsilon_{t-1}\right|^\kappa I_{[\varepsilon_{t-1}&lt;0]}+ \beta \sigma_{t-1}^\kappa.
+\]</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="07b%20Markov%20switching%20model.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Markov Switching model</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="notation.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Notation</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    <div class="extra_footer">
+      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.03.
+    </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

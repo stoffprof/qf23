@@ -1,0 +1,2171 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Factor regressions &#8212; Quant Finance in Python</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/admonitions-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/custom-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"cov": "\\operatorname{Cov}", "var": "\\operatorname{Var}", "N": "\\mathcal{N}", "E": "\\mathbb{E}", "P": "\\mathbb{P}", "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="canonical" href="https://stoffprof.github.io/qf23/06 Calculating beta.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Diversification" href="05a%20Diversification.html" />
+    <link rel="prev" title="Implementing regressions" href="04b%20Regression%20applications.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/qf.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Quant Finance in Python</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a%20math.html">
+   Math background
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b%20returns.html">
+   Asset returns
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01c%20prices.html">
+   A model of prices
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Econometrics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="probability.html">
+   Probability
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02a%20MSE.html">
+     Prediction: First look
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02b%20Probability%20theory.html">
+     Probability theory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02d%20Pseudorandom%20number%20generation.html">
+     Pseudorandom number generation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02c%20Distributions.html">
+     Probability distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02e%20Covariance.html">
+     Covariance
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02f%20Estimation.html">
+     Parameter estimation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="regression.html">
+   Regression
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04a%20Regression%20theory.html">
+     Linear regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04b%20Regression%20applications.html">
+     Implementing regressions
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Factors
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Factor regressions
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Portfolio optimization
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="05a%20Diversification.html">
+   Diversification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05b%20Efficient%20portfolios.html">
+   The efficient frontier
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05c%20Numerical%20optimization.html">
+   Numerical optimization
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reference
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="notation.html">
+   Notation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sources.html">
+   Additional sources
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/06 Calculating beta.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#market-size-and-value-factors">
+   Market, Size, and Value factors
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#historical-returns">
+   Historical returns
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-one-factor-model-capm">
+   The one-factor model: CAPM
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#what-is-risk">
+     What is risk?
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#estimating-one-factor-regressions">
+     Estimating one-factor regressions
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#famafrench-3-factor-model">
+   Fama–French 3-factor model
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#are-alphas-zero">
+   Are alphas zero?
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#do-betas-explain-the-cross-section-of-returns">
+   Do betas explain the cross-section of returns?
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Factor regressions</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#market-size-and-value-factors">
+   Market, Size, and Value factors
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#historical-returns">
+   Historical returns
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-one-factor-model-capm">
+   The one-factor model: CAPM
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#what-is-risk">
+     What is risk?
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#estimating-one-factor-regressions">
+     Estimating one-factor regressions
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#famafrench-3-factor-model">
+   Fama–French 3-factor model
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#are-alphas-zero">
+   Are alphas zero?
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#do-betas-explain-the-cross-section-of-returns">
+   Do betas explain the cross-section of returns?
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="factor-regressions">
+<h1>Factor regressions<a class="headerlink" href="#factor-regressions" title="Permalink to this headline">#</a></h1>
+<p>Begin by downloading data from the <a class="reference external" href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html">Fama-French Data Library</a> using <code class="docutils literal notranslate"><span class="pre">pandas_datareader</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas_datareader</span> <span class="k">as</span> <span class="nn">pdr</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ff</span> <span class="o">=</span> <span class="n">pdr</span><span class="o">.</span><span class="n">get_data_famafrench</span><span class="p">(</span><span class="s1">&#39;F-F_Research_Data_Factors&#39;</span><span class="p">,</span> <span class="mi">1926</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The returned result is a dictionary:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">ff</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>dict
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ff</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>dict_keys([0, 1, &#39;DESCR&#39;])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">ff</span><span class="p">[</span><span class="s1">&#39;DESCR&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F-F Research Data Factors
+-------------------------
+
+This file was created by CMPT_ME_BEME_RETS using the 202212 CRSP database. The 1-month TBill return is from Ibbotson and Associates, Inc. Copyright 2022 Kenneth R. French
+
+  0 : (1158 rows x 4 cols)
+  1 : Annual Factors: January-December (96 rows x 4 cols)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The data we want is stored in the dictionary element with a key of <code class="docutils literal notranslate"><span class="pre">0</span></code>. We’ll just write over our <code class="docutils literal notranslate"><span class="pre">ff</span></code> dictionary with the <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> we want.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ff</span> <span class="o">=</span> <span class="n">ff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">ff</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Mkt-RF</th>
+      <th>SMB</th>
+      <th>HML</th>
+      <th>RF</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1926-07</th>
+      <td>2.96</td>
+      <td>-2.56</td>
+      <td>-2.43</td>
+      <td>0.22</td>
+    </tr>
+    <tr>
+      <th>1926-08</th>
+      <td>2.64</td>
+      <td>-1.17</td>
+      <td>3.82</td>
+      <td>0.25</td>
+    </tr>
+    <tr>
+      <th>1926-09</th>
+      <td>0.36</td>
+      <td>-1.40</td>
+      <td>0.13</td>
+      <td>0.23</td>
+    </tr>
+    <tr>
+      <th>1926-10</th>
+      <td>-3.24</td>
+      <td>-0.09</td>
+      <td>0.70</td>
+      <td>0.32</td>
+    </tr>
+    <tr>
+      <th>1926-11</th>
+      <td>2.53</td>
+      <td>-0.10</td>
+      <td>-0.51</td>
+      <td>0.31</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2022-08</th>
+      <td>-3.77</td>
+      <td>1.39</td>
+      <td>0.31</td>
+      <td>0.19</td>
+    </tr>
+    <tr>
+      <th>2022-09</th>
+      <td>-9.35</td>
+      <td>-0.82</td>
+      <td>0.03</td>
+      <td>0.19</td>
+    </tr>
+    <tr>
+      <th>2022-10</th>
+      <td>7.83</td>
+      <td>0.10</td>
+      <td>8.05</td>
+      <td>0.23</td>
+    </tr>
+    <tr>
+      <th>2022-11</th>
+      <td>4.60</td>
+      <td>-3.40</td>
+      <td>1.39</td>
+      <td>0.29</td>
+    </tr>
+    <tr>
+      <th>2022-12</th>
+      <td>-6.41</td>
+      <td>-0.64</td>
+      <td>1.36</td>
+      <td>0.33</td>
+    </tr>
+  </tbody>
+</table>
+<p>1158 rows × 4 columns</p>
+</div></div></div>
+</div>
+<section id="market-size-and-value-factors">
+<h2>Market, Size, and Value factors<a class="headerlink" href="#market-size-and-value-factors" title="Permalink to this headline">#</a></h2>
+<p>The data contain monthly returns on four assets:</p>
+<ul class="simple">
+<li><p><strong>Mkt-RF</strong> is return on the market portfolio in excess of the riskfree rate. The market portfolio is the CRSP value-weighted portfolio, which includes all stocks traded on U.S. public markets, but uses market-capitalization to weight returns. That is, large stocks have more of an impact on the return of the portfolio than small stocks. This factor is usually referred to as <strong>RMRF</strong>.</p></li>
+<li><p><strong>SMB</strong> (“small-minus-big”) is the return on a portfolio that is long <em>small</em> stocks and short <em>big</em> stocks.</p></li>
+<li><p><strong>HML</strong> (“high-minus-low”) is the return on a portfolio that is long <em>value</em> stocks and short <em>growth</em> stocks.</p></li>
+<li><p><strong>RF</strong> is the riskfree rate, which is proxied by the 1-month T-Bill.</p></li>
+</ul>
+<p>RMRF, SMB, and HML are known as <em>factor-mimicking portfolios</em>. That is, they are portfolios whose returns are meant to mimick the returns of some underlying economic factor.</p>
+<p>The SMB and HML portfolios are constructed from six underlying portfolios that include stocks based on two characteristics:</p>
+<ul class="simple">
+<li><p><strong>Size</strong> is the market capitalization of the company, equal to number of shares outstanding times the share price;</p></li>
+<li><p><strong>Book-to-market</strong> is the book value of equity divided by market value of equity.</p></li>
+</ul>
+<p>At each point in time, firms with below-median size are called “small” and those above the median are “big”. On the book-to-market dimension, firms are divided into three groups (below 30th percentile, between the 30th and 70th percentile, and above the 70th percentile.) Those with the highest book-to-market are called “value” stocks, while those with the lowest book-to-market are “growth” stocks. Stocks with high book-to-market are typically companies with lots of physical assets but not a lot of growth opportunities, like a utility company. Stocks with low book-to-market are those with a lot of market value relative to their assets, which usually means they have a lot of growth opportunities that make investors willing to pay relatively high prices today to buy shares.</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>Small</p></th>
+<th class="head"><p>Big</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Value</strong></p></td>
+<td><p>Small Value</p></td>
+<td><p>Big Value</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Neutral</strong></p></td>
+<td><p>Small Neutral</p></td>
+<td><p>Big Neutral</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Growth</strong></p></td>
+<td><p>Small Growth</p></td>
+<td><p>Big Growth</p></td>
+</tr>
+</tbody>
+</table>
+<p>The factors are then long-short portfolios that combine these six building block portfolios differently. The size factor is</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{multline*}
+SMB = \frac{1}{3}(\text{Small Value} + \text{Small Neutral} + \text{Small Growth}) \\
+- \frac{1}{3}(\text{Big Value} + \text{Big Neutral} + \text{Big Growth}),
+\end{multline*}\]</div>
+<p>and the value factor is</p>
+<div class="math notranslate nohighlight">
+\[HML = \frac{1}{2}(\text{Small Value} + \text{Big Value}) - \frac{1}{2}(\text{Small Growth} + \text{Big Growth}).\]</div>
+<p>All three factors mimicking are <em>arbitrage</em>, <em>self-financing</em>, or <em>zero net-investment</em> portfolios. While it may be hard to implement for a small investor, theoretically these portfolios could be constructed with no investment — you pay for the long side with funds generated from the short side. With RMRF, for example, we would borrow at the riskfree rate to invest in the market portfolio.</p>
+</section>
+<section id="historical-returns">
+<h2>Historical returns<a class="headerlink" href="#historical-returns" title="Permalink to this headline">#</a></h2>
+<p>The data from the Fama–French library are in percent, so the 2.96 in July 1926 means the return that month was 2.96%. To make these consistent with other data we’ll be using, we’ll divide by 100.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ff</span> <span class="o">=</span> <span class="n">ff</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;Mkt-RF&#39;</span><span class="p">:</span><span class="s1">&#39;RMRF&#39;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ff</span> <span class="o">=</span> <span class="n">ff</span> <span class="o">/</span> <span class="mi">100</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ff</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>RMRF</th>
+      <th>SMB</th>
+      <th>HML</th>
+      <th>RF</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>1158.000000</td>
+      <td>1158.000000</td>
+      <td>1158.000000</td>
+      <td>1158.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.006677</td>
+      <td>0.001893</td>
+      <td>0.003608</td>
+      <td>0.002663</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.053534</td>
+      <td>0.031693</td>
+      <td>0.035625</td>
+      <td>0.002516</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>-0.291300</td>
+      <td>-0.172300</td>
+      <td>-0.139700</td>
+      <td>-0.000600</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>-0.020150</td>
+      <td>-0.016000</td>
+      <td>-0.013875</td>
+      <td>0.000300</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.010600</td>
+      <td>0.000800</td>
+      <td>0.001300</td>
+      <td>0.002200</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>0.036500</td>
+      <td>0.017575</td>
+      <td>0.017600</td>
+      <td>0.004200</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>0.388500</td>
+      <td>0.365600</td>
+      <td>0.356100</td>
+      <td>0.013500</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Given monthly returns, the annual return can be approximated as <span class="math notranslate nohighlight">\(12 \times R_t\)</span>, where <span class="math notranslate nohighlight">\(R_t\)</span> is the return in month <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">12</span> <span class="o">*</span> <span class="n">ff</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RMRF    0.080130
+SMB     0.022714
+HML     0.043294
+RF      0.031952
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>The variance of the annual return is</p>
+<div class="math notranslate nohighlight">
+\[12\times\var(R_t),\]</div>
+<p>so the volatility is</p>
+<div class="math notranslate nohighlight">
+\[\sqrt{12}\times \sigma_R.\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="n">ff</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RMRF    0.185449
+SMB     0.109789
+HML     0.123408
+RF      0.008715
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>So on an annualized basis over the last 100 years, the market factor has earned a return of about 8% with a volatility of a little less than 0.2.</p>
+<p>The Sharpe ratio is simply the average portfolio return divided by its volatility:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ff</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="n">ff</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RMRF    0.124732
+SMB     0.059723
+HML     0.101274
+RF      1.058382
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>On an annualized basis, this means we multiply by <span class="math notranslate nohighlight">\(\sqrt{12}\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="n">ff</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="n">ff</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RMRF    0.432085
+SMB     0.206887
+HML     0.350823
+RF      3.666344
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">ff</span><span class="p">)</span><span class="o">.</span><span class="n">cumprod</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">x_compat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># (1+ff).cumprod().plot(figsize=(16,8), lw=2, ax=ax, logy=True, xlabel=&#39;&#39;)</span>
+
+<span class="c1"># change year locations</span>
+<span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">YearLocator</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">YearLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">YearLocator</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/06 Calculating beta_27_0.png" src="_images/06 Calculating beta_27_0.png" />
+</div>
+</div>
+</section>
+<section id="the-one-factor-model-capm">
+<h2>The one-factor model: CAPM<a class="headerlink" href="#the-one-factor-model-capm" title="Permalink to this headline">#</a></h2>
+<p>The Capital Asset Pricing Model (CAPM) says that an asset’s expected return depends on its <em>beta</em>, denoted <span class="math notranslate nohighlight">\(\beta\)</span>. That is,</p>
+<div class="math notranslate nohighlight">
+\[\E(R^e_i) = \beta_i \, \E(R_M^e),\]</div>
+<p>where <span class="math notranslate nohighlight">\(R^e_i := R_i - R_f\)</span> is the <em>excess return</em> on asset <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(R_M\)</span> is the return on the market portfolio.</p>
+<p>The CAPM is a <em>one-factor</em> model, where the market portfolio is the single factor — the fundamental source of risk in the economy. A factor model of returns says that the returns on an asset come from:</p>
+<ol class="simple">
+<li><p>How much return we get from being exposed to any <em>risk factor</em>. In the CAPM, this is <span class="math notranslate nohighlight">\(\E(R_M^e)\)</span>, the expected excess return from holding the market.</p></li>
+<li><p>How much exposure to a factor we get from holding a particular asset. This is the asset’s beta, <span class="math notranslate nohighlight">\(\beta_i\)</span>. It is also called the <em>factor loading</em>. If a stock has high factor loadings, it gives high exposure to the underlying source of risk and is therefore riskier than a stock that has a low factor loading. So high-beta stocks are riskier than low-beta stocks. This is why we say beta is a measure of an asset’s risk.</p></li>
+</ol>
+<p>We saw that historically, the market portfolio has earned an excess return of about 8% per year. If an investor just holds the market portfolio, this is the return they earn for bearing market risk. An investor can earn a higher return by buying a stock with <span class="math notranslate nohighlight">\(\beta_i&gt;1\)</span>, allowing them to load up on more of the risk factor. If the investor wants to own a stocks with less risk, she buys a stock with <span class="math notranslate nohighlight">\(\beta_i&lt;1\)</span> (and therefore earn a return below that of the market.</p>
+<section id="what-is-risk">
+<h3>What is risk?<a class="headerlink" href="#what-is-risk" title="Permalink to this headline">#</a></h3>
+<p>The CAPM says that a high-beta stock should earn a higher return than a low beta stock. As long as arbitrage opportunities are not common in financial markets, we can only earn higher returns by taking on more risk. Therefore, the higher returns from high betas must be due to higher risk. But why is beta a measure of risk?</p>
+<p>It is easiest to understand this if we step back and define what we mean by risk. Economically, a risky asset is one that pays off when times are “good.” This might strange, but stop and think: if you buy an insurance contract against something bad happening, are you increasing your risk or decreasing it? You should agree that insurance reduces risk. Home insurance pays you when your house burns down. It pays off in bad times. (Insurance also has a negative expected return. It has regular negative cash flows, and with a very small probability has a large positive cash flow.)</p>
+<p>In economic models, times are “good” when people have low <em>marginal utility</em>. Their needs are being met. They have food to eat, and so having more food won’t increase their utility much. Times are “bad” when they have high marginal utility; their utility would increase a lot if they were able to consume more.</p>
+<p>So a low-risk asset should be one that pays off when times are bad. It will allow you to buy more food precisely at the time that you are hungry, just like the insurance contract allows you to build a house when your house burns down. A high-risk asset pays off in good times, when you already have what you need and another dollar isn’t going to have much of an effect on your utility.</p>
+<p>In the CAPM, the measure of whether times are good or bad is the market portfolio. This obviously ignores all kinds of important economic information about the welfare of people in an economy, but it is the measure that CAPM uses. (There are other asset pricing models that use other proxies to measure marginal utility.)</p>
+<p>Assets with high betas must earn higher expected returns in order to incentivise investors to own these assets. People who are risk averse are willing to hold risky assets, but must be compensated for doing so.</p>
+<div class="admonition-key-fact admonition">
+<p class="admonition-title">Key fact</p>
+<p>In the CAPM model, the measure of an asset’s risk is its beta. The bigger its beta, the more the asset loads on the single risk factor in the economy, and the higher its expected returns must be.</p>
+</div>
+</section>
+<section id="estimating-one-factor-regressions">
+<h3>Estimating one-factor regressions<a class="headerlink" href="#estimating-one-factor-regressions" title="Permalink to this headline">#</a></h3>
+<p>We can estimate an asset’s <span class="math notranslate nohighlight">\(\beta\)</span> by running a time series regression,</p>
+<div class="math notranslate nohighlight">
+\[R_{i,t}^e = \alpha_i + \beta_i R_{M,t}^e + \epsilon_{i,t}.\]</div>
+<p>The prediction of the CAPM in this context is that the <span class="math notranslate nohighlight">\(\alpha_i\)</span> should be zero.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ff</span> <span class="o">=</span> <span class="n">pdr</span><span class="o">.</span><span class="n">get_data_famafrench</span><span class="p">(</span><span class="s1">&#39;F-F_Research_Data_Factors_daily&#39;</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">ff</span> <span class="o">=</span> <span class="n">ff</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Mkt-RF&#39;</span><span class="p">:</span><span class="s1">&#39;RMRF&#39;</span><span class="p">})</span>
+<span class="n">ff</span> <span class="o">=</span> <span class="n">ff</span> <span class="o">/</span> <span class="mi">100</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As a sample of firms, we’ll use historical returns on the current constitutents of the S&amp;P 500.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sp500</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://raw.githubusercontent.com/stoffprof/qf23/main/data/sp500_yahoo.csv&#39;</span><span class="p">,</span>
+                    <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span>
+
+<span class="n">rets</span> <span class="o">=</span> <span class="n">sp500</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+
+<span class="n">rets</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+DatetimeIndex: 5598 entries, 2000-01-04 to 2022-04-01
+Columns: 505 entries, MMM to ZTS
+dtypes: float64(505)
+memory usage: 21.6 MB
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">rets</span><span class="p">[</span><span class="s1">&#39;LLY&#39;</span><span class="p">],</span> <span class="n">ff</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>LLY</th>
+      <th>RMRF</th>
+      <th>SMB</th>
+      <th>HML</th>
+      <th>RF</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2000-01-04</th>
+      <td>-0.031459</td>
+      <td>-0.0406</td>
+      <td>0.0000</td>
+      <td>0.0206</td>
+      <td>0.00021</td>
+    </tr>
+    <tr>
+      <th>2000-01-05</th>
+      <td>0.012795</td>
+      <td>-0.0009</td>
+      <td>0.0020</td>
+      <td>0.0016</td>
+      <td>0.00021</td>
+    </tr>
+    <tr>
+      <th>2000-01-06</th>
+      <td>0.029155</td>
+      <td>-0.0073</td>
+      <td>-0.0043</td>
+      <td>0.0126</td>
+      <td>0.00021</td>
+    </tr>
+    <tr>
+      <th>2000-01-07</th>
+      <td>0.073654</td>
+      <td>0.0321</td>
+      <td>-0.0047</td>
+      <td>-0.0142</td>
+      <td>0.00021</td>
+    </tr>
+    <tr>
+      <th>2000-01-10</th>
+      <td>-0.041336</td>
+      <td>0.0176</td>
+      <td>0.0096</td>
+      <td>-0.0153</td>
+      <td>0.00021</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2022-03-28</th>
+      <td>0.009134</td>
+      <td>0.0073</td>
+      <td>-0.0056</td>
+      <td>-0.0169</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>2022-03-29</th>
+      <td>-0.011212</td>
+      <td>0.0145</td>
+      <td>0.0154</td>
+      <td>-0.0193</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>2022-03-30</th>
+      <td>0.005201</td>
+      <td>-0.0083</td>
+      <td>-0.0127</td>
+      <td>0.0040</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>2022-03-31</th>
+      <td>-0.012143</td>
+      <td>-0.0155</td>
+      <td>0.0072</td>
+      <td>-0.0044</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>2022-04-01</th>
+      <td>0.022000</td>
+      <td>0.0039</td>
+      <td>0.0069</td>
+      <td>-0.0059</td>
+      <td>0.00001</td>
+    </tr>
+  </tbody>
+</table>
+<p>5598 rows × 5 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;exret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;LLY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;RF&#39;</span><span class="p">]</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>  <span class="c1"># regression doesn&#39;t work NaNs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>LLY</th>
+      <th>RMRF</th>
+      <th>SMB</th>
+      <th>HML</th>
+      <th>RF</th>
+      <th>exret</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2000-01-04</th>
+      <td>-0.031459</td>
+      <td>-0.0406</td>
+      <td>0.0000</td>
+      <td>0.0206</td>
+      <td>0.00021</td>
+      <td>-0.031669</td>
+    </tr>
+    <tr>
+      <th>2000-01-05</th>
+      <td>0.012795</td>
+      <td>-0.0009</td>
+      <td>0.0020</td>
+      <td>0.0016</td>
+      <td>0.00021</td>
+      <td>0.012585</td>
+    </tr>
+    <tr>
+      <th>2000-01-06</th>
+      <td>0.029155</td>
+      <td>-0.0073</td>
+      <td>-0.0043</td>
+      <td>0.0126</td>
+      <td>0.00021</td>
+      <td>0.028945</td>
+    </tr>
+    <tr>
+      <th>2000-01-07</th>
+      <td>0.073654</td>
+      <td>0.0321</td>
+      <td>-0.0047</td>
+      <td>-0.0142</td>
+      <td>0.00021</td>
+      <td>0.073444</td>
+    </tr>
+    <tr>
+      <th>2000-01-10</th>
+      <td>-0.041336</td>
+      <td>0.0176</td>
+      <td>0.0096</td>
+      <td>-0.0153</td>
+      <td>0.00021</td>
+      <td>-0.041546</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2022-03-28</th>
+      <td>0.009134</td>
+      <td>0.0073</td>
+      <td>-0.0056</td>
+      <td>-0.0169</td>
+      <td>0.00000</td>
+      <td>0.009134</td>
+    </tr>
+    <tr>
+      <th>2022-03-29</th>
+      <td>-0.011212</td>
+      <td>0.0145</td>
+      <td>0.0154</td>
+      <td>-0.0193</td>
+      <td>0.00000</td>
+      <td>-0.011212</td>
+    </tr>
+    <tr>
+      <th>2022-03-30</th>
+      <td>0.005201</td>
+      <td>-0.0083</td>
+      <td>-0.0127</td>
+      <td>0.0040</td>
+      <td>0.00000</td>
+      <td>0.005201</td>
+    </tr>
+    <tr>
+      <th>2022-03-31</th>
+      <td>-0.012143</td>
+      <td>-0.0155</td>
+      <td>0.0072</td>
+      <td>-0.0044</td>
+      <td>0.00000</td>
+      <td>-0.012143</td>
+    </tr>
+    <tr>
+      <th>2022-04-01</th>
+      <td>0.022000</td>
+      <td>0.0039</td>
+      <td>0.0069</td>
+      <td>-0.0059</td>
+      <td>0.00001</td>
+      <td>0.021990</td>
+    </tr>
+  </tbody>
+</table>
+<p>5598 rows × 6 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;exret&#39;</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;RMRF&#39;</span><span class="p">]))</span>
+
+<span class="n">reg_rslt</span> <span class="o">=</span> <span class="n">reg_model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">reg_rslt</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  exret   R-squared:                       0.238
+Model:                            OLS   Adj. R-squared:                  0.237
+Method:                 Least Squares   F-statistic:                     1744.
+Date:                Mon, 20 Feb 2023   Prob (F-statistic):               0.00
+Time:                        21:32:39   Log-Likelihood:                 15640.
+No. Observations:                5598   AIC:                        -3.128e+04
+Df Residuals:                    5596   BIC:                        -3.126e+04
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0003      0.000      1.369      0.171      -0.000       0.001
+RMRF           0.6593      0.016     41.761      0.000       0.628       0.690
+==============================================================================
+Omnibus:                     2034.618   Durbin-Watson:                   2.001
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):           302785.798
+Skew:                          -0.651   Prob(JB):                         0.00
+Kurtosis:                      39.006   Cond. No.                         79.8
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="famafrench-3-factor-model">
+<h2>Fama–French 3-factor model<a class="headerlink" href="#famafrench-3-factor-model" title="Permalink to this headline">#</a></h2>
+<div class="math notranslate nohighlight">
+\[R_{i,t}^e = \alpha_i + \beta^M_i R_{M,t}^e + \beta^S_i R_{SMB,t} + \beta^V_i R_{HML,t} + \epsilon_{i,t}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;exret&#39;</span><span class="p">],</span>
+                   <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;RMRF&#39;</span><span class="p">,</span> <span class="s1">&#39;SMB&#39;</span><span class="p">,</span> <span class="s1">&#39;HML&#39;</span><span class="p">]]))</span>
+
+<span class="n">reg_rslt</span> <span class="o">=</span> <span class="n">reg_model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">reg_rslt</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  exret   R-squared:                       0.254
+Model:                            OLS   Adj. R-squared:                  0.254
+Method:                 Least Squares   F-statistic:                     635.6
+Date:                Mon, 20 Feb 2023   Prob (F-statistic):               0.00
+Time:                        21:32:43   Log-Likelihood:                 15702.
+No. Observations:                5598   AIC:                        -3.140e+04
+Df Residuals:                    5594   BIC:                        -3.137e+04
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0003      0.000      1.534      0.125   -8.36e-05       0.001
+RMRF           0.6844      0.016     43.326      0.000       0.653       0.715
+SMB           -0.3425      0.031    -10.998      0.000      -0.404      -0.281
+HML           -0.0787      0.025     -3.092      0.002      -0.129      -0.029
+==============================================================================
+Omnibus:                     2050.739   Durbin-Watson:                   2.009
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):           315066.295
+Skew:                          -0.657   Prob(JB):                         0.00
+Kurtosis:                      39.729   Cond. No.                         161.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_rslt</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>const    0.000300
+RMRF     0.684447
+SMB     -0.342549
+HML     -0.078720
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_rslt</span><span class="o">.</span><span class="n">tvalues</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>const     1.533558
+RMRF     43.326331
+SMB     -10.997645
+HML      -3.092456
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_rslt</span><span class="o">.</span><span class="n">rsquared</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.25422021867012323
+</pre></div>
+</div>
+</div>
+</div>
+<p>The residuals from the regression,</p>
+<div class="math notranslate nohighlight">
+\[\hat\varepsilon = y_i - \hat y_i,\]</div>
+<p>are stored in the <code class="docutils literal notranslate"><span class="pre">.resid</span></code> property of the regression result object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_rslt</span><span class="o">.</span><span class="n">resid</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date
+2000-01-04   -0.002559
+2000-01-05    0.013711
+2000-01-06    0.033160
+2000-01-07    0.048445
+2000-01-10   -0.051809
+                ...   
+2022-03-28    0.000589
+2022-03-29   -0.017681
+2022-03-30    0.006546
+2022-03-31    0.000286
+2022-04-01    0.020919
+Length: 5598, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_rslt</span><span class="o">.</span><span class="n">resid</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/06 Calculating beta_49_0.png" src="_images/06 Calculating beta_49_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># rename RF so it doesn&#39;t clash with ticker RF</span>
+
+<span class="n">ff</span> <span class="o">=</span> <span class="n">ff</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;RF&#39;</span><span class="p">:</span> <span class="s1">&#39;rf&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">regression</span><span class="p">(</span><span class="n">ticker</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">ff</span><span class="p">,</span> <span class="n">rets</span><span class="p">[</span><span class="n">ticker</span><span class="p">],</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;exret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">ticker</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;rf&#39;</span><span class="p">]</span>
+    <span class="n">reg_model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;exret&#39;</span><span class="p">],</span>
+                       <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;RMRF&#39;</span><span class="p">,</span> <span class="s1">&#39;SMB&#39;</span><span class="p">,</span> <span class="s1">&#39;HML&#39;</span><span class="p">]]))</span>
+    <span class="n">reg_rslt</span> <span class="o">=</span> <span class="n">reg_model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">reg_rslt</span><span class="o">.</span><span class="n">params</span>
+    <span class="n">tvals</span> <span class="o">=</span> <span class="n">reg_rslt</span><span class="o">.</span><span class="n">tvalues</span>
+    <span class="n">tvals</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;t_&#39;</span><span class="o">+</span><span class="n">x</span><span class="p">,</span> <span class="n">tvals</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>  <span class="c1"># rename t-value index values</span>
+    <span class="n">rslt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">params</span><span class="p">,</span> <span class="n">tvals</span><span class="p">])</span>
+    <span class="n">rslt</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reg_rslt</span><span class="o">.</span><span class="n">rsquared</span>
+    <span class="n">rslt</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reg_rslt</span><span class="o">.</span><span class="n">nobs</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">rslt</span><span class="p">,</span> <span class="n">reg_rslt</span><span class="o">.</span><span class="n">resid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rslt</span><span class="p">,</span> <span class="n">resid</span> <span class="o">=</span> <span class="n">regression</span><span class="p">(</span><span class="s1">&#39;LLY&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rslt</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>const         0.000300
+RMRF          0.684447
+SMB          -0.342549
+HML          -0.078720
+t_const       1.533558
+t_RMRF       43.326331
+t_SMB       -10.997645
+t_HML        -3.092456
+R2            0.254220
+N          5598.000000
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resid</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date
+2000-01-04   -0.002559
+2000-01-05    0.013711
+2000-01-06    0.033160
+2000-01-07    0.048445
+2000-01-10   -0.051809
+                ...   
+2022-03-28    0.000589
+2022-03-29   -0.017681
+2022-03-30    0.006546
+2022-03-31    0.000286
+2022-04-01    0.020919
+Length: 5598, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now run regressions for each stock in our sample, simply by iterating over the columns of <code class="docutils literal notranslate"><span class="pre">rets</span></code> dataframe.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">betas</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">resids</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">tic</span> <span class="ow">in</span> <span class="n">rets</span><span class="p">:</span>
+    <span class="n">rslt</span><span class="p">,</span> <span class="n">resid</span> <span class="o">=</span> <span class="n">regression</span><span class="p">(</span><span class="n">tic</span><span class="p">)</span>
+    <span class="n">betas</span><span class="p">[</span><span class="n">tic</span><span class="p">]</span> <span class="o">=</span> <span class="n">rslt</span>
+    <span class="n">resids</span><span class="p">[</span><span class="n">tic</span><span class="p">]</span> <span class="o">=</span> <span class="n">resid</span>
+
+<span class="n">resids</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">resids</span><span class="p">)</span>
+
+<span class="c1"># transpose betas dataframe so coefficient estimates are columns</span>
+<span class="n">betas</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">betas</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">betas</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>const</th>
+      <th>RMRF</th>
+      <th>SMB</th>
+      <th>HML</th>
+      <th>t_const</th>
+      <th>t_RMRF</th>
+      <th>t_SMB</th>
+      <th>t_HML</th>
+      <th>R2</th>
+      <th>N</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>MMM</th>
+      <td>0.000107</td>
+      <td>0.793478</td>
+      <td>-0.172604</td>
+      <td>0.215761</td>
+      <td>0.728567</td>
+      <td>67.075571</td>
+      <td>-7.400232</td>
+      <td>11.318978</td>
+      <td>0.461515</td>
+      <td>5598.0</td>
+    </tr>
+    <tr>
+      <th>AOS</th>
+      <td>0.000396</td>
+      <td>0.886165</td>
+      <td>0.491453</td>
+      <td>0.377775</td>
+      <td>1.746974</td>
+      <td>48.473369</td>
+      <td>13.634382</td>
+      <td>12.824099</td>
+      <td>0.348253</td>
+      <td>5598.0</td>
+    </tr>
+    <tr>
+      <th>ABT</th>
+      <td>0.000431</td>
+      <td>0.631901</td>
+      <td>-0.356982</td>
+      <td>-0.133692</td>
+      <td>2.459603</td>
+      <td>44.680849</td>
+      <td>-12.802182</td>
+      <td>-5.866535</td>
+      <td>0.267863</td>
+      <td>5598.0</td>
+    </tr>
+    <tr>
+      <th>ABBV</th>
+      <td>0.000438</td>
+      <td>0.835245</td>
+      <td>-0.168996</td>
+      <td>-0.116550</td>
+      <td>1.430220</td>
+      <td>29.061098</td>
+      <td>-3.294421</td>
+      <td>-3.140182</td>
+      <td>0.268505</td>
+      <td>2329.0</td>
+    </tr>
+    <tr>
+      <th>ABMD</th>
+      <td>0.000754</td>
+      <td>1.111644</td>
+      <td>0.804867</td>
+      <td>-0.384085</td>
+      <td>1.722699</td>
+      <td>31.479591</td>
+      <td>11.559867</td>
+      <td>-6.749882</td>
+      <td>0.185478</td>
+      <td>5598.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>YUM</th>
+      <td>0.000425</td>
+      <td>0.782000</td>
+      <td>-0.032449</td>
+      <td>0.142497</td>
+      <td>2.076847</td>
+      <td>47.404384</td>
+      <td>-0.997661</td>
+      <td>5.360714</td>
+      <td>0.296422</td>
+      <td>5598.0</td>
+    </tr>
+    <tr>
+      <th>ZBRA</th>
+      <td>0.000391</td>
+      <td>1.015638</td>
+      <td>0.510139</td>
+      <td>-0.166483</td>
+      <td>1.491884</td>
+      <td>48.103279</td>
+      <td>12.254333</td>
+      <td>-4.893408</td>
+      <td>0.323328</td>
+      <td>5598.0</td>
+    </tr>
+    <tr>
+      <th>ZBH</th>
+      <td>0.000114</td>
+      <td>0.763228</td>
+      <td>0.136674</td>
+      <td>0.073282</td>
+      <td>0.549503</td>
+      <td>43.872839</td>
+      <td>3.943862</td>
+      <td>2.572812</td>
+      <td>0.292529</td>
+      <td>5205.0</td>
+    </tr>
+    <tr>
+      <th>ZION</th>
+      <td>-0.000151</td>
+      <td>1.200056</td>
+      <td>0.186312</td>
+      <td>1.685215</td>
+      <td>-0.586432</td>
+      <td>57.802091</td>
+      <td>4.551445</td>
+      <td>50.373529</td>
+      <td>0.536626</td>
+      <td>5598.0</td>
+    </tr>
+    <tr>
+      <th>ZTS</th>
+      <td>0.000341</td>
+      <td>0.927520</td>
+      <td>-0.217058</td>
+      <td>-0.316579</td>
+      <td>1.383762</td>
+      <td>40.357513</td>
+      <td>-5.286311</td>
+      <td>-10.668083</td>
+      <td>0.428082</td>
+      <td>2308.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>505 rows × 10 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;RMRF&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/06 Calculating beta_57_0.png" src="_images/06 Calculating beta_57_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">betas</span><span class="p">[</span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;RMRF&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>const</th>
+      <th>RMRF</th>
+      <th>SMB</th>
+      <th>HML</th>
+      <th>t_const</th>
+      <th>t_RMRF</th>
+      <th>t_SMB</th>
+      <th>t_HML</th>
+      <th>R2</th>
+      <th>N</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">betas</span><span class="p">[</span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">252</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>const</th>
+      <th>RMRF</th>
+      <th>SMB</th>
+      <th>HML</th>
+      <th>t_const</th>
+      <th>t_RMRF</th>
+      <th>t_SMB</th>
+      <th>t_HML</th>
+      <th>R2</th>
+      <th>N</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>CEG</th>
+      <td>0.006973</td>
+      <td>0.069285</td>
+      <td>-1.807734</td>
+      <td>-0.612789</td>
+      <td>1.602613</td>
+      <td>0.174693</td>
+      <td>-2.859140</td>
+      <td>-1.371078</td>
+      <td>0.154656</td>
+      <td>51.0</td>
+    </tr>
+    <tr>
+      <th>OGN</th>
+      <td>0.000108</td>
+      <td>0.833203</td>
+      <td>-0.247922</td>
+      <td>0.164986</td>
+      <td>0.066889</td>
+      <td>4.700357</td>
+      <td>-1.027382</td>
+      <td>1.118596</td>
+      <td>0.093293</td>
+      <td>223.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Drop results for stocks with less than a year of data</span>
+
+<span class="n">betas</span> <span class="o">=</span> <span class="n">betas</span><span class="p">[</span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">]</span><span class="o">&gt;=</span><span class="mi">252</span><span class="p">]</span>
+
+<span class="n">resids</span> <span class="o">=</span> <span class="n">resids</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">betas</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;RMRF&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/06 Calculating beta_61_0.png" src="_images/06 Calculating beta_61_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;RMRF&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.0008431357189833
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/06 Calculating beta_63_0.png" src="_images/06 Calculating beta_63_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CFG    0.722346
+AMP    0.693241
+JPM    0.674347
+TFC    0.654010
+PRU    0.643416
+Name: R2, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="are-alphas-zero">
+<h2>Are alphas zero?<a class="headerlink" href="#are-alphas-zero" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;const&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>count    503.000000
+mean       0.000326
+std        0.000333
+min       -0.000933
+25%        0.000145
+50%        0.000302
+75%        0.000475
+max        0.003590
+Name: const, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>To determine whether the <span class="math notranslate nohighlight">\(\alpha_i\)</span> are statistically different from zero, we divide the average alpha by the <a class="reference external" href="https://en.wikipedia.org/wiki/Standard_error">standard error of the mean</a>,</p>
+<div class="math notranslate nohighlight">
+\[\sigma_{\bar x} = \frac{\sigma}{\sqrt{N}}.\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">scs</span>
+
+<span class="n">scs</span><span class="o">.</span><span class="n">sem</span><span class="p">(</span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;const&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.4831789318091964e-05
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># t-statistic</span>
+
+<span class="n">betas</span><span class="p">[</span><span class="s1">&#39;const&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="n">scs</span><span class="o">.</span><span class="n">sem</span><span class="p">(</span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;const&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22.006735539187545
+</pre></div>
+</div>
+</div>
+</div>
+<p>A <span class="math notranslate nohighlight">\(t\)</span>-statistic greater than 1.96 is “significant” at a 5% level. At the 1% level, the cutoff value is 2.58. The calculated statistic here is much, much higher than that. This is strong evidence that the <span class="math notranslate nohighlight">\(\alpha\)</span>s are not zero.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;t_const&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/06 Calculating beta_71_0.png" src="_images/06 Calculating beta_71_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">betas</span><span class="p">[</span><span class="s1">&#39;t_const&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GE     -2.330513
+C      -1.897282
+UA     -1.395577
+LUMN   -1.345907
+KHC    -1.314762
+          ...   
+TSCO    3.324593
+AAPL    3.435320
+IDXX    3.473038
+BF.B    3.600581
+MNST    3.641536
+Name: t_const, Length: 503, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="do-betas-explain-the-cross-section-of-returns">
+<h2>Do betas explain the cross-section of returns?<a class="headerlink" href="#do-betas-explain-the-cross-section-of-returns" title="Permalink to this headline">#</a></h2>
+<p>Fama, E. F., &amp; MacBeth, J. D. (1973). Risk, return, and equilibrium: Empirical tests. <em>Journal of Political Economy</em>, 81(3), 607-636.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">avgrets</span> <span class="o">=</span> <span class="n">rets</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">betas</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>   <span class="c1"># keep only stocks that we have betas for</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">avgrets</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">betas</span><span class="p">[[</span><span class="s1">&#39;RMRF&#39;</span><span class="p">]]))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.057
+Model:                            OLS   Adj. R-squared:                  0.055
+Method:                 Least Squares   F-statistic:                     30.50
+Date:                Mon, 20 Feb 2023   Prob (F-statistic):           5.38e-08
+Time:                        21:33:22   Log-Likelihood:                 3277.1
+No. Observations:                 503   AIC:                            -6550.
+Df Residuals:                     501   BIC:                            -6542.
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0004   6.03e-05      7.435      0.000       0.000       0.001
+RMRF           0.0003   5.81e-05      5.522      0.000       0.000       0.000
+==============================================================================
+Omnibus:                      390.457   Durbin-Watson:                   2.123
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):            10986.094
+Skew:                           3.082   Prob(JB):                         0.00
+Kurtosis:                      25.050   Cond. No.                         7.40
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="04b%20Regression%20applications.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Implementing regressions</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="05a%20Diversification.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Diversification</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    <div class="extra_footer">
+      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.03.
+    </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,2151 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Time series models &#8212; Quant Finance in Python</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/admonitions-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/custom-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"cov": "\\operatorname{Cov}", "var": "\\operatorname{Var}", "N": "\\mathcal{N}", "E": "\\mathbb{E}", "P": "\\mathbb{P}", "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="canonical" href="https://stoffprof.github.io/qf23/07a Time series analysis.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Applications" href="07aa%20Applications.html" />
+    <link rel="prev" title="Numerical optimization" href="05c%20Numerical%20optimization.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/qf.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Quant Finance in Python</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a%20math.html">
+   Math background
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b%20returns.html">
+   Asset returns
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01c%20prices.html">
+   A model of prices
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Econometrics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="probability.html">
+   Probability
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02a%20MSE.html">
+     Prediction: First look
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02b%20Probability%20theory.html">
+     Probability theory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02d%20Pseudorandom%20number%20generation.html">
+     Pseudorandom number generation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02c%20Distributions.html">
+     Probability distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02e%20Covariance.html">
+     Covariance
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02f%20Estimation.html">
+     Parameter estimation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="regression.html">
+   Regression
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04a%20Regression%20theory.html">
+     Linear regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04b%20Regression%20applications.html">
+     Implementing regressions
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Factors
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="06%20Calculating%20beta.html">
+   Factor regressions
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Portfolio optimization
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="05a%20Diversification.html">
+   Diversification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05b%20Efficient%20portfolios.html">
+   The efficient frontier
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05c%20Numerical%20optimization.html">
+   Numerical optimization
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Time series modeling
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Time series models
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07aa%20Applications.html">
+   Applications
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07b%20Markov%20switching%20model.html">
+   Markov Switching model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="08%20Volatility%20modeling.html">
+   Volatility modeling
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reference
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="notation.html">
+   Notation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sources.html">
+   Additional sources
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/07a Time series analysis.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#white-noise">
+   White noise
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#stationarity">
+   Stationarity
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#autocorrelation-function-acf">
+   Autocorrelation function (ACF)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ar-models">
+   AR models
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#estimating-ar-coefficients">
+   Estimating AR coefficients
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#partial-autocorrelation-function-pacf">
+   Partial autocorrelation function (PACF)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#information-criteria">
+   Information criteria
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ma-q-models">
+   MA(q) models
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#arma-p-q-model">
+   ARMA(p,q) model
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Time series models</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#white-noise">
+   White noise
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#stationarity">
+   Stationarity
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#autocorrelation-function-acf">
+   Autocorrelation function (ACF)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ar-models">
+   AR models
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#estimating-ar-coefficients">
+   Estimating AR coefficients
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#partial-autocorrelation-function-pacf">
+   Partial autocorrelation function (PACF)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#information-criteria">
+   Information criteria
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ma-q-models">
+   MA(q) models
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#arma-p-q-model">
+   ARMA(p,q) model
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="time-series-models">
+<h1>Time series models<a class="headerlink" href="#time-series-models" title="Permalink to this headline">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pandas_datareader</span> <span class="k">as</span> <span class="nn">pdr</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Any data that we observe at regular intervals over time is a <em>time series</em>. An example could be stock prices or returns. For example, let’s look the S&amp;P 500 index since 2000.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sp500</span> <span class="o">=</span> <span class="n">pdr</span><span class="o">.</span><span class="n">get_data_yahoo</span><span class="p">(</span><span class="s1">&#39;^GSPC&#39;</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ts_plot</span><span class="p">(</span><span class="n">ts</span><span class="p">):</span>
+    
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+
+    <span class="c1"># Set up axes</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="mf">0.85</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="mf">0.005</span>
+
+    <span class="n">rect_lvl</span>  <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="o">-</span><span class="n">width</span><span class="p">)</span><span class="o">+</span><span class="n">space</span><span class="p">,</span> <span class="n">height</span><span class="o">+</span><span class="n">space</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">]</span>
+    <span class="n">rect_ret</span>   <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="o">-</span><span class="n">width</span><span class="p">)</span><span class="o">+</span><span class="n">space</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">-</span><span class="n">space</span><span class="p">]</span>
+    <span class="n">rect_hist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">-</span><span class="n">space</span><span class="p">]</span>
+
+    <span class="n">ax_ret</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="n">rect_ret</span><span class="p">)</span>
+    <span class="n">ax_lvl</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="n">rect_lvl</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="n">ax_ret</span><span class="p">)</span>
+    <span class="n">ax_hist</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="n">rect_hist</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="n">ax_ret</span><span class="p">)</span>
+
+    <span class="c1"># Plot index level with moving average</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax_lvl</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Index&#39;</span><span class="p">)</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax_lvl</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;200-day MA&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Plot return with rolling volatility</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span>
+    <span class="n">ret</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax_ret</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Return&#39;</span><span class="p">)</span>
+    <span class="n">ret</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">21</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax_ret</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;21-day volatility&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Plot return histogram</span>
+    <span class="n">ret</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax_hist</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Add pdf of normal distribution</span>
+    <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">gaussian_kde</span>
+    <span class="n">μ</span><span class="p">,</span> <span class="n">σ</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">ret</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">ret</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.005</span><span class="p">),</span> <span class="n">ret</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.995</span><span class="p">),</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">pdf</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">μ</span><span class="p">,</span> <span class="n">σ</span><span class="p">)</span>
+    <span class="n">ax_hist</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pdf</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Normal PDF&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Kernel density estimation</span>
+    <span class="n">kde</span> <span class="o">=</span> <span class="n">gaussian_kde</span><span class="p">(</span><span class="n">ret</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
+    <span class="n">ax_hist</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kde</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estimated PDF&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Formatting</span>
+    <span class="n">ax_hist</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+    <span class="n">ax_hist</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">textstr</span> <span class="o">=</span> <span class="s1">&#39;$\mu=</span><span class="si">{:0.4f}</span><span class="s1">$</span><span class="se">\n</span><span class="s1">$\sigma=</span><span class="si">{:0.3f}</span><span class="s1">$</span><span class="se">\n</span><span class="s1">Skew=$</span><span class="si">{:0.2f}</span><span class="s1">$</span><span class="se">\n</span><span class="s1">Kurt=$</span><span class="si">{:0.1f}</span><span class="s1">$&#39;</span>
+    <span class="n">ax_hist</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">textstr</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">μ</span><span class="p">,</span> <span class="n">σ</span><span class="p">,</span> <span class="n">ret</span><span class="o">.</span><span class="n">skew</span><span class="p">(),</span> <span class="n">ret</span><span class="o">.</span><span class="n">kurt</span><span class="p">()),</span>
+                 <span class="n">transform</span><span class="o">=</span><span class="n">ax_hist</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax_hist</span><span class="o">.</span><span class="n">invert_xaxis</span><span class="p">()</span>
+    
+    <span class="n">ax_hist</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labelbottom</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax_ret</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labeltop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labelleft</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax_lvl</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labelbottom</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax_lvl</span><span class="p">,</span> <span class="n">ax_ret</span><span class="p">]:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">((</span><span class="n">ts</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ts</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    
+<span class="n">ts_plot</span><span class="p">(</span><span class="n">sp500</span><span class="p">[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_5_0.png" src="_images/07a Time series analysis_5_0.png" />
+</div>
+</div>
+<section id="white-noise">
+<h2>White noise<a class="headerlink" href="#white-noise" title="Permalink to this headline">#</a></h2>
+<p>A time series is said to be <em>white noise</em> if its realizations are drawn from an IID (independent and identically distributed) random variable. A special case is Gaussian white noise, where</p>
+<div class="math notranslate nohighlight">
+\[\varepsilon_t \overset{iid}{\sim} N(0, \sigma_{\varepsilon}^2).\]</div>
+<p>This assumption has three implications:</p>
+<ol class="simple">
+<li><p><span class="math notranslate nohighlight">\(\E(\varepsilon_t) = \E(\varepsilon_t | \varepsilon_{t-1}, \varepsilon_{t-2}, \ldots) = 0\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\E(\varepsilon_t \varepsilon_{t-j}) = \cov(\varepsilon_{t}\varepsilon_{t-j}) = 0\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\var(\varepsilon_t) = \var(\varepsilon_t | \varepsilon_{t-1}, \varepsilon_{t-2}, \ldots) = \sigma_{\varepsilon}^2\)</span>.</p></li>
+</ol>
+<p>The first and second facts imply the absense of any <em>serial correlation</em> or <em>predictability</em>. The third fact implies that the series is <em>conditionally homoskedastic</em>, or has a constant conditional variance, where “conditional” means that we use what we know about how the time series has behaved up until a point in time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="mi">250</span>
+<span class="n">ε</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ε</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">T</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_9_0.png" src="_images/07a Time series analysis_9_0.png" />
+</div>
+</div>
+<p>We can construct more complex models of time series by taking linear combinations of white noise:</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Equation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>AR(1)</p></td>
+<td><p><span class="math notranslate nohighlight">\(x_t = \phi x_{t-1} + \varepsilon_t\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>AR(p)</p></td>
+<td><p><span class="math notranslate nohighlight">\(x_t = \phi_1 x_{t-1} + \phi_2 x_{t-2} + \cdots + \phi_p x_{t-p} +\varepsilon_t\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>MA(1)</p></td>
+<td><p><span class="math notranslate nohighlight">\(x_t = \varepsilon_t +  \theta \varepsilon_{t-1}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>MA(q)</p></td>
+<td><p><span class="math notranslate nohighlight">\(x_t = \varepsilon_t +  \theta_1 \varepsilon_{t-1} + \cdots + \theta_q \varepsilon_{t-q}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>ARMA(p,q)</p></td>
+<td><p><span class="math notranslate nohighlight">\(x_t = \phi_1 x_{t-1} + \cdots + \phi_p x_{t-p} + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \cdots + \theta_q \varepsilon_{t-q}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p>Adding a constant to the model will absorb any mean in the underlying process. To see this, suppose that the <em>demeaned</em> value of <span class="math notranslate nohighlight">\(x\)</span> follows an AR(1), so</p>
+<div class="math notranslate nohighlight">
+\[x_t - \bar x = \phi (x_{t-1} - \bar x) + \varepsilon_t.\]</div>
+<p>This is the same thing as</p>
+<div class="math notranslate nohighlight">
+\[x_t = (1 - \phi)\bar x + \phi x_{t-1} + \varepsilon_t\]</div>
+<p>which is simply an AR(1) with an added constant term. In other words, if we specify a model with a constant term it is equivalent to first subtracting the mean from the series.</p>
+<p>It is often helpful to represent ARMA models using a <em>lag operator</em>:</p>
+<div class="math notranslate nohighlight">
+\[L x_t := x_{t-1}\]</div>
+<p>From this definition, the following operations are also valid:</p>
+<div class="math notranslate nohighlight">
+\[L^2 x_t = LL x_t = L x_{t-1} = x_{t-2}\]</div>
+<div class="math notranslate nohighlight">
+\[L^j x_t = x_{t-j}\]</div>
+<div class="math notranslate nohighlight">
+\[L^{-j} x_t = x_{t+j}\]</div>
+<p>We can also define <em>lag polynomials</em> such as</p>
+<div class="math notranslate nohighlight">
+\[a(L)x_t = (a_0L^0 + a_1 L^1 + a_2L^2)x_t = a_0x + a_1x_{t-1} + a_2 x_{t-2}.\]</div>
+</section>
+<section id="stationarity">
+<h2>Stationarity<a class="headerlink" href="#stationarity" title="Permalink to this headline">#</a></h2>
+<p>A times series is said to be <em>weakly stationary</em> if</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\E(r_t) = \mu\)</span>; and</p></li>
+<li><p><span class="math notranslate nohighlight">\(\cov(r_t,r_{t-k})=\gamma_k\)</span>.</p></li>
+</ul>
+<p>That is, the expected return is constant over time, and the covariance between the return at time <span class="math notranslate nohighlight">\(t\)</span> and time <span class="math notranslate nohighlight">\(t-k\)</span> depends only on the horizon <span class="math notranslate nohighlight">\(k\)</span>, not on where in the time series we are, <span class="math notranslate nohighlight">\(t\)</span>.</p>
+</section>
+<section id="autocorrelation-function-acf">
+<h2>Autocorrelation function (ACF)<a class="headerlink" href="#autocorrelation-function-acf" title="Permalink to this headline">#</a></h2>
+<p>Recall that the correlation coefficient between two random variables <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[\rho_{x,y} = \frac{\cov(X,Y)}{\sqrt{\var(X)\var(Y)}} = \frac{\cov(X,Y)}{\sqrt{E(X-\mu_x)^2 E(Y-\mu_y)^2}} = \frac{\cov(X,Y)}{\sigma_x \sigma_y}.\]</div>
+<p>The correlation between <span class="math notranslate nohighlight">\(r_t\)</span> and <span class="math notranslate nohighlight">\(r_{t-k}\)</span> is therefore</p>
+<div class="math notranslate nohighlight">
+\[\rho(k) = \frac{\cov(r_t,r_{t-k})}{\sqrt{\var(r_t)\var(r_{t-k})}} = \frac{\cov(r_t,r_{t-k})}{\var(r)} = \frac{\gamma_k}{\gamma_0}.\]</div>
+<p>Notice that this definition assumes the series is weakly stationary, so <span class="math notranslate nohighlight">\(\var(r_t) = \var(r_{t-k}) = \var(r)\)</span>.</p>
+<p><span class="math notranslate nohighlight">\(\rho(k)\)</span> is the <em>autocorrelation function</em>. It gives the autocorrelation for a time series at as a function of <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<p>Let’s calculate <span class="math notranslate nohighlight">\(\rho(1)\)</span> for S&amp;P 500 index using the last ten years of daily data. We’ll multiply by 100 to avoid precision problems later.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rets</span> <span class="o">=</span> <span class="n">sp500</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2012&#39;</span><span class="p">:,</span> <span class="s1">&#39;Adj Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate the 1-period autocovariance</span>
+<span class="n">covmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">rets</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">rets</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="n">covmat</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 1.07861584, -0.16976787],
+       [-0.16976787,  1.07877407]])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1-period autocorrelation</span>
+<span class="n">covmat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">covmat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.15739419775089186
+</pre></div>
+</div>
+</div>
+</div>
+<p>The ACF is built-in to the <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> library, along with a helpful plotting function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa</span> <span class="kn">import</span> <span class="n">stattools</span> <span class="k">as</span> <span class="n">st</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">st</span><span class="o">.</span><span class="n">acf</span><span class="p">(</span><span class="n">rets</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 1.        , -0.15737104,  0.09435691, -0.01982453, -0.07970421,
+        0.04699541, -0.12178553,  0.16437112, -0.13686491,  0.13173219,
+       -0.05237084])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">rets</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_25_0.png" src="_images/07a Time series analysis_25_0.png" />
+</div>
+</div>
+<p>Since <span class="math notranslate nohighlight">\(\rho(1)\)</span> is always equal to one, it is common to plot the autocorrelation without this value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">rets</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auto_ylims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_27_0.png" src="_images/07a Time series analysis_27_0.png" />
+</div>
+</div>
+<p>Testing for autocorrelation at multiple horizons is done using a <em>portmanteau test</em> such as the Ljung-Box statistic,</p>
+<div class="math notranslate nohighlight">
+\[Q(m) = T(T+2)\sum_{k=1}^m \frac{\hat\rho_k^2}{T-k}.\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">acfs</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">acf</span><span class="p">(</span><span class="n">rets</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rets</span><span class="p">)</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">acfs</span><span class="p">))</span>
+
+<span class="c1"># Q(m) statistic</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="p">(</span><span class="n">T</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">acfs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">T</span><span class="o">-</span><span class="n">k</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">q</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>148.51824915576768
+</pre></div>
+</div>
+</div>
+</div>
+<p>How do we interpret this value? Is it big? Small?</p>
+<p>We need to know what we would expect it to be if there aren’t significant correlations. In other words, under the <em>null hypothesis</em> of no autocorrelation at all <span class="math notranslate nohighlight">\(m\)</span> lags, what is the distribution of the <span class="math notranslate nohighlight">\(Q(m)\)</span> statistic? How surprised should we be at seeing a number like 149?</p>
+<p>Ljung and Box (1978) showed that under the null of no autocorrelations, the test statistic has a <span class="math notranslate nohighlight">\(\chi^2\)</span> distribution with <span class="math notranslate nohighlight">\(m\)</span> degrees of freedom.</p>
+<p>Many statistical tests require us to know what distribution we would get by summing up squares of <span class="math notranslate nohighlight">\(\N(0,1)\)</span> random variables. This distribution is described by the <span class="math notranslate nohighlight">\(\chi^2\)</span> (pronounced <em>chi-square</em>) distribution.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chi2</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">chi2</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">m</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$m=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;$\chi^2$ distribution PDF&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_33_0.png" src="_images/07a Time series analysis_33_0.png" />
+</div>
+</div>
+<p>If <span class="math notranslate nohighlight">\(Q\)</span> is larger than <span class="math notranslate nohighlight">\(\chi^2_{\alpha}\)</span> then we reject the null at the <span class="math notranslate nohighlight">\(\alpha\)</span> significance level. For example, the cutoff for a 5% test is about 11.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>31.410432844230918
+</pre></div>
+</div>
+</div>
+</div>
+<p>Clearly, the <span class="math notranslate nohighlight">\(Q\)</span> statistic we calculated is far greater than this value, indicating that we can easily reject the null hypothesis.</p>
+<p>By specifying <code class="docutils literal notranslate"><span class="pre">qstat=True</span></code> we get <span class="math notranslate nohighlight">\(Q\)</span>-statistics with corresponding <span class="math notranslate nohighlight">\(p\)</span>-values. (Recall that a <span class="math notranslate nohighlight">\(p\)</span>-value is the probability of observing a statistic of some magnitude under the null hypothesis. In this case, the null hypothesis is that there is no serial correlation. If the test-statistic is larger than the corresponding “critical value” then the probability of getting this result if the null hypothesis is true is small. We take this as evidence against the null.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">acf</span><span class="p">,</span> <span class="n">qstats</span><span class="p">,</span> <span class="n">pvals</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">acf</span><span class="p">(</span><span class="n">rets</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">qstat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qstats</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 63.96968908,  86.97565427,  87.99159299, 104.41989442,
+       110.13349034, 148.51824916, 218.46816721, 266.984636  ,
+       311.94788796, 319.05710675, 319.09707274, 323.72071773,
+       348.49343974, 359.59358421, 386.05000475])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pvals</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.26348257e-15, 1.29860373e-19, 5.91402469e-19, 1.12590268e-21,
+       3.83963339e-22, 1.59161112e-29, 1.39482908e-43, 4.29572512e-53,
+       7.60688142e-62, 1.44453956e-62, 8.23108198e-62, 4.84173197e-62,
+       1.60932361e-66, 3.99263301e-68, 5.88109555e-73])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="ar-models">
+<h2>AR models<a class="headerlink" href="#ar-models" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.tsa.arima_process</span> <span class="kn">import</span> <span class="n">ArmaProcess</span><span class="p">,</span> <span class="n">arma_acf</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.arima.model</span> <span class="kn">import</span> <span class="n">ARIMA</span>
+
+<span class="c1"># Suppress all warnings about future changes to syntax</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">simplefilter</span>
+<span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Suppose returns, <span class="math notranslate nohighlight">\(r_t\)</span>, follow</p>
+<div class="math notranslate nohighlight">
+\[r_t = \phi_0 + \phi_1 r_{t-1} + \varepsilon_t,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\varepsilon \sim N(0,1)\)</span> is a white noise process. Such a model is referred to as an AR(1) model.</p>
+<p>More generally, an AR(<span class="math notranslate nohighlight">\(p\)</span>) model is</p>
+<div class="math notranslate nohighlight">
+\[r_t = \phi_0 + \phi_1 r_{t-1} + \cdots + \phi_p r_{t-p} + \varepsilon_t.\]</div>
+<p>We can calculate <em>conditional</em> mean and variance of an AR(1) model as</p>
+<div class="math notranslate nohighlight">
+\[E(r_t|r_{t-1}) = \phi_0 + \phi_1 r_{t-1}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\var(r_t|r_{t-1}) = \var(\varepsilon_t) = \sigma^2_{\varepsilon}\]</div>
+<p>Notice that <span class="math notranslate nohighlight">\(E(r_t) = \phi_0 + \phi_1 E(r_{t-1})\)</span> implies that</p>
+<div class="math notranslate nohighlight">
+\[E(r_t) = \mu = \frac{\phi_0}{1-\phi_1}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\var(r_t) = \phi_1^2\var(r_{t-1}) + \sigma^2_{\varepsilon}
+\Longrightarrow \var(r_t) = \frac{\sigma^2_{\varepsilon}}{1-\phi_1^2}.\]</div>
+<p>We can use the lag operator</p>
+<div class="math notranslate nohighlight">
+\[Lx_t := x_{t-1}, \quad L^k x_t = x_{t-k}\]</div>
+<p>to write an AR(<span class="math notranslate nohighlight">\(p\)</span>) model as</p>
+<div class="math notranslate nohighlight">
+\[r_t = \phi_0 + \phi_1 Lr_t + \cdots + \phi_p L^p r_t + \varepsilon_t.\]</div>
+<p>This leads to the <em>lag-polynomial representation</em>,</p>
+<div class="math notranslate nohighlight">
+\[\phi(L) r_t = \left(1-\phi_{1}L-\ldots-\phi_{p}L^{p}\right)r_{t} = \phi_0 + \varepsilon_{t}.\]</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">φ</span> <span class="o">=</span> <span class="mf">0.75</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="n">lags</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">acf</span> <span class="o">=</span> <span class="n">arma_acf</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">φ</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">lags</span><span class="o">=</span><span class="n">lags</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lags</span><span class="p">),</span> <span class="n">acf</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;$\phi=</span><span class="si">{</span><span class="n">φ</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">)</span>
+
+<span class="n">acf</span> <span class="o">=</span> <span class="n">arma_acf</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">φ</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">lags</span><span class="o">=</span><span class="n">lags</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lags</span><span class="p">),</span> <span class="n">acf</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;$\phi=</span><span class="si">{</span><span class="o">-</span><span class="n">φ</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">1.1</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Theoretical ACFs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_47_0.png" src="_images/07a Time series analysis_47_0.png" />
+</div>
+</div>
+<p>Clearly the autocorrelations for an AR process die out as <span class="math notranslate nohighlight">\(k\)</span> increases. To see why, notice that the model</p>
+<div class="math notranslate nohighlight">
+\[r_t = \phi r_{t-1} + \varepsilon_t\]</div>
+<p>means that of course</p>
+<div class="math notranslate nohighlight">
+\[r_{t-1} = \phi r_{t-2} + \varepsilon_{t-1}.\]</div>
+<p>Therefore, by subsituting the value for <span class="math notranslate nohighlight">\(r_{t-1}\)</span> into the first equation,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-430f112b-bc03-49d0-a936-7712f5de61ff">
+<span class="eqno">(15)<a class="headerlink" href="#equation-430f112b-bc03-49d0-a936-7712f5de61ff" title="Permalink to this equation">#</a></span>\[\begin{align}
+r_t &amp;= \phi (\phi r_{t-2} + \varepsilon_{t-1}) + \varepsilon_t, \\
+&amp;= \phi^2 r_{t-2} + \phi\varepsilon_{t-1} + \varepsilon_t.
+\end{align}\]</div>
+<p>But we don’t have to stop there. We could do the same <em>recursion</em> again, which gives</p>
+<div class="amsmath math notranslate nohighlight" id="equation-3b442dfe-2bd1-4dd9-bb4b-21ce14091b80">
+<span class="eqno">(16)<a class="headerlink" href="#equation-3b442dfe-2bd1-4dd9-bb4b-21ce14091b80" title="Permalink to this equation">#</a></span>\[\begin{equation}
+r_t = \phi^3 r_{t-3} + \phi^2\varepsilon_{t-2} + \phi\varepsilon_{t-1} + \varepsilon_t.
+\end{equation}\]</div>
+<p>To calculate various autocovariances, consider that</p>
+<div class="amsmath math notranslate nohighlight" id="equation-ea4dacd9-959b-4e66-887c-d259f64a5181">
+<span class="eqno">(17)<a class="headerlink" href="#equation-ea4dacd9-959b-4e66-887c-d259f64a5181" title="Permalink to this equation">#</a></span>\[\begin{align}
+\cov(x_t,x_{t-1}) &amp;= \cov(\phi x_{t-1} + \varepsilon_t, x_{t-1}) \\
+&amp;= \cov(\phi x_{t-1}, x_{t-1}) + \cov(\varepsilon_t, x_{t-1}) \\
+&amp;= \phi\cov(x_{t-1}, x_{t-1}) + \cov(\varepsilon_t, x_{t-1}) \\
+&amp;= \phi\var(x),
+\end{align}\]</div>
+<p>and therefore <span class="math notranslate nohighlight">\(\rho(1) = \phi\)</span>. Similar calculations show that <span class="math notranslate nohighlight">\(\rho(2) = \phi^2\)</span>, and more generally that</p>
+<div class="math notranslate nohighlight">
+\[\rho(k) = \phi^k.\]</div>
+<p>Also note that we could continue the recursion above ad infinitum, giving</p>
+<div class="math notranslate nohighlight">
+\[r_t = \phi^k + \sum_{i=0}^{k-1}\phi^i \varepsilon_{t-i}.\]</div>
+<p>As we take <span class="math notranslate nohighlight">\(k\rightarrow\infty\)</span>, the first term disappears. We’ll see below that this means we are left with an MA model where <span class="math notranslate nohighlight">\(q=\infty\)</span>. In other words, an AR(1) model is equivalent to an MA(<span class="math notranslate nohighlight">\(\infty\)</span>) model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">simulate_ar1</span><span class="p">(</span><span class="n">φ0</span><span class="p">,</span> <span class="n">φ1</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+    <span class="n">ε</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+    
+    <span class="c1"># initilize series</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="c1"># filter series</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">T</span><span class="p">):</span>
+        <span class="n">r</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>  <span class="o">=</span> <span class="n">φ0</span> <span class="o">+</span> <span class="n">φ1</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">ε</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simulate_ar1</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_54_0.png" src="_images/07a Time series analysis_54_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">φ</span> <span class="o">=</span> <span class="mf">0.3</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">ArmaProcess</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">φ</span><span class="p">])</span><span class="o">.</span><span class="n">generate_sample</span><span class="p">(</span><span class="mi">250</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Simulated data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_56_0.png" src="_images/07a Time series analysis_56_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auto_ylims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_57_0.png" src="_images/07a Time series analysis_57_0.png" />
+</div>
+</div>
+</section>
+<section id="estimating-ar-coefficients">
+<h2>Estimating AR coefficients<a class="headerlink" href="#estimating-ar-coefficients" title="Permalink to this headline">#</a></h2>
+<p>We can estimate the <span class="math notranslate nohighlight">\(\phi\)</span> parameters using OLS.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res_ols</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">res_ols</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.066
+Model:                            OLS   Adj. R-squared:                  0.062
+Method:                 Least Squares   F-statistic:                     17.32
+Date:                Mon, 04 Apr 2022   Prob (F-statistic):           4.36e-05
+Time:                        15:30:02   Log-Likelihood:                -351.51
+No. Observations:                 249   AIC:                             707.0
+Df Residuals:                     247   BIC:                             714.0
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0408      0.063      0.645      0.520      -0.084       0.165
+x1             0.2560      0.062      4.162      0.000       0.135       0.377
+==============================================================================
+Omnibus:                        0.126   Durbin-Watson:                   1.963
+Prob(Omnibus):                  0.939   Jarque-Bera (JB):                0.041
+Skew:                          -0.029   Prob(JB):                        0.980
+Kurtosis:                       3.025   Cond. No.                         1.06
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</pre></div>
+</div>
+</div>
+</div>
+<p>A better way to fit a model like this uses <code class="docutils literal notranslate"><span class="pre">AugtoReg</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.tsa.ar_model</span> <span class="kn">import</span> <span class="n">AutoReg</span><span class="p">,</span> <span class="n">ar_select_order</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">AutoReg</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            AutoReg Model Results                             
+==============================================================================
+Dep. Variable:                      y   No. Observations:                  250
+Model:                     AutoReg(1)   Log Likelihood                -351.528
+Method:               Conditional MLE   S.D. of innovations              0.993
+Date:                Mon, 04 Apr 2022   AIC                            709.055
+Time:                        15:30:04   BIC                            719.608
+Sample:                             1   HQIC                           713.303
+                                  250                                         
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0400      0.063      0.635      0.525      -0.083       0.164
+y.L1           0.2560      0.061      4.179      0.000       0.136       0.376
+                                    Roots                                    
+=============================================================================
+                  Real          Imaginary           Modulus         Frequency
+-----------------------------------------------------------------------------
+AR.1            3.9059           +0.0000j            3.9059            0.0000
+-----------------------------------------------------------------------------
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">resid</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Residuals&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_64_0.png" src="_images/07a Time series analysis_64_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_65_0.png" src="_images/07a Time series analysis_65_0.png" />
+</div>
+</div>
+</section>
+<section id="partial-autocorrelation-function-pacf">
+<h2>Partial autocorrelation function (PACF)<a class="headerlink" href="#partial-autocorrelation-function-pacf" title="Permalink to this headline">#</a></h2>
+<p>With real data we don’t know the correct <span class="math notranslate nohighlight">\(p\)</span> and must estimate it. This can be done using the Partial Autocorrelation Function (PACF).</p>
+<p>Consider this sequence of regressions, where we add one more lag to each subsequent regression:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+r_t &amp;= \phi_{0,1} + \phi_{1,1} r_{t-1} + \varepsilon_{1t} \\
+r_t &amp;= \phi_{0,2} + \phi_{1,2} r_{t-1} + \phi_{2,2} r_{t-2} + \varepsilon_{2t} \\
+r_t &amp;= \phi_{0,3} + \phi_{1,3} r_{t-1} + \phi_{2,3} r_{t-2} + \phi_{3,3} r_{t-3} + \varepsilon_{3t} \\
+r_t &amp;= \phi_{0,4} + \phi_{1,4} r_{t-1} + \phi_{2,4} r_{t-2} + \phi_{3,4} r_{t-3} + \phi_{4,4} r_{t-4} + \varepsilon_{3t} \\
+&amp;\vdots
+\end{align}\end{split}\]</div>
+<p>The terms <span class="math notranslate nohighlight">\(\phi_{1,1}, \phi_{2,2}, \phi_{3,3}, \phi_{4,4}, \ldots\)</span> are the relevant coefficients. Each gives the marginal effect of adding one additional lag to the autoregression.</p>
+<p>Estimating these regressions using OLS, we get estimates for the <span class="math notranslate nohighlight">\(\phi\)</span>, which have these properties:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\hat \phi_{p,p}\)</span> converges to <span class="math notranslate nohighlight">\(\phi_p\)</span> as <span class="math notranslate nohighlight">\(T\rightarrow \infty\)</span>; and</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat \phi_{k,k}\)</span> converges to zero for all <span class="math notranslate nohighlight">\(k&gt;p\)</span>.</p></li>
+</ul>
+<p>This means that we can determine <span class="math notranslate nohighlight">\(p\)</span> by looking at where the PACF drops off. For example, consider these figures:</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_coefs</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>    
+    <span class="sd">&#39;&#39;&#39;Generate coefficients for a stationary AR(p) model&#39;&#39;&#39;</span>
+    <span class="kn">from</span> <span class="nn">statsmodels.tsa.statespace.tools</span> <span class="kn">import</span> <span class="n">is_invertible</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">coefs</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">.95</span><span class="p">,</span><span class="mf">.95</span><span class="p">,</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">alltrue</span><span class="p">(</span><span class="n">coefs</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_invertible</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">coefs</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="n">coefs</span>
+
+<span class="k">def</span> <span class="nf">simulate_ar</span><span class="p">(</span><span class="n">nlags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nobs</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">coefs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">coefs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">coefs</span> <span class="o">=</span> <span class="n">get_coefs</span><span class="p">(</span><span class="n">nlags</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">coefs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coefs</span><span class="p">)</span>
+    <span class="c1"># simulate series</span>
+    <span class="k">return</span> <span class="n">ArmaProcess</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">coefs</span><span class="p">])</span><span class="o">.</span><span class="n">generate_sample</span><span class="p">(</span><span class="n">nobs</span><span class="p">),</span> <span class="n">coefs</span>
+
+<span class="n">φ</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="c1"># Plot PACF</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">y</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">simulate_ar</span><span class="p">(</span><span class="n">coefs</span><span class="o">=</span><span class="p">[</span><span class="n">φ</span><span class="p">])</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_pacf</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;PACF, $\phi_1=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">φ</span><span class="p">))</span>
+
+<span class="n">y</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">simulate_ar</span><span class="p">(</span><span class="n">coefs</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">𝜙</span><span class="p">])</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_pacf</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;PACF, $\phi_1=</span><span class="si">{}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">-</span><span class="n">φ</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_67_0.png" src="_images/07a Time series analysis_67_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
+
+<span class="n">lags</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">n</span><span class="p">,</span><span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lags</span><span class="p">,</span> <span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">()):</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">simulate_ar</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_pacf</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;PACF, $\phi$: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_68_0.png" src="_images/07a Time series analysis_68_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">simulate_ar</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;AR(</span><span class="si">{}</span><span class="s1">): $\phi$=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">),</span> <span class="n">params</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_69_0.png" src="_images/07a Time series analysis_69_0.png" />
+</div>
+</div>
+</section>
+<section id="information-criteria">
+<h2>Information criteria<a class="headerlink" href="#information-criteria" title="Permalink to this headline">#</a></h2>
+<p>We can select among different possible models by evaluating an <em>information criterion</em>. In particular, we can use either the <em>Akaike information criterion</em> (AIC) or the <em>Schwarz-Bayesian information criterion</em> (BIC). Both criteria begin with the <em>log-likelihood function</em>, which measures how likely we are to see the observed data given the model parameters we have estimated.</p>
+<p>In the case of the autoregression model, the log-likelihood is given by</p>
+<div class="math notranslate nohighlight">
+\[\ln \mathcal{L} = -\frac{T-\ell}{2} \left(\ln(2\pi) + \ln(\hat\sigma_{\varepsilon}^2)+1 \right),\]</div>
+<p>where <span class="math notranslate nohighlight">\(T\)</span> is the number of time series observations, <span class="math notranslate nohighlight">\(\ell\)</span> is the number of lags in the model, and <span class="math notranslate nohighlight">\(\hat\sigma_{\varepsilon}^2\)</span> is the variance of the residuals. We can think of <span class="math notranslate nohighlight">\(T-\ell\)</span> as the effictive number of observations, since we lose one observation for each additional lag we include in the model.</p>
+<p>Notice that this is smaller when the variance of the residuals, <span class="math notranslate nohighlight">\(\hat\sigma_{\varepsilon}^2\)</span>, is greater. That is, the more variance our model leaves unexplained, the lower is the likelihood of the model, and the worse is its <em>fit</em>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span><span class="o">.</span><span class="n">sigma2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9857405388813706
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span><span class="o">.</span><span class="n">llf</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-351.5276128001678
+</pre></div>
+</div>
+</div>
+</div>
+<p>The AIC is then defined as</p>
+<div class="math notranslate nohighlight">
+\[AIC = -2 \ln \mathcal{L} + 2(1+k),\]</div>
+<p>where <span class="math notranslate nohighlight">\(k\)</span> is the <em>degrees of freedom</em> in the model, or the number of lags (plus one if there is a constant term).</p>
+<p>We prefer models with a lower AIC. This happens when the likelihood is higher or when we have fewer parameters to estimate.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Volatility of residuals: </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">sigma2</span><span class="p">)))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of observations: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">nobs</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Degrees of freedom: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">df_model</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;AIC: </span><span class="si">{:.3f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">res</span><span class="o">.</span><span class="n">llf</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">res</span><span class="o">.</span><span class="n">df_model</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Volatility of residuals: 0.9928
+Number of observations: 249
+Degrees of freedom: 2
+AIC: 709.055
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span><span class="o">.</span><span class="n">aic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>709.0552256003356
+</pre></div>
+</div>
+</div>
+</div>
+<p>The BIC is defined as</p>
+<div class="math notranslate nohighlight">
+\[BIC = -2 \ln \mathcal{L} + (1+k)\ln(T-\ell).\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">res</span><span class="o">.</span><span class="n">llf</span> <span class="o">+</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">df_model</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">nobs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>719.6075842897297
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span><span class="o">.</span><span class="n">bic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>719.6075842897297
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can use AIC or BIC to aid in order selection.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">modsel</span> <span class="o">=</span> <span class="n">ar_select_order</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">maxlag</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">old_names</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># best model appears first</span>
+<span class="n">modsel</span><span class="o">.</span><span class="n">aic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{0: 708.1508652922782,
+ (1,): 710.0140317610806,
+ (1, 2): 710.0909473586689,
+ (1, 2, 3): 711.6340710078738,
+ (1, 2, 3, 4): 713.6217150438183,
+ (1, 2, 3, 4, 5, 6): 714.8781231561347,
+ (1, 2, 3, 4, 5): 715.0182112870524}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">modsel</span><span class="o">.</span><span class="n">bic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{0: 711.6480335175714,
+ (1,): 717.008368211667,
+ (1, 2): 720.5824520345485,
+ (1, 2, 3): 725.6227439090466,
+ (1, 2, 3, 4): 731.1075561702843,
+ (1, 2, 3, 4, 5): 736.0012206388116,
+ (1, 2, 3, 4, 5, 6): 739.3583007331872}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># number of lags selected by default selected criterion (default is BIC)</span>
+<span class="n">modsel</span><span class="o">.</span><span class="n">ar_lags</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">areg</span> <span class="o">=</span> <span class="n">AutoReg</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">old_names</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areg</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            AutoReg Model Results                             
+==============================================================================
+Dep. Variable:                      y   No. Observations:                  250
+Model:                     AutoReg(2)   Log Likelihood                -356.915
+Method:               Conditional MLE   S.D. of innovations              1.020
+Date:                Mon, 04 Apr 2022   AIC                            721.831
+Time:                        15:30:10   BIC                            735.885
+Sample:                             2   HQIC                           727.488
+                                  250                                         
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0387      0.065      0.597      0.551      -0.089       0.166
+y.L1          -0.0269      0.063     -0.425      0.671      -0.151       0.097
+y.L2           0.0917      0.063      1.448      0.148      -0.032       0.216
+                                    Roots                                    
+=============================================================================
+                  Real          Imaginary           Modulus         Frequency
+-----------------------------------------------------------------------------
+AR.1           -3.1594           +0.0000j            3.1594            0.5000
+AR.2            3.4527           +0.0000j            3.4527            0.0000
+-----------------------------------------------------------------------------
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s look at the monthly return on the value-weighted market series. The series starts in 1926.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vwret</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://raw.githubusercontent.com/stoffprof/qf22/main/data/market_monthly.csv&#39;</span><span class="p">,</span>
+                    <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;caldt&#39;</span><span class="p">,</span> <span class="s1">&#39;vwretd&#39;</span><span class="p">],</span>
+                    <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;caldt&#39;</span><span class="p">],</span>
+                    <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;caldt&#39;</span><span class="p">,</span>
+                    <span class="n">squeeze</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># move dates to end of month to avoid warnings with model selection</span>
+<span class="n">vwret</span> <span class="o">=</span> <span class="n">vwret</span><span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;ffill&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_pacf</span><span class="p">(</span><span class="n">vwret</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_89_0.png" src="_images/07a Time series analysis_89_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">modsel</span> <span class="o">=</span> <span class="n">ar_select_order</span><span class="p">(</span><span class="n">vwret</span><span class="p">,</span> <span class="n">maxlag</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">old_names</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">modsel</span><span class="o">.</span><span class="n">bic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(1,): -3445.161721738548,
+ (1, 2, 3): -3441.221696374567,
+ 0: -3440.6091314227774,
+ (1, 2): -3439.3971123411898,
+ (1, 2, 3, 4): -3435.4762727786824,
+ (1, 2, 3, 4, 5): -3431.0468835532643,
+ (1, 2, 3, 4, 5, 6): -3427.710545938721,
+ (1, 2, 3, 4, 5, 6, 7): -3422.025428077765,
+ (1, 2, 3, 4, 5, 6, 7, 8): -3417.2500554327457,
+ (1, 2, 3, 4, 5, 6, 7, 8, 9): -3411.9284598827558,
+ (1, 2, 3, 4, 5, 6, 7, 8, 9, 10): -3405.0244698696656,
+ (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11): -3398.0642116166455,
+ (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12): -3391.0487079604213}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vwret_ar1</span> <span class="o">=</span> <span class="n">AutoReg</span><span class="p">(</span><span class="n">vwret</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">old_names</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vwret_ar1</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            AutoReg Model Results                             
+==============================================================================
+Dep. Variable:                 vwretd   No. Observations:                 1152
+Model:                     AutoReg(1)   Log Likelihood                1749.583
+Method:               Conditional MLE   S.D. of innovations              0.053
+Date:                Mon, 04 Apr 2022   AIC                          -3493.165
+Time:                        15:36:36   BIC                          -3478.020
+Sample:                    02-28-1926   HQIC                         -3487.449
+                         - 12-31-2021                                         
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0085      0.002      5.352      0.000       0.005       0.012
+vwretd.L1      0.1010      0.029      3.445      0.001       0.044       0.159
+                                    Roots                                    
+=============================================================================
+                  Real          Imaginary           Modulus         Frequency
+-----------------------------------------------------------------------------
+AR.1            9.8970           +0.0000j            9.8970            0.0000
+-----------------------------------------------------------------------------
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># testing for serial correlation in residuals</span>
+
+<span class="n">vwret_ar1</span><span class="o">.</span><span class="n">test_serial_correlation</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Ljung-Box</th>
+      <th>LB P-value</th>
+      <th>DF</th>
+    </tr>
+    <tr>
+      <th>Lag</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>0.012330</td>
+      <td>NaN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.697830</td>
+      <td>NaN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11.009051</td>
+      <td>0.000907</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>11.390009</td>
+      <td>0.003363</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>15.450763</td>
+      <td>0.001469</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>17.904335</td>
+      <td>0.001288</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>18.306322</td>
+      <td>0.002586</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>19.660321</td>
+      <td>0.003182</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>22.790986</td>
+      <td>0.001853</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>22.952233</td>
+      <td>0.003426</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>23.475286</td>
+      <td>0.005213</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>23.504386</td>
+      <td>0.009030</td>
+      <td>10</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">modsel</span><span class="o">.</span><span class="n">aic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(1, 2, 3, 4, 5, 6): -3462.982030728441,
+ (1, 2, 3, 4, 5, 6, 7, 8): -3462.599107305243,
+ (1, 2, 3, 4, 5, 6, 7): -3462.3356964088734,
+ (1, 2, 3, 4, 5, 6, 7, 8, 9): -3462.3162952966413,
+ (1, 2, 3): -3461.376830540121,
+ (1, 2, 3, 4, 5): -3461.2795848015953,
+ (1, 2, 3, 4): -3460.670190485625,
+ (1, 2, 3, 4, 5, 6, 7, 8, 9, 10): -3460.4510888249397,
+ (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11): -3458.529614113308,
+ (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12): -3456.5528939984724,
+ (1,): -3455.239288821325,
+ (1, 2): -3454.5134629653553,
+ 0: -3445.647914964166}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vwret_ar6</span> <span class="o">=</span> <span class="n">AutoReg</span><span class="p">(</span><span class="n">vwret</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">old_names</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vwret_ar6</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            AutoReg Model Results                             
+==============================================================================
+Dep. Variable:                 vwretd   No. Observations:                 1152
+Model:                     AutoReg(6)   Log Likelihood                1750.104
+Method:               Conditional MLE   S.D. of innovations              0.053
+Date:                Mon, 04 Apr 2022   AIC                          -3484.207
+Time:                        15:36:38   BIC                          -3443.855
+Sample:                    07-31-1926   HQIC                         -3468.972
+                         - 12-31-2021                                         
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0093      0.002      5.534      0.000       0.006       0.013
+vwretd.L1      0.1053      0.029      3.571      0.000       0.048       0.163
+vwretd.L2     -0.0177      0.030     -0.597      0.551      -0.076       0.040
+vwretd.L3     -0.0953      0.030     -3.218      0.001      -0.153      -0.037
+vwretd.L4      0.0269      0.030      0.907      0.364      -0.031       0.085
+vwretd.L5      0.0535      0.030      1.805      0.071      -0.005       0.112
+vwretd.L6     -0.0572      0.029     -1.939      0.053      -0.115       0.001
+                                    Roots                                    
+=============================================================================
+                  Real          Imaginary           Modulus         Frequency
+-----------------------------------------------------------------------------
+AR.1           -1.3655           -0.7516j            1.5587           -0.4199
+AR.2           -1.3655           +0.7516j            1.5587            0.4199
+AR.3            0.2681           -1.4889j            1.5129           -0.2216
+AR.4            0.2681           +1.4889j            1.5129            0.2216
+AR.5            1.5649           -0.8345j            1.7735           -0.0780
+AR.6            1.5649           +0.8345j            1.7735            0.0780
+-----------------------------------------------------------------------------
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vwret_ar6</span><span class="o">.</span><span class="n">test_serial_correlation</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Ljung-Box</th>
+      <th>LB P-value</th>
+      <th>DF</th>
+    </tr>
+    <tr>
+      <th>Lag</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>0.003456</td>
+      <td>NaN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.003979</td>
+      <td>NaN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.005730</td>
+      <td>NaN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.007301</td>
+      <td>NaN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.019799</td>
+      <td>NaN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.024419</td>
+      <td>NaN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.985302</td>
+      <td>NaN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2.833074</td>
+      <td>0.092341</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>5.577252</td>
+      <td>0.061506</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>5.622218</td>
+      <td>0.131509</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>5.853950</td>
+      <td>0.210324</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>5.909105</td>
+      <td>0.315164</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vwret_ar6</span><span class="o">.</span><span class="n">test_normality</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jarque-Bera    1996.460004
+P-value           0.000000
+Skewness          0.078407
+Kurtosis          9.464216
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="ma-q-models">
+<h2>MA(q) models<a class="headerlink" href="#ma-q-models" title="Permalink to this headline">#</a></h2>
+<div class="math notranslate nohighlight">
+\[r_t = \mu + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \cdots + \theta_q \varepsilon_{t-q}\]</div>
+<div class="math notranslate nohighlight">
+\[E(r_t) = \mu\]</div>
+<div class="math notranslate nohighlight">
+\[\var(r_t) = (1+\theta_1^2 + \cdots + \theta_q^2)\sigma^2_{\varepsilon}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">θ</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]</span>
+
+<span class="n">ma_coefs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">θ</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">acf</span> <span class="o">=</span> <span class="n">arma_acf</span><span class="p">(</span><span class="n">ar</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ma</span><span class="o">=</span><span class="n">ma_coefs</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">acf</span><span class="p">)),</span> <span class="n">acf</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Theoretical ACF, $\theta$=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">θ</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_102_0.png" src="_images/07a Time series analysis_102_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">ArmaProcess</span><span class="p">(</span><span class="n">ma</span><span class="o">=</span><span class="n">ma_coefs</span><span class="p">)</span><span class="o">.</span><span class="n">generate_sample</span><span class="p">(</span><span class="mi">250</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_104_0.png" src="_images/07a Time series analysis_104_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07a Time series analysis_105_0.png" src="_images/07a Time series analysis_105_0.png" />
+</div>
+</div>
+<p>We can transform an AR(<span class="math notranslate nohighlight">\(p\)</span>) model by recursively substituting values for <span class="math notranslate nohighlight">\(r_{t-k}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+r_t &amp;= \phi_0 + \phi_1(\phi_0 + \phi_1 r_{t-2} + \varepsilon_{t-1}) + \varepsilon_t \\
+&amp;= \phi_0 + \phi_1(\phi_0 + \phi_1 (\phi_0 + \phi_1 r_{t-3} + \varepsilon_{t-2}) + \varepsilon_{t-1}) + \varepsilon_t \\
+&amp;= \phi_0 + \phi_1\phi_0 + \phi_1^2\phi_0 + \phi_1^3 r_{t-3} + \phi_1^2\varepsilon_{t-2} + \phi_1\varepsilon_{t-1} + \varepsilon_t \\
+&amp; = \phi_0(1+ \phi_1 + \phi_1^2 + \cdots ) + \varepsilon_t + \phi_1\varepsilon_{t-1} + \phi_1^2\varepsilon_{t-2} + \cdots
+\end{align}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\Longrightarrow r_t = \mu + \sum_{i=1}^{\infty}\phi_1^i \varepsilon_{t-i}.\]</div>
+<p>This implies an equivalence between an AR(1) model and an MA(<span class="math notranslate nohighlight">\(\infty\)</span>) model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vwret_ma9</span> <span class="o">=</span> <span class="n">ARIMA</span><span class="p">(</span><span class="n">vwret</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">vwret_ma9</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                               SARIMAX Results                                
+==============================================================================
+Dep. Variable:                 vwretd   No. Observations:                 1152
+Model:                 ARIMA(0, 0, 9)   Log Likelihood                1763.590
+Date:                Mon, 04 Apr 2022   AIC                          -3505.179
+Time:                        15:37:06   BIC                          -3449.637
+Sample:                    01-31-1926   HQIC                         -3484.215
+                         - 12-31-2021                                         
+Covariance Type:                  opg                                         
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0094      0.002      4.818      0.000       0.006       0.013
+ma.L1          0.1036      0.019      5.517      0.000       0.067       0.140
+ma.L2         -0.0057      0.021     -0.268      0.789      -0.048       0.036
+ma.L3         -0.1018      0.022     -4.613      0.000      -0.145      -0.059
+ma.L4          0.0099      0.023      0.438      0.662      -0.035       0.054
+ma.L5          0.0715      0.023      3.152      0.002       0.027       0.116
+ma.L6         -0.0286      0.022     -1.322      0.186      -0.071       0.014
+ma.L7          0.0217      0.023      0.926      0.355      -0.024       0.068
+ma.L8          0.0259      0.017      1.486      0.137      -0.008       0.060
+ma.L9          0.0653      0.019      3.359      0.001       0.027       0.103
+sigma2         0.0027   6.69e-05     40.929      0.000       0.003       0.003
+===================================================================================
+Ljung-Box (L1) (Q):                   0.00   Jarque-Bera (JB):              1914.23
+Prob(Q):                              0.99   Prob(JB):                         0.00
+Heteroskedasticity (H):               0.44   Skew:                             0.10
+Prob(H) (two-sided):                  0.00   Kurtosis:                         9.31
+===================================================================================
+
+Warnings:
+[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vwret_ma9</span> <span class="o">=</span> <span class="n">ARIMA</span><span class="p">(</span><span class="n">vwret</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">]))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vwret_ma9</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                   SARIMAX Results                                   
+=====================================================================================
+Dep. Variable:                        vwretd   No. Observations:                 1152
+Model:             ARIMA(0, 0, [1, 3, 5, 9])   Log Likelihood                1762.213
+Date:                       Mon, 04 Apr 2022   AIC                          -3512.425
+Time:                               15:37:07   BIC                          -3482.130
+Sample:                           01-31-1926   HQIC                         -3500.990
+                                - 12-31-2021                                         
+Covariance Type:                         opg                                         
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0094      0.002      5.160      0.000       0.006       0.013
+ma.L1          0.1080      0.018      5.846      0.000       0.072       0.144
+ma.L3         -0.1081      0.021     -5.190      0.000      -0.149      -0.067
+ma.L5          0.0750      0.022      3.372      0.001       0.031       0.119
+ma.L9          0.0572      0.018      3.207      0.001       0.022       0.092
+sigma2         0.0027   6.58e-05     41.738      0.000       0.003       0.003
+===================================================================================
+Ljung-Box (L1) (Q):                   0.02   Jarque-Bera (JB):              1830.38
+Prob(Q):                              0.89   Prob(JB):                         0.00
+Heteroskedasticity (H):               0.44   Skew:                             0.09
+Prob(H) (two-sided):                  0.00   Kurtosis:                         9.17
+===================================================================================
+
+Warnings:
+[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="arma-p-q-model">
+<h2>ARMA(p,q) model<a class="headerlink" href="#arma-p-q-model" title="Permalink to this headline">#</a></h2>
+<p>ARMA models combine properties of both AR and MA processes. They are particularly useful in modeling volatility.</p>
+<p>An ARMA(<span class="math notranslate nohighlight">\(p,q\)</span>) model may be written as</p>
+<div class="math notranslate nohighlight">
+\[\phi(L) y_t = \psi(L) \varepsilon_t\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\phi(L) = 1 - \phi_1 L^1 - \phi_2 L^2 - \cdots - \phi_p L^p, \\
+\theta(L) = 1 - \theta_1 L^1 + \theta_2 L^2 + \cdots + \theta_p L^p. \\
+\end{align}\end{split}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vwret_arma</span> <span class="o">=</span> <span class="n">ARIMA</span><span class="p">(</span><span class="n">vwret</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vwret_arma</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                               SARIMAX Results                                
+==============================================================================
+Dep. Variable:                 vwretd   No. Observations:                 1152
+Model:                 ARIMA(1, 0, 2)   Log Likelihood                1752.617
+Date:                Mon, 04 Apr 2022   AIC                          -3495.233
+Time:                        15:37:11   BIC                          -3469.987
+Sample:                    01-31-1926   HQIC                         -3485.704
+                         - 12-31-2021                                         
+Covariance Type:                  opg                                         
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0094      0.002      5.414      0.000       0.006       0.013
+ar.L1          0.5434      0.345      1.574      0.115      -0.133       1.220
+ma.L1         -0.4465      0.348     -1.285      0.199      -1.128       0.235
+ma.L2         -0.0842      0.029     -2.911      0.004      -0.141      -0.028
+sigma2         0.0028   6.07e-05     45.972      0.000       0.003       0.003
+===================================================================================
+Ljung-Box (L1) (Q):                   0.02   Jarque-Bera (JB):              2285.08
+Prob(Q):                              0.88   Prob(JB):                         0.00
+Heteroskedasticity (H):               0.41   Skew:                             0.10
+Prob(H) (two-sided):                  0.00   Kurtosis:                         9.90
+===================================================================================
+
+Warnings:
+[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="05c%20Numerical%20optimization.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Numerical optimization</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="07aa%20Applications.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Applications</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    <div class="extra_footer">
+      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.03.
+    </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

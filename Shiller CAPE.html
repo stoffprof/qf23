@@ -1,0 +1,2259 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Shiller’s CAPE &#8212; Quant Finance in Python</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/admonitions-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/.ipynb_checkpoints/custom-checkpoint.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="canonical" href="https://stoffprof.github.io/qf23/Shiller CAPE.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Time series models" href="07a%20Time%20series%20analysis.html" />
+    <link rel="prev" title="Factor regressions" href="06%20Calculating%20beta.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/qf.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Quant Finance in Python</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a%20math.html">
+   Math background
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b%20returns.html">
+   Asset returns
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01c%20prices.html">
+   A model of prices
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Econometrics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="probability.html">
+   Probability
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02a%20MSE.html">
+     Prediction: First look
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02b%20Probability%20theory.html">
+     Probability theory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02d%20Pseudorandom%20number%20generation.html">
+     Pseudorandom number generation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02c%20Distributions.html">
+     Probability distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02e%20Covariance.html">
+     Covariance
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02f%20Estimation.html">
+     Parameter estimation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="regression.html">
+   Regression
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04a%20Regression%20theory.html">
+     Linear regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04b%20Regression%20applications.html">
+     Implementing regressions
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Portfolio optimization
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="05a%20Diversification.html">
+   Diversification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05b%20Efficient%20portfolios.html">
+   The efficient frontier
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05c%20Numerical%20optimization.html">
+   Numerical optimization
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Factors
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="06%20Calculating%20beta.html">
+   Factor regressions
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Equity premium
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Shiller’s CAPE
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Time series modeling
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="07a%20Time%20series%20analysis.html">
+   Time series models
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07aa%20Applications.html">
+   Applications
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07b%20Markov%20switching%20model.html">
+   Markov Switching model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="08%20Volatility%20modeling.html">
+   Volatility modeling
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reference
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="notation.html">
+   Notation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sources.html">
+   Additional sources
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/Shiller CAPE.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plotting">
+   Plotting
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#correlations">
+   Correlations
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Shiller’s CAPE</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plotting">
+   Plotting
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#correlations">
+   Correlations
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="shillers-cape">
+<h1>Shiller’s CAPE<a class="headerlink" href="#shillers-cape" title="Permalink to this headline">#</a></h1>
+<p><a class="reference external" href="http://www.econ.yale.edu/~shiller/data.htm">http://www.econ.yale.edu/~shiller/data.htm</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;http://www.econ.yale.edu/~shiller/data/ie_data.xls&#39;</span><span class="p">,</span>
+                        <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span>
+                        <span class="n">skipfooter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="s1">&#39;A:E&#39;</span><span class="p">,</span>
+                        <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Date&#39;</span><span class="p">:</span><span class="nb">str</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date</th>
+      <th>P</th>
+      <th>D</th>
+      <th>E</th>
+      <th>CPI</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1871.01</td>
+      <td>4.440000</td>
+      <td>0.260000</td>
+      <td>0.40</td>
+      <td>12.464061</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1871.02</td>
+      <td>4.500000</td>
+      <td>0.260000</td>
+      <td>0.40</td>
+      <td>12.844641</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1871.03</td>
+      <td>4.610000</td>
+      <td>0.260000</td>
+      <td>0.40</td>
+      <td>13.034972</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1871.04</td>
+      <td>4.740000</td>
+      <td>0.260000</td>
+      <td>0.40</td>
+      <td>12.559226</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1871.05</td>
+      <td>4.860000</td>
+      <td>0.260000</td>
+      <td>0.40</td>
+      <td>12.273812</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1804</th>
+      <td>2021.05</td>
+      <td>4167.849500</td>
+      <td>57.787824</td>
+      <td>148.56</td>
+      <td>269.195000</td>
+    </tr>
+    <tr>
+      <th>1805</th>
+      <td>2021.06</td>
+      <td>4238.489545</td>
+      <td>57.865042</td>
+      <td>158.74</td>
+      <td>271.696000</td>
+    </tr>
+    <tr>
+      <th>1806</th>
+      <td>2021.07</td>
+      <td>4363.712857</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>273.003000</td>
+    </tr>
+    <tr>
+      <th>1807</th>
+      <td>2021.08</td>
+      <td>4454.206364</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>273.656500</td>
+    </tr>
+    <tr>
+      <th>1808</th>
+      <td>2021.09</td>
+      <td>4493.280000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>273.983250</td>
+    </tr>
+  </tbody>
+</table>
+<p>1809 rows × 5 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date       1871.1
+P            4.59
+D            0.26
+E             0.4
+CPI     12.368896
+Name: 9, dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date      2021.09
+P         4493.28
+D             NaN
+E             NaN
+CPI     273.98325
+Name: 1808, dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;1871-01-31&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">shiller</span><span class="p">),</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DatetimeIndex([&#39;1871-01-31&#39;, &#39;1871-02-28&#39;, &#39;1871-03-31&#39;, &#39;1871-04-30&#39;,
+               &#39;1871-05-31&#39;, &#39;1871-06-30&#39;, &#39;1871-07-31&#39;, &#39;1871-08-31&#39;,
+               &#39;1871-09-30&#39;, &#39;1871-10-31&#39;,
+               ...
+               &#39;2020-12-31&#39;, &#39;2021-01-31&#39;, &#39;2021-02-28&#39;, &#39;2021-03-31&#39;,
+               &#39;2021-04-30&#39;, &#39;2021-05-31&#39;, &#39;2021-06-30&#39;, &#39;2021-07-31&#39;,
+               &#39;2021-08-31&#39;, &#39;2021-09-30&#39;],
+              dtype=&#39;datetime64[ns]&#39;, length=1809, freq=&#39;M&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Frequency codes are <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#timeseries-offset-aliases">here</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;1871-01-31&#39;</span><span class="p">,</span>
+                                <span class="n">periods</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">shiller</span><span class="p">),</span>
+                                <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">)</span>
+
+<span class="n">shiller</span> <span class="o">=</span> <span class="n">shiller</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+DatetimeIndex: 1809 entries, 1871-01-31 to 2021-09-30
+Data columns (total 4 columns):
+ #   Column  Non-Null Count  Dtype  
+---  ------  --------------  -----  
+ 0   P       1809 non-null   float64
+ 1   D       1806 non-null   float64
+ 2   E       1806 non-null   float64
+ 3   CPI     1809 non-null   float64
+dtypes: float64(4)
+memory usage: 70.7 KB
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>P</th>
+      <th>D</th>
+      <th>E</th>
+      <th>CPI</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1871-01-31</th>
+      <td>4.440000</td>
+      <td>0.260000</td>
+      <td>0.40</td>
+      <td>12.464061</td>
+    </tr>
+    <tr>
+      <th>1871-02-28</th>
+      <td>4.500000</td>
+      <td>0.260000</td>
+      <td>0.40</td>
+      <td>12.844641</td>
+    </tr>
+    <tr>
+      <th>1871-03-31</th>
+      <td>4.610000</td>
+      <td>0.260000</td>
+      <td>0.40</td>
+      <td>13.034972</td>
+    </tr>
+    <tr>
+      <th>1871-04-30</th>
+      <td>4.740000</td>
+      <td>0.260000</td>
+      <td>0.40</td>
+      <td>12.559226</td>
+    </tr>
+    <tr>
+      <th>1871-05-31</th>
+      <td>4.860000</td>
+      <td>0.260000</td>
+      <td>0.40</td>
+      <td>12.273812</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2021-05-31</th>
+      <td>4167.849500</td>
+      <td>57.787824</td>
+      <td>148.56</td>
+      <td>269.195000</td>
+    </tr>
+    <tr>
+      <th>2021-06-30</th>
+      <td>4238.489545</td>
+      <td>57.865042</td>
+      <td>158.74</td>
+      <td>271.696000</td>
+    </tr>
+    <tr>
+      <th>2021-07-31</th>
+      <td>4363.712857</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>273.003000</td>
+    </tr>
+    <tr>
+      <th>2021-08-31</th>
+      <td>4454.206364</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>273.656500</td>
+    </tr>
+    <tr>
+      <th>2021-09-30</th>
+      <td>4493.280000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>273.983250</td>
+    </tr>
+  </tbody>
+</table>
+<p>1809 rows × 4 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;1995-01-31&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>P      465.25
+D       13.18
+E       31.25
+CPI    150.30
+Name: 1995-01-31 00:00:00, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>When the index is a <code class="docutils literal notranslate"><span class="pre">datetime</span></code>, we can refer to ranges of dates in a meaningful way.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;1995&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>P</th>
+      <th>D</th>
+      <th>E</th>
+      <th>CPI</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1995-01-31</th>
+      <td>465.25</td>
+      <td>13.1800</td>
+      <td>31.2500</td>
+      <td>150.3</td>
+    </tr>
+    <tr>
+      <th>1995-02-28</th>
+      <td>481.92</td>
+      <td>13.1800</td>
+      <td>31.9000</td>
+      <td>150.9</td>
+    </tr>
+    <tr>
+      <th>1995-03-31</th>
+      <td>493.15</td>
+      <td>13.1700</td>
+      <td>32.5500</td>
+      <td>151.4</td>
+    </tr>
+    <tr>
+      <th>1995-04-30</th>
+      <td>507.91</td>
+      <td>13.2433</td>
+      <td>33.1767</td>
+      <td>151.9</td>
+    </tr>
+    <tr>
+      <th>1995-05-31</th>
+      <td>523.81</td>
+      <td>13.3067</td>
+      <td>33.8033</td>
+      <td>152.2</td>
+    </tr>
+    <tr>
+      <th>1995-06-30</th>
+      <td>539.35</td>
+      <td>13.3600</td>
+      <td>34.4300</td>
+      <td>152.5</td>
+    </tr>
+    <tr>
+      <th>1995-07-31</th>
+      <td>557.37</td>
+      <td>13.4400</td>
+      <td>34.6800</td>
+      <td>152.5</td>
+    </tr>
+    <tr>
+      <th>1995-08-31</th>
+      <td>559.11</td>
+      <td>13.5100</td>
+      <td>34.9300</td>
+      <td>152.9</td>
+    </tr>
+    <tr>
+      <th>1995-09-30</th>
+      <td>578.77</td>
+      <td>13.5800</td>
+      <td>35.1800</td>
+      <td>153.2</td>
+    </tr>
+    <tr>
+      <th>1995-10-31</th>
+      <td>582.92</td>
+      <td>13.6500</td>
+      <td>34.7733</td>
+      <td>153.7</td>
+    </tr>
+    <tr>
+      <th>1995-11-30</th>
+      <td>595.53</td>
+      <td>13.7200</td>
+      <td>34.3667</td>
+      <td>153.6</td>
+    </tr>
+    <tr>
+      <th>1995-12-31</th>
+      <td>614.57</td>
+      <td>13.7900</td>
+      <td>33.9600</td>
+      <td>153.5</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;1995-07&#39;</span><span class="p">:</span><span class="s1">&#39;1995-11&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>P</th>
+      <th>D</th>
+      <th>E</th>
+      <th>CPI</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1995-07-31</th>
+      <td>557.37</td>
+      <td>13.44</td>
+      <td>34.6800</td>
+      <td>152.5</td>
+    </tr>
+    <tr>
+      <th>1995-08-31</th>
+      <td>559.11</td>
+      <td>13.51</td>
+      <td>34.9300</td>
+      <td>152.9</td>
+    </tr>
+    <tr>
+      <th>1995-09-30</th>
+      <td>578.77</td>
+      <td>13.58</td>
+      <td>35.1800</td>
+      <td>153.2</td>
+    </tr>
+    <tr>
+      <th>1995-10-31</th>
+      <td>582.92</td>
+      <td>13.65</td>
+      <td>34.7733</td>
+      <td>153.7</td>
+    </tr>
+    <tr>
+      <th>1995-11-30</th>
+      <td>595.53</td>
+      <td>13.72</td>
+      <td>34.3667</td>
+      <td>153.6</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>To convert all the data to “real” terms, we need to adjust for inflation. We do this by calculating how much the CPI has changed from each year until the last year in the sample. (Shiller uses the non-seasonally adjusted <a class="reference external" href="https://fred.stlouisfed.org/series/CPIAUCNS">CPI data</a>, which starts in 1913, along with another price series that goes earlier.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CPI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>273.98325
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CPI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;1995&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CPI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date
+1995-01-31    0.548574
+1995-02-28    0.550764
+1995-03-31    0.552589
+1995-04-30    0.554413
+1995-05-31    0.555508
+1995-06-30    0.556603
+1995-07-31    0.556603
+1995-08-31    0.558063
+1995-09-30    0.559158
+1995-10-31    0.560983
+1995-11-30    0.560618
+1995-12-31    0.560253
+Name: CPI, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># CPI numbers at end of series are estimates so use an older one</span>
+<span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CPI_factor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CPI&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CPI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>P</th>
+      <th>D</th>
+      <th>E</th>
+      <th>CPI</th>
+      <th>CPI_factor</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1871-01-31</th>
+      <td>4.44</td>
+      <td>0.26</td>
+      <td>0.4</td>
+      <td>12.464061</td>
+      <td>0.045655</td>
+    </tr>
+    <tr>
+      <th>1871-02-28</th>
+      <td>4.50</td>
+      <td>0.26</td>
+      <td>0.4</td>
+      <td>12.844641</td>
+      <td>0.047049</td>
+    </tr>
+    <tr>
+      <th>1871-03-31</th>
+      <td>4.61</td>
+      <td>0.26</td>
+      <td>0.4</td>
+      <td>13.034972</td>
+      <td>0.047747</td>
+    </tr>
+    <tr>
+      <th>1871-04-30</th>
+      <td>4.74</td>
+      <td>0.26</td>
+      <td>0.4</td>
+      <td>12.559226</td>
+      <td>0.046004</td>
+    </tr>
+    <tr>
+      <th>1871-05-31</th>
+      <td>4.86</td>
+      <td>0.26</td>
+      <td>0.4</td>
+      <td>12.273812</td>
+      <td>0.044959</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>P</th>
+      <th>D</th>
+      <th>E</th>
+      <th>CPI</th>
+      <th>CPI_factor</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2021-05-31</th>
+      <td>4167.849500</td>
+      <td>57.787824</td>
+      <td>148.56</td>
+      <td>269.19500</td>
+      <td>0.986051</td>
+    </tr>
+    <tr>
+      <th>2021-06-30</th>
+      <td>4238.489545</td>
+      <td>57.865042</td>
+      <td>158.74</td>
+      <td>271.69600</td>
+      <td>0.995213</td>
+    </tr>
+    <tr>
+      <th>2021-07-31</th>
+      <td>4363.712857</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>273.00300</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>2021-08-31</th>
+      <td>4454.206364</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>273.65650</td>
+      <td>1.002394</td>
+    </tr>
+    <tr>
+      <th>2021-09-30</th>
+      <td>4493.280000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>273.98325</td>
+      <td>1.003591</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;1953&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>P</th>
+      <th>D</th>
+      <th>E</th>
+      <th>CPI</th>
+      <th>CPI_factor</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1953-01-31</th>
+      <td>26.18</td>
+      <td>1.41000</td>
+      <td>2.41000</td>
+      <td>26.6</td>
+      <td>0.097435</td>
+    </tr>
+    <tr>
+      <th>1953-02-28</th>
+      <td>25.86</td>
+      <td>1.41000</td>
+      <td>2.42000</td>
+      <td>26.5</td>
+      <td>0.097069</td>
+    </tr>
+    <tr>
+      <th>1953-03-31</th>
+      <td>25.99</td>
+      <td>1.41000</td>
+      <td>2.43000</td>
+      <td>26.6</td>
+      <td>0.097435</td>
+    </tr>
+    <tr>
+      <th>1953-04-30</th>
+      <td>24.71</td>
+      <td>1.41333</td>
+      <td>2.45667</td>
+      <td>26.6</td>
+      <td>0.097435</td>
+    </tr>
+    <tr>
+      <th>1953-05-31</th>
+      <td>24.84</td>
+      <td>1.41667</td>
+      <td>2.48333</td>
+      <td>26.7</td>
+      <td>0.097801</td>
+    </tr>
+    <tr>
+      <th>1953-06-30</th>
+      <td>23.95</td>
+      <td>1.42000</td>
+      <td>2.51000</td>
+      <td>26.8</td>
+      <td>0.098167</td>
+    </tr>
+    <tr>
+      <th>1953-07-31</th>
+      <td>24.29</td>
+      <td>1.42000</td>
+      <td>2.52333</td>
+      <td>26.8</td>
+      <td>0.098167</td>
+    </tr>
+    <tr>
+      <th>1953-08-31</th>
+      <td>24.39</td>
+      <td>1.42000</td>
+      <td>2.53667</td>
+      <td>26.9</td>
+      <td>0.098534</td>
+    </tr>
+    <tr>
+      <th>1953-09-30</th>
+      <td>23.27</td>
+      <td>1.42000</td>
+      <td>2.55000</td>
+      <td>26.9</td>
+      <td>0.098534</td>
+    </tr>
+    <tr>
+      <th>1953-10-31</th>
+      <td>23.97</td>
+      <td>1.43000</td>
+      <td>2.53667</td>
+      <td>27.0</td>
+      <td>0.098900</td>
+    </tr>
+    <tr>
+      <th>1953-11-30</th>
+      <td>24.50</td>
+      <td>1.44000</td>
+      <td>2.52333</td>
+      <td>26.9</td>
+      <td>0.098534</td>
+    </tr>
+    <tr>
+      <th>1953-12-31</th>
+      <td>24.83</td>
+      <td>1.45000</td>
+      <td>2.51000</td>
+      <td>26.9</td>
+      <td>0.098534</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;p_real&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CPI_factor&#39;</span><span class="p">]</span>
+<span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;d_real&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CPI_factor&#39;</span><span class="p">]</span>
+<span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;e_real&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CPI_factor&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>P</th>
+      <th>D</th>
+      <th>E</th>
+      <th>CPI</th>
+      <th>CPI_factor</th>
+      <th>p_real</th>
+      <th>d_real</th>
+      <th>e_real</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1871-01-31</th>
+      <td>4.44</td>
+      <td>0.26</td>
+      <td>0.4</td>
+      <td>12.464061</td>
+      <td>0.045655</td>
+      <td>97.250271</td>
+      <td>5.694836</td>
+      <td>8.761286</td>
+    </tr>
+    <tr>
+      <th>1871-02-28</th>
+      <td>4.50</td>
+      <td>0.26</td>
+      <td>0.4</td>
+      <td>12.844641</td>
+      <td>0.047049</td>
+      <td>95.644049</td>
+      <td>5.526101</td>
+      <td>8.501693</td>
+    </tr>
+    <tr>
+      <th>1871-03-31</th>
+      <td>4.61</td>
+      <td>0.26</td>
+      <td>0.4</td>
+      <td>13.034972</td>
+      <td>0.047747</td>
+      <td>96.551327</td>
+      <td>5.445411</td>
+      <td>8.377555</td>
+    </tr>
+    <tr>
+      <th>1871-04-30</th>
+      <td>4.74</td>
+      <td>0.26</td>
+      <td>0.4</td>
+      <td>12.559226</td>
+      <td>0.046004</td>
+      <td>103.034548</td>
+      <td>5.651684</td>
+      <td>8.694899</td>
+    </tr>
+    <tr>
+      <th>1871-05-31</th>
+      <td>4.86</td>
+      <td>0.26</td>
+      <td>0.4</td>
+      <td>12.273812</td>
+      <td>0.044959</td>
+      <td>108.099637</td>
+      <td>5.783108</td>
+      <td>8.897089</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span> <span class="o">=</span> <span class="n">shiller</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;CPI&#39;</span><span class="p">,</span> <span class="s1">&#39;CPI_factor&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>p_real</th>
+      <th>d_real</th>
+      <th>e_real</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2020-07-31</th>
+      <td>3379.723099</td>
+      <td>62.590604</td>
+      <td>104.199431</td>
+    </tr>
+    <tr>
+      <th>2020-08-31</th>
+      <td>3562.458180</td>
+      <td>62.103269</td>
+      <td>103.518285</td>
+    </tr>
+    <tr>
+      <th>2020-09-30</th>
+      <td>3530.029762</td>
+      <td>61.726704</td>
+      <td>103.021187</td>
+    </tr>
+    <tr>
+      <th>2020-10-31</th>
+      <td>3584.326960</td>
+      <td>61.501494</td>
+      <td>101.549075</td>
+    </tr>
+    <tr>
+      <th>2020-11-30</th>
+      <td>3723.203792</td>
+      <td>61.339341</td>
+      <td>100.180866</td>
+    </tr>
+    <tr>
+      <th>2020-12-31</th>
+      <td>3873.057257</td>
+      <td>61.082104</td>
+      <td>98.657725</td>
+    </tr>
+    <tr>
+      <th>2021-01-31</th>
+      <td>3959.388261</td>
+      <td>60.598827</td>
+      <td>110.092348</td>
+    </tr>
+    <tr>
+      <th>2021-02-28</th>
+      <td>4030.920845</td>
+      <td>60.045568</td>
+      <td>121.280922</td>
+    </tr>
+    <tr>
+      <th>2021-03-31</th>
+      <td>4030.476360</td>
+      <td>59.401487</td>
+      <td>132.132970</td>
+    </tr>
+    <tr>
+      <th>2021-04-30</th>
+      <td>4233.426661</td>
+      <td>58.996190</td>
+      <td>141.462607</td>
+    </tr>
+    <tr>
+      <th>2021-05-31</th>
+      <td>4226.807396</td>
+      <td>58.605283</td>
+      <td>150.661512</td>
+    </tr>
+    <tr>
+      <th>2021-06-30</th>
+      <td>4258.878899</td>
+      <td>58.143403</td>
+      <td>159.503623</td>
+    </tr>
+    <tr>
+      <th>2021-07-31</th>
+      <td>4363.712857</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2021-08-31</th>
+      <td>4443.569584</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2021-09-30</th>
+      <td>4477.204062</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Next we’ll calculate the <em>cyclically-adjusted price earnings ratio (CAPE)</em>. This is the price at a point in time divided by the average earnings over the previous ten years.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">shiller</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Rolling [window=120,min_periods=100,center=False,axis=0,method=single]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;e_real&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date
+1871-01-31           NaN
+1871-02-28           NaN
+1871-03-31           NaN
+1871-04-30           NaN
+1871-05-31           NaN
+                 ...    
+2021-05-31    116.057410
+2021-06-30    116.541292
+2021-07-31    116.658439
+2021-08-31    116.769376
+2021-09-30    116.872890
+Name: e_real, Length: 1809, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;e_real&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">95</span><span class="p">:</span><span class="mi">105</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date
+1878-12-31         NaN
+1879-01-31         NaN
+1879-02-28         NaN
+1879-03-31         NaN
+1879-04-30    9.229380
+1879-05-31    9.250051
+1879-06-30    9.273541
+1879-07-31    9.297140
+1879-08-31    9.322177
+1879-09-30    9.344698
+Name: e_real, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>The value of CAPE is the current price value divided by the rolling average <em>lagged one period</em>. We do this by calling <code class="docutils literal notranslate"><span class="pre">.shift</span></code> to shift the time series one period.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CAPE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;p_real&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;e_real&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">shift</span><span class="p">()</span>
+
+<span class="n">shiller</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>p_real</th>
+      <th>d_real</th>
+      <th>e_real</th>
+      <th>CAPE</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2021-05-31</th>
+      <td>4226.807396</td>
+      <td>58.605283</td>
+      <td>150.661512</td>
+      <td>36.552152</td>
+    </tr>
+    <tr>
+      <th>2021-06-30</th>
+      <td>4258.878899</td>
+      <td>58.143403</td>
+      <td>159.503623</td>
+      <td>36.696312</td>
+    </tr>
+    <tr>
+      <th>2021-07-31</th>
+      <td>4363.712857</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>37.443491</td>
+    </tr>
+    <tr>
+      <th>2021-08-31</th>
+      <td>4443.569584</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>38.090426</td>
+    </tr>
+    <tr>
+      <th>2021-09-30</th>
+      <td>4477.204062</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>38.342280</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Then, we’ll add a recession indicator variable (1 or 0) by accessing data from the St. Louis Federal Reserve data service, <a class="reference external" href="https://fred.stlouisfed.org/">FRED</a> using the <code class="docutils literal notranslate"><span class="pre">pandas_datareader</span></code>.</p>
+<p>The particular series we want is at <a class="reference external" href="https://fred.stlouisfed.org/series/USREC">https://fred.stlouisfed.org/series/USREC</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas_datareader</span> <span class="k">as</span> <span class="nn">pdr</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nber</span> <span class="o">=</span> <span class="n">pdr</span><span class="o">.</span><span class="n">get_data_fred</span><span class="p">(</span><span class="s1">&#39;USREC&#39;</span><span class="p">,</span> <span class="s1">&#39;1870&#39;</span><span class="p">)</span>
+<span class="n">nber</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>USREC</th>
+    </tr>
+    <tr>
+      <th>DATE</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1870-01-01</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1870-02-01</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1870-03-01</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1870-04-01</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1870-05-01</th>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nber</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>USREC    0.281953
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">shiller</span></code> DataFrame and the <code class="docutils literal notranslate"><span class="pre">nber</span></code> Series both have the same index (<code class="docutils literal notranslate"><span class="pre">datetime</span></code> values). We can <em>join</em> the two together on that index.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nber</span><span class="o">.</span><span class="n">index</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DatetimeIndex([&#39;1870-01-01&#39;, &#39;1870-02-01&#39;, &#39;1870-03-01&#39;, &#39;1870-04-01&#39;,
+               &#39;1870-05-01&#39;, &#39;1870-06-01&#39;, &#39;1870-07-01&#39;, &#39;1870-08-01&#39;,
+               &#39;1870-09-01&#39;, &#39;1870-10-01&#39;,
+               ...
+               &#39;2021-02-01&#39;, &#39;2021-03-01&#39;, &#39;2021-04-01&#39;, &#39;2021-05-01&#39;,
+               &#39;2021-06-01&#39;, &#39;2021-07-01&#39;, &#39;2021-08-01&#39;, &#39;2021-09-01&#39;,
+               &#39;2021-10-01&#39;, &#39;2021-11-01&#39;],
+              dtype=&#39;datetime64[ns]&#39;, name=&#39;DATE&#39;, length=1823, freq=None)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pandas.tseries.offsets</span> <span class="kn">import</span> <span class="n">MonthEnd</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nber</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="n">MonthEnd</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DatetimeIndex([&#39;1870-01-31&#39;, &#39;1870-02-28&#39;, &#39;1870-03-31&#39;, &#39;1870-04-30&#39;,
+               &#39;1870-05-31&#39;, &#39;1870-06-30&#39;, &#39;1870-07-31&#39;, &#39;1870-08-31&#39;,
+               &#39;1870-09-30&#39;, &#39;1870-10-31&#39;,
+               ...
+               &#39;2021-02-28&#39;, &#39;2021-03-31&#39;, &#39;2021-04-30&#39;, &#39;2021-05-31&#39;,
+               &#39;2021-06-30&#39;, &#39;2021-07-31&#39;, &#39;2021-08-31&#39;, &#39;2021-09-30&#39;,
+               &#39;2021-10-31&#39;, &#39;2021-11-30&#39;],
+              dtype=&#39;datetime64[ns]&#39;, name=&#39;DATE&#39;, length=1823, freq=None)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nber</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">nber</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="n">MonthEnd</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span> <span class="o">=</span> <span class="n">shiller</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nber</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+<span class="n">shiller</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>p_real</th>
+      <th>d_real</th>
+      <th>e_real</th>
+      <th>CAPE</th>
+      <th>USREC</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1879-05-31</th>
+      <td>131.454931</td>
+      <td>6.282478</td>
+      <td>11.317135</td>
+      <td>14.243094</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1879-06-30</th>
+      <td>133.676385</td>
+      <td>6.413766</td>
+      <td>11.646049</td>
+      <td>14.451421</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1879-07-31</th>
+      <td>134.791351</td>
+      <td>6.395916</td>
+      <td>11.704160</td>
+      <td>14.535046</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1879-08-31</th>
+      <td>135.792276</td>
+      <td>6.449299</td>
+      <td>11.901009</td>
+      <td>14.605812</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1879-09-30</th>
+      <td>136.051291</td>
+      <td>6.286730</td>
+      <td>11.686870</td>
+      <td>14.594369</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<section id="plotting">
+<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">#</a></h2>
+<p>(This is more advanced. Don’t worry about learning these details yet.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %matplotlib notebook</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">YearLocator</span>
+
+<span class="c1"># create Series with means and current value repeated</span>
+<span class="n">avg</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CAPE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">shiller</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">avg47</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">shiller</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;1947&#39;</span><span class="p">:,</span><span class="s1">&#39;CAPE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">shiller</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;1947&#39;</span><span class="p">:]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">curentval</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CAPE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">shiller</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+<span class="c1"># main plot</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CAPE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">9</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">45</span><span class="p">),</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">x_compat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># change year locations</span>
+<span class="n">yrs10</span> <span class="o">=</span> <span class="n">YearLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">yrs5</span> <span class="o">=</span> <span class="n">YearLocator</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">yrs10</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">yrs5</span><span class="p">)</span>
+
+<span class="c1"># add bells &amp; whistles</span>
+<span class="n">curentval</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Current level&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">avg</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Avg&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">avg47</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Avg, post-war&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;medium&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CAPE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;USREC&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> 
+                <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7fd5de06be50&gt;
+</pre></div>
+</div>
+<img alt="_images/Shiller CAPE_44_1.png" src="_images/Shiller CAPE_44_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;e_real&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">r</span><span class="p">[</span><span class="s1">&#39;e_real&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="correlations">
+<h2>Correlations<a class="headerlink" href="#correlations" title="Permalink to this headline">#</a></h2>
+<p>Let’s calculate future 2- and 5-year returns. We do this by dividing the price in 2 or 5 years by the price “today”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;p_real&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># equivalent to:</span>
+<span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;p_real&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;p_real&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;p_real&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;p_real&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ret(t -&gt; t+24) = price(t+24) / price(t) - 1</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;ret2yr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;p_real&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="mi">12</span><span class="p">)</span> <span class="o">/</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;p_real&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;ret5yr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;p_real&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="o">*</span><span class="mi">12</span><span class="p">)</span> <span class="o">/</span> <span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;p_real&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># this is WRONG</span>
+<span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;p_real&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">(</span><span class="o">-</span><span class="mi">24</span><span class="p">)</span>
+
+<span class="c1"># p(t) / p(t+24) - 1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="p">[[</span><span class="s1">&#39;CAPE&#39;</span><span class="p">,</span> <span class="s1">&#39;ret2yr&#39;</span><span class="p">,</span> <span class="s1">&#39;ret5yr&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="p">[[</span><span class="s1">&#39;CAPE&#39;</span><span class="p">,</span> <span class="s1">&#39;ret5yr&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="p">[</span><span class="s1">&#39;CAPE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shiller</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;1980&#39;</span><span class="p">:,</span> <span class="p">[</span><span class="s1">&#39;CAPE&#39;</span><span class="p">,</span> <span class="s1">&#39;ret2yr&#39;</span><span class="p">,</span> <span class="s1">&#39;ret5yr&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="06%20Calculating%20beta.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Factor regressions</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="07a%20Time%20series%20analysis.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Time series models</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    <div class="extra_footer">
+      &copy; 2023 <a href="https://stoffprof.github.io">Noah Stoffman</a>. Version 0.23.02.
+    </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
